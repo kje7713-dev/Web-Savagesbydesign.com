@@ -1,3 +1,10 @@
+---
+title: "Savages By Design App"
+slug: "app"
+status: "draft"
+type: "page"
+---
+
 # Page: The App
 # Slug: /app
 # WP: Page
