@@ -3,6 +3,7 @@ title: "Savages By Design App"
 slug: "app"
 status: "draft"
 type: "page"
+---
 ## Sync Test
 If you can read this in WordPress, GitHub → WP sync works.
 ---
