@@ -1,0 +1,29 @@
+name: Sync Markdown to WordPress (JWT)
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "content/**.md"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        run: npm init -y && npm i gray-matter marked node-fetch@2
+
+      - name: Sync to WordPress
+        env:
+          WP_URL: ${{ secrets.WP_URL }}
+          WP_JWT_USER: ${{ secrets.WP_JWT_USER }}
+          WP_JWT_PASS: ${{ secrets.WP_JWT_PASS }}
+        run: node .github/scripts/wp-sync-jwt.js
