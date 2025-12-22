@@ -5,6 +5,10 @@ on:
     branches: ["main"]
     paths:
       - "content/**.md"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "content/**.md"
 
 jobs:
   sync:
