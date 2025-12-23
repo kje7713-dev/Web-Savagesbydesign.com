@@ -23,6 +23,7 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           port: ${{ secrets.FTP_PORT }}
           protocol: ftp
-          local-dir: sbd-brutalist/
-          server-dir: ${{ secrets.FTP_DEST }}/
+          local-dir: ftp-probe/
+          server-dir: ./
+          dangerous-clean-slate: false
           dangerous-clean-slate: false
