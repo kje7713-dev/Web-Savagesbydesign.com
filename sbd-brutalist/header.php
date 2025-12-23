@@ -11,7 +11,7 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
-      Savage by Design
+      SAVAGE BY DESIGN
     </a>
 
     <nav class="nav">
