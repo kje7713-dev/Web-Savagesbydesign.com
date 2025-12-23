@@ -1,5 +1,5 @@
-# Page: Home
-# Slug: /
+# Page: Home (Old)
+# Slug: /home-old
 # WP: Page
 
 ## SEO
