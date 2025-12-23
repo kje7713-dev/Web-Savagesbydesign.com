@@ -6,6 +6,21 @@
   <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
+<?php if ( function_exists('wp_body_open') ) { wp_body_open(); } ?>
+
 <header class="site-header">
-  <h1><a href="<?php echo home_url(); ?>">Savage by Design</a></h1>
+  <div class="header-inner">
+    <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
+      Savage by Design
+    </a>
+
+    <nav class="nav">
+      <a href="/app/">App</a>
+      <a href="/offerings/">Offerings</a>
+      <a href="/guides/">Guides</a>
+      <a href="/reviews/">Reviews</a>
+      <a href="/deals/">Deals</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </div>
 </header>
