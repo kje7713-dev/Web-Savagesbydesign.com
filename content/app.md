@@ -1,7 +1,7 @@
 ---
 title: "Savages By Design App"
-slug: "app"
-status: "draft"
+slug: "/"
+status: "publish"
 type: "page"
 ---
 
