@@ -5,3 +5,52 @@ Author: Savage by Design
 Description: Opinionated, content-first WordPress theme. No builders. No fluff.
 Version: 0.1.0
 */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.site-header, .site-footer {
+  padding: 16px 20px;
+  border-bottom: 1px solid #222;
+}
+
+.site-footer { border-top: 1px solid #222; border-bottom: 0; }
+
+.site-header a { color: inherit; text-decoration: none; }
+
+.wrap { max-width: 980px; margin: 0 auto; padding: 28px 20px; }
+
+.kicker { letter-spacing: .12em; text-transform: uppercase; opacity: .75; margin: 0 0 8px; }
+
+h1 { font-size: 42px; line-height: 1.05; margin: 0 0 12px; }
+
+.subhead { font-size: 18px; max-width: 60ch; margin: 0 0 18px; }
+
+.cta { display: flex; gap: 12px; margin: 18px 0 10px; flex-wrap: wrap; }
+
+.btn {
+  display: inline-block;
+  padding: 10px 14px;
+  border: 1px solid #111;
+  text-decoration: none;
+  color: #111;
+  font-weight: 600;
+}
+
+.btn-ghost { opacity: .8; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.card {
+  border: 1px solid #111;
+  padding: 14px;
+}
+
+.card a { text-decoration: none; font-weight: 600; }
