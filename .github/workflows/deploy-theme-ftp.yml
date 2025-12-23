@@ -26,4 +26,4 @@ jobs:
           local-dir: sbd-brutalist/
           server-dir: ${{ secrets.FTP_DEST }}/
           dangerous-clean-slate: false
-          dangerous-clean-slate: false
+          
