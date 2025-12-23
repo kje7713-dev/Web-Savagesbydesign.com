@@ -1,0 +1,26 @@
+name: Deploy WP Theme (FTP)
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "sbd-brutalist/**"
+      - ".github/workflows/deploy-theme-ftp.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy theme via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ secrets.FTP_PORT }}
+          protocol: ftp
+          local-dir: sbd-brutalist/
+          server-dir: ${{ secrets.FTP_DEST }}/
+          dangerous-clean-slate: false
