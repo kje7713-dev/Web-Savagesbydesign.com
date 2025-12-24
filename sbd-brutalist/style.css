@@ -243,19 +243,15 @@ img{ max-width:100%; height:auto; display:block; }
 /* Hero Section with Brand Wheel */
 .hero{
   padding:18px 0 10px;
-  display:grid;
-  gap:24px;
-  align-items:center;
 }
 
 .hero-content{
-  order:1;
+  max-width:100%;
 }
 
 .hero-visual{
-  order:2;
   max-width:300px;
-  margin:0 auto;
+  margin:20px auto;
 }
 
 .brand-wheel--hero{
@@ -265,19 +261,9 @@ img{ max-width:100%; height:auto; display:block; }
 
 /* Desktop hero layout */
 @media (min-width:641px){
-  .hero{
-    grid-template-columns: 1fr 320px;
-    gap:40px;
-  }
-  
-  .hero-content{
-    order:1;
-  }
-  
   .hero-visual{
-    order:2;
     max-width:320px;
-    margin:0;
+    margin:30px auto;
   }
 }
 
