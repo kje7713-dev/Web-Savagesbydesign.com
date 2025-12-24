@@ -2,15 +2,20 @@
 
 <main class="wrap">
   <section class="hero">
-    <p class="kicker">Savages By Design</p>
-    <h1>Show up. Track it. Repeat.</h1>
-    <p class="subhead">
-      A gritty brand for lifters, grapplers, and anyone building consistency the hard way.
-    </p>
+    <div class="hero-content">
+      <p class="kicker">Savages By Design</p>
+      <h1>Show up. Track it. Repeat.</h1>
+      <p class="subhead">
+        A gritty brand for lifters, grapplers, and anyone building consistency the hard way.
+      </p>
 
-    <div class="cta">
-      <a class="btn" href="/app/">The App</a>
-      <a class="btn btn-ghost" href="/offerings/">Offerings</a>
+      <div class="cta">
+        <a class="btn" href="/app/">The App</a>
+        <a class="btn btn-ghost" href="/offerings/">Offerings</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <?php get_template_part('template-parts/brand-wheel', null, array('context' => 'hero')); ?>
     </div>
   </section>
 
