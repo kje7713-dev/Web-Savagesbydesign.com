@@ -172,7 +172,6 @@ blockquote cite, blockquote em{ color:var(--muted); }
 }
 
 /* Homepage sections */
-.hero{ padding:18px 0 10px; }
 .subhead{ font-size:18px; max-width:64ch; opacity:.92; }
 
 .cta{ display:flex; gap:12px; flex-wrap:wrap; margin:18px 0 8px; }

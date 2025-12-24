@@ -21,7 +21,7 @@ $loading_attr = ($context === 'hero') ? '' : 'loading="lazy"';
   src="<?php echo esc_url($brand_wheel_url); ?>" 
   alt="Savage by Design lifestyle wheel representing strength, nature, and combat"
   class="brand-wheel brand-wheel--<?php echo esc_attr($context); ?> <?php echo esc_attr($class); ?>"
-  <?php echo $loading_attr; ?>
+  <?php if ($loading_attr) { echo esc_attr($loading_attr); } ?>
   width="1024"
   height="1024"
 />
