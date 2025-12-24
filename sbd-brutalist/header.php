@@ -10,10 +10,15 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
-      SAVAGE BY DESIGN
-    </a>
-    <p class="header-subtitle">"In a modern world, we must be deliberate to engage the animal in us — lest it eat us alive."</p>
+    <div class="brand-mark-container">
+      <?php get_template_part('template-parts/brand-wheel', null, array('context' => 'header')); ?>
+    </div>
+    <div class="brand-text-container">
+      <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
+        SAVAGE BY DESIGN
+      </a>
+      <p class="header-subtitle">"In a modern world, we must be deliberate to engage the animal in us — lest it eat us alive."</p>
+    </div>
   </div>
   <nav class="nav">
     <a href="/app/">App</a>
