@@ -5,10 +5,8 @@
  * @package Savage_By_Design_Brutalist
  */
 
-// Build the URL path from site root to Assets folder
-// Assumes Assets folder is accessible at site-root/Assets/
-$site_url = trailingslashit(home_url());
-$brand_wheel_url = $site_url . 'Assets/9954152A-8A70-4A27-86E2-7B395F7AE12E.png';
+// Build the URL path to the wheel asset in the theme's template-parts directory
+$brand_wheel_url = get_template_directory_uri() . '/template-parts/9954152A-8A70-4A27-86E2-7B395F7AE12E.png';
 
 $context = isset($args['context']) ? $args['context'] : 'default';
 $class = isset($args['class']) ? $args['class'] : '';
