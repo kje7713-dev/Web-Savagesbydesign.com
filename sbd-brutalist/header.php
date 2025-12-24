@@ -13,6 +13,7 @@
     <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
       SAVAGE BY DESIGN
     </a>
+    <p class="header-subtitle">"In a modern world, we must be deliberate to engage the animal in us — lest it eat us alive."</p>
   </div>
   <nav class="nav">
     <a href="/app/">App</a>
