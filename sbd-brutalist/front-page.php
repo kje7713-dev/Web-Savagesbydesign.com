@@ -4,17 +4,14 @@
   <section class="hero">
     <div class="hero-content">
       <h1>Modern comforts create a cage. We're here to help break you out.</h1>
+      
+      <div class="hero-visual">
+        <?php get_template_part('template-parts/brand-wheel', null, array('context' => 'hero')); ?>
+      </div>
+      
       <p class="subhead">
         The world rewards stillness and comfort. Your body was built for movement, resistance, and exposure. Savage by Design exists to close that gap — through sun, strain, and disciplined effort. This is training for the real arenas of life, not the artificial ones.
       </p>
-
-      <div class="cta">
-        <a class="btn" href="/app/">The App</a>
-        <a class="btn btn-ghost" href="/offerings/">Offerings</a>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <?php get_template_part('template-parts/brand-wheel', null, array('context' => 'hero')); ?>
     </div>
   </section>
 
