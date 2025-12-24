@@ -13,14 +13,13 @@
     <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
       SAVAGE BY DESIGN
     </a>
-
-    <nav class="nav">
-      <a href="/app/">App</a>
-      <a href="/offerings/">Offerings</a>
-      <a href="/guides/">Guides</a>
-      <a href="/reviews/">Reviews</a>
-      <a href="/deals/">Deals</a>
-      <a href="/contact/">Contact</a>
-    </nav>
   </div>
+  <nav class="nav">
+    <a href="/app/">App</a>
+    <a href="/offerings/">Offerings</a>
+    <a href="/guides/">Guides</a>
+    <a href="/reviews/">Reviews</a>
+    <a href="/deals/">Deals</a>
+    <a href="/contact/">Contact</a>
+  </nav>
 </header>
