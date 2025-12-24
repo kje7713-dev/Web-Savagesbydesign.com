@@ -143,7 +143,7 @@ blockquote cite, blockquote em{ color:var(--muted); }
   letter-spacing:.08em;
   text-align:center;
   color:var(--muted);
-  margin:10px 0 0;
+  margin:10px auto 0;
   max-width:600px;
   font-style:italic;
   opacity:.85;
