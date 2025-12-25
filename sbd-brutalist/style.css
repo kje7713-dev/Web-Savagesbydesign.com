@@ -138,16 +138,6 @@ blockquote cite, blockquote em{ color:var(--muted); }
   font-size: clamp(32px, 5vw, 48px);
   text-align:center;
 }
-.header-subtitle{
-  font-size: clamp(11px, 2vw, 13px);
-  letter-spacing:.08em;
-  text-align:center;
-  color:var(--muted);
-  margin:10px auto 0;
-  max-width:600px;
-  font-style:italic;
-  opacity:.85;
-}
 .nav{
   display:flex;
   flex-wrap:wrap;
@@ -233,38 +223,15 @@ img{ max-width:100%; height:auto; display:block; }
   .brand{
     text-align:left;
   }
-  
-  .header-subtitle{
-    text-align:left;
-    margin:10px 0 0;
-  }
 }
 
-/* Hero Section with Brand Wheel */
+/* Hero Section */
 .hero{
   padding:18px 0 10px;
 }
 
 .hero-content{
   max-width:100%;
-}
-
-.hero-visual{
-  max-width:300px;
-  margin:20px auto;
-}
-
-.brand-wheel--hero{
-  width:100%;
-  height:auto;
-}
-
-/* Desktop hero layout */
-@media (min-width:641px){
-  .hero-visual{
-    max-width:320px;
-    margin:30px auto;
-  }
 }
 
 /* Mobile */
