@@ -5,7 +5,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "content/**.md"
+      - "content/pages/**.md"
 
 jobs:
   sync:

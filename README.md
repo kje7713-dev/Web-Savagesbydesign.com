@@ -1,65 +1,146 @@
-# Savages By Design — GitHub-First Content Repo (Simple WordPress Path)
+# Savages By Design — GitHub-First Content Repo (Automated WordPress Sync)
 
-This repo is the **workbench** for the Savages By Design website.
-You write and iterate here (with **GitHub Copilot**), then **copy/paste** the HTML blocks into WordPress (Classic Editor) to publish.
+This repo is the **source of truth** for the Savages By Design website.
+All page content is written here in Markdown and **automatically synced** to WordPress via GitHub Actions and JWT authentication.
 
 ## Why this approach
-- Fastest path to launch (no APIs, no JWT, no automation headaches)
-- Version control for all copy + templates
-- Copilot helps you write/refactor in a consistent brand voice
-- WordPress stays the CMS/runtime
+- Complete automation: commit to main → page updates in WordPress
+- Version control for all content
+- GitHub Copilot helps you write/refactor in a consistent brand voice
+- No manual copy/paste steps
+- WordPress acts as the CMS/runtime, controlled via REST API
 
 ---
 
 ## Folder structure
 
-- `brand/` — voice, tone, visual rules (Copilot reads this to stay consistent)
-- `content/` — page drafts (paste-ready HTML)
-- `templates/` — reusable post/page templates (reviews/guides/deals)
-- `assets/` — notes/links for images and brand assets (you'll upload images in WP)
+- `Brand/` — voice, tone, visual rules (Copilot reads this to stay consistent)
+- `content/pages/` — **page source files** (Markdown with YAML frontmatter)
+- `.github/workflows/` — GitHub Actions workflow for WordPress sync
+- `.github/scripts/` — JWT sync script
+- `Templates/` — reusable templates for future use
+- `Assets/` — notes/links for images and brand assets
 
 ---
 
-## Your workflow (the “simple path”)
+## Your workflow (automated sync)
 
-### 1) Draft in GitHub (with Copilot)
-- Edit files in `content/` (e.g. `content/app.md`)
-- Keep everything between:
-  - `<!-- WP-PASTE-START -->`
-  - `<!-- WP-PASTE-END -->`
-  as **HTML**, because WordPress Classic Editor is most predictable with HTML.
+### 1) Write pages in Markdown
 
-### 2) Publish in WordPress
-For each page you want live:
-1. WordPress Admin → **Pages → Add New**
-2. Set the title (matches the file)
-3. Set the slug/permalink (matches the file header, e.g. `/app`)
-4. In Classic Editor, switch to **Text** (not Visual)
-5. Paste only the HTML block between the WP markers
-6. Preview → Publish/Update
+All pages live in `content/pages/` as Markdown files with YAML frontmatter.
 
-### 3) Commit what you published
-After you publish, commit the final content here so GitHub stays the source of truth.
+**File format:**
+```markdown
+---
+title: "Page Title"
+slug: "page-slug"
+status: "publish"
+type: "page"
+---
+
+# Your content here
+
+Write in **Markdown**. It will be converted to HTML automatically.
+```
+
+**Required frontmatter fields:**
+- `title` — Page title in WordPress
+- `slug` — URL slug (no leading slash)
+- `status` — `publish` or `draft`
+- `type` — `page` (or `post` for blog posts)
+
+### 2) Commit and push to main
+
+When you push changes to the `main` branch that modify files in `content/pages/`, the GitHub Action automatically:
+1. Authenticates to WordPress using JWT
+2. Converts Markdown to HTML
+3. Creates or updates the WordPress page via REST API
+4. Logs the result
+
+**No manual WordPress steps required.**
+
+### 3) Verify the page is live
+
+After the GitHub Action completes, check:
+```
+https://savagesbydesign.com/{slug}/
+```
+
+If the page doesn't appear, check the GitHub Actions log for errors.
+
+---
+
+## GitHub Secrets (already configured)
+
+The following secrets are required in the repository:
+
+- `WP_URL` = https://savagesbydesign.com
+- `WP_JWT_USER` = agent-sbd
+- `WP_JWT_PASS` = (password for JWT user)
+
+These are used by `.github/scripts/wp-sync-jwt.js` to authenticate.
+
+---
+
+## WordPress REST API
+
+The sync uses the WordPress REST API with JWT authentication:
+
+**Authentication endpoint:**
+```
+POST /wp-json/jwt-auth/v1/token
+```
+
+**Page management:**
+```
+GET /wp-json/wp/v2/pages?slug={slug}
+POST /wp-json/wp/v2/pages/{id}  (update existing)
+POST /wp-json/wp/v2/pages       (create new)
+```
+
+All requests include:
+```
+Authorization: Bearer {token}
+```
 
 ---
 
 ## Copilot instructions (recommended)
-Copilot will do best if you keep your brand rules in `brand/voice.md`.
+
+Copilot will do best if you reference `Brand/voice.md` for tone and style.
 
 **Prompt pattern to use in Copilot Chat:**
-> “Use `brand/voice.md` as the source of truth. Write paste-ready HTML for the page described in `content/app.md`, keeping headings scannable, tone gritty/minimal, and avoiding exaggerated claims.”
+> "Use `Brand/voice.md` as the source of truth. Write Markdown content for a new page in `content/pages/`, using YAML frontmatter. Keep headings scannable, tone gritty/minimal, and avoid exaggerated claims."
 
 ---
 
 ## Quick launch checklist
-- [ ] `/app` page live (landing page for your app)
-- [ ] `/privacy` live
-- [ ] `/terms` live
-- [ ] Homepage updated to route people to `/app`
-- [ ] Primary menu updated: Home, App, Reviews, Guides, Deals, About, Contact
+
+- [x] `/app` page live (landing page for your app)
+- [x] `/user-guide` page live (comprehensive documentation)
+- [x] `/quick-start` page live (10-minute setup guide)
+- [x] `/about` page live
+- [ ] `/privacy` and `/terms` pages completed
+- [ ] `/contact` page completed
+- [ ] Homepage updated
+- [ ] Primary menu configured
+
+---
+
+## Testing the sync
+
+To test without pushing to main:
+1. Use the **Actions** tab in GitHub
+2. Click **Sync Markdown to WordPress (JWT)**
+3. Click **Run workflow** → **Run workflow**
+
+This manually triggers the sync job.
 
 ---
 
 ## Notes
-- This repo intentionally does **not** contain WordPress exports or themes.
-- You can add a Phase 2 later (automation posting drafts), but launch with this first.
+
+- This repo does **not** contain WordPress theme files
+- Theme customization happens in WordPress directly or via separate deployment
+- Page content is the only thing synced from this repository
+- Images and media are uploaded directly to WordPress

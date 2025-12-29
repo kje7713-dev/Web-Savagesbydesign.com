@@ -95,11 +95,11 @@ async function upsert({ token, type, title, slug, status, html }) {
 // ---- MAIN ----
 (async () => {
   const token = await getToken();
-  const contentDir = path.join(process.cwd(), "content");
+  const contentDir = path.join(process.cwd(), "content", "pages");
   const files = getMarkdownFiles(contentDir);
 
   if (!files.length) {
-    console.log("⚠️ No markdown files found in /content");
+    console.log("⚠️ No markdown files found in /content/pages");
     return;
   }
 
