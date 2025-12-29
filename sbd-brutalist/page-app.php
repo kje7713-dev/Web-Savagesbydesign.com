@@ -15,7 +15,7 @@
     
     <div class="cta">
       <a class="btn" href="/contact/">Get Early Access</a>
-      <a class="btn btn-ghost" href="/user-guide/">Read the User Guide</a>
+      <a class="btn btn-ghost" href="/app/">Learn More</a>
     </div>
   </section>
 
@@ -126,12 +126,12 @@
     
     <p class="stack">
       Want early access or have questions?<br>
-      <a href="/user-guide/">Read the full User Guide</a> to understand how the app works.
+      Contact us to learn more.
     </p>
     
     <div class="cta">
       <a class="btn" href="/contact/">Contact Us</a>
-      <a class="btn btn-ghost" href="/user-guide/">User Guide</a>
+      <a class="btn btn-ghost" href="/">Back to Home</a>
     </div>
     
     <p><em>Show up. Track it. Repeat.</em></p>
