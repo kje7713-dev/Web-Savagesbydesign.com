@@ -3,15 +3,13 @@
 <main class="wrap">
 
   <section class="hero">
-  <p class="kicker">SAVAGES BY DESIGN</p>
 
   <h1 class="hero-title">
     TAKE CHARGE OF HOW YOU TRAIN
   </h1>
 
   <p class="subhead hero-subhead">
-    Stop renting other people’s programs. Consult the world’s knowledge, apply it to your life,
-    and design training that actually fits you.
+    Stop renting other people’s programs, and forcing in your life.<br> Consult your favorite AI to build training for your life.
   </p>
 
   <p class="hero-support">
