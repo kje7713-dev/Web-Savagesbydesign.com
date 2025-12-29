@@ -245,3 +245,10 @@ img{ max-width:100%; height:auto; display:block; }
     justify-content:center;
   }
 }
+.section { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
+.section-dark { padding: 16px; background: rgba(242,242,242,.04); border: 1px solid var(--line); }
+.stack { margin: 12px 0 14px; }
+.stack br { line-height: 1.9; }
+
+.closer { margin-top: 34px; padding-top: 22px; }
+.closer .cta { margin-top: 16px; }
