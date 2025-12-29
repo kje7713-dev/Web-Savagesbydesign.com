@@ -1,191 +1,253 @@
-# Savages By Design — GitHub-First Content Repo (Automated WordPress Sync)
+Here is the full, clean README you can drop into the root of the repo (e.g. README.md).
+It is written as an agent contract + operating manual.
+No code blocks, no formatting tricks, copy-paste safe.
 
-This repo is the **source of truth** for the Savages By Design website.
-All page content is written here in Markdown and **automatically synced** to WordPress via GitHub Actions and JWT authentication.
+⸻
 
-## Why this approach
-- Complete automation: commit to main → page updates in WordPress
-- Version control for all content
-- GitHub Copilot helps you write/refactor in a consistent brand voice
-- No manual copy/paste steps
-- WordPress acts as the CMS/runtime, controlled via REST API
+SavagesByDesign.com — Repo-Driven Website (FTP Theme Mode)
 
----
+Purpose
+This repository is the single source of truth for the Savages By Design public website.
+The site runs on WordPress, but WordPress is used strictly as a rendering engine.
+All layout, structure, copy, and assets are driven from this repository and deployed via FTP.
 
-## Folder structure
+The WordPress UI is not used for page creation, layout, or content editing.
 
-- `Brand/` — voice, tone, visual rules (Copilot reads this to stay consistent)
-- `content/pages/` — **page source files** (Markdown with YAML frontmatter)
-- `.github/workflows/` — GitHub Actions workflow for WordPress sync
-- `.github/scripts/` — JWT sync script
-- `Templates/` — reusable templates for future use
-- `Assets/` — notes/links for images and brand assets
+⸻
 
----
+Operating Mode (Hard Rules)
+	1.	The site is theme-driven, not content-editor driven.
+	2.	The repository controls what appears on the site.
+	3.	No WordPress page builders, block editor layouts, or Astra-style templates.
+	4.	No “paste this into WordPress” instructions.
+	5.	No JWT / REST / database content syncing unless explicitly requested.
+	6.	Images are deployed with the theme via FTP, not uploaded through the Media Library.
 
-## Your workflow (automated sync)
+If a task requires the WordPress UI, that task must be explicitly approved first.
 
-### 1) Write pages in Markdown
+⸻
 
-All pages live in `content/pages/` as Markdown files with YAML frontmatter.
+High-Level Architecture
 
-**File format:**
-```markdown
----
-title: "Page Title"
-slug: "page-slug"
-status: "publish"
-type: "page"
----
+• Hosting: Hostinger
+• CMS Runtime: WordPress
+• Active Theme: sbd-brutalist
+• Deployment: GitHub Actions → FTP
+• Cache Layer: LiteSpeed (must be purged after theme changes)
 
-# Your content here
+WordPress stores minimal placeholder pages for routing only.
+All visible content is rendered from PHP templates in the theme.
 
-Write in **Markdown**. It will be converted to HTML automatically.
-```
+⸻
 
-**Required frontmatter fields:**
-- `title` — Page title in WordPress
-- `slug` — URL slug (no leading slash)
-- `status` — `publish` or `draft`
-- `type` — `page` (or `post` for blog posts)
+Deployment Pipeline
 
-### 2) Commit and push to main
+• Theme source lives in the repo under:
+sbd-brutalist/
 
-When you push changes to the `main` branch that modify files in `content/pages/`, the GitHub Action automatically:
-1. Authenticates to WordPress using JWT
-2. Converts Markdown to HTML
-3. Creates or updates the WordPress page via REST API
-4. Logs the result
+• GitHub Action deploys the theme folder via FTP to:
+wp-content/themes/sbd-brutalist
 
-**No manual WordPress steps required.**
+• FTP user is rooted at:
+/domains/savagesbydesign.com/public_html
 
-### 3) Verify the page is live
+When changes are pushed to main:
+	1.	GitHub Actions deploys the theme via FTP
+	2.	WordPress immediately serves the updated templates
+	3.	LiteSpeed cache may need to be purged to see changes
 
-After the GitHub Action completes, check:
-```
-https://savagesbydesign.com/{slug}/
-```
+⸻
 
-**If changes don't appear immediately:**
-- **Clear WordPress cache** (if using WP Super Cache, W3 Total Cache, or similar)
-- **Clear browser cache** or open in incognito/private mode
-- **Check CDN cache** (if using Cloudflare or similar CDN)
-- **Verify the GitHub Action succeeded** - check the Actions tab for errors
+Caching Rule (Critical)
 
----
+Hostinger/LiteSpeed aggressively caches theme files.
 
-## GitHub Secrets (already configured)
+After any change to:
+• PHP templates
+• CSS
+• Images
 
-The following secrets are required in the repository:
+You must purge cache:
+WordPress Admin → LiteSpeed Cache → Toolbox → Purge All
+Then refresh in a private/incognito browser tab.
 
-- `WP_URL` = https://savagesbydesign.com
-- `WP_JWT_USER` = agent-sbd
-- `WP_JWT_PASS` = (password for JWT user)
+Failure to purge cache will make it appear as if changes “did nothing”.
 
-These are used by `.github/scripts/wp-sync-jwt.js` to authenticate.
+⸻
 
----
+Repo Structure (Source of Truth)
 
-## WordPress REST API
+sbd-brutalist/
+• style.css — theme header + all styling
+• functions.php — enqueue CSS, theme behavior, auto page creation
+• header.php — site header + navigation
+• footer.php — site footer
+• front-page.php — homepage (fully template-driven)
+• page-*.php — slug-specific page templates
+• assets/
+• img/ — all site images (logos, heroes, screenshots)
 
-The sync uses the WordPress REST API with JWT authentication:
+No content lives in the WordPress editor.
 
-**Authentication endpoint:**
-```
-POST /wp-json/jwt-auth/v1/token
-```
+⸻
 
-**Page management:**
-```
-GET /wp-json/wp/v2/pages?slug={slug}
-POST /wp-json/wp/v2/pages/{id}  (update existing)
-POST /wp-json/wp/v2/pages       (create new)
-```
+Page Creation & Routing (Zero WP UI)
 
-All requests include:
-```
-Authorization: Bearer {token}
-```
+All required pages are auto-created by the theme.
 
----
+The theme is responsible for ensuring the following routes exist:
 
-## Copilot instructions (recommended)
+• / (homepage)
+• /app
+• /offerings
+• /guides
+• /reviews
+• /deals
+• /contact
 
-Copilot will do best if you reference `Brand/voice.md` for tone and style.
+These pages are created and published automatically by theme code when the theme is activated.
 
-**Prompt pattern to use in Copilot Chat:**
-> "Use `Brand/voice.md` as the source of truth. Write Markdown content for a new page in `content/pages/`, using YAML frontmatter. Keep headings scannable, tone gritty/minimal, and avoid exaggerated claims."
+WordPress pages act only as routing placeholders.
+They may contain empty content in the editor.
 
----
+The agent must never instruct the user to create or edit pages in WordPress Admin.
 
-## Quick launch checklist
+⸻
 
-- [x] `/app` page live (landing page for your app)
-- [x] `/user-guide` page live (comprehensive documentation)
-- [x] `/quick-start` page live (10-minute setup guide)
-- [x] `/about` page live
-- [ ] `/privacy` and `/terms` pages completed
-- [ ] `/contact` page completed
-- [ ] Homepage updated
-- [ ] Primary menu configured
+How Pages Are Implemented
 
----
+Pages are implemented using WordPress template hierarchy.
 
-## Testing the sync
+Template mapping:
 
-To test without pushing to main:
-1. Use the **Actions** tab in GitHub
-2. Click **Sync Markdown to WordPress (JWT)**
-3. Click **Run workflow** → **Run workflow**
+Homepage
+• front-page.php
 
-This manually triggers the sync job.
+Slug-based pages
+• page-app.php → /app
+• page-offerings.php → /offerings
+• page-guides.php → /guides
+• page-reviews.php → /reviews
+• page-deals.php → /deals
+• page-contact.php → /contact
 
----
+If a template file exists, it controls the entire page output.
+WordPress editor content is ignored.
 
-## Troubleshooting
+When asked to “add a page” or “change page content”, the agent must modify or create the appropriate PHP template.
 
-### Changes not showing up on the site
+⸻
 
-If your updates successfully synced (GitHub Action shows ✅) but don't appear on the website:
+Images (Best Practice)
 
-**1. WordPress Cache**
-- Log into WordPress admin dashboard
-- Clear cache from your caching plugin (WP Super Cache, W3 Total Cache, etc.)
-- Some themes have built-in caching - check theme settings
+All images are stored in the theme and deployed via FTP.
 
-**2. Browser Cache**
-- Hard refresh: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac)
-- Or open the page in incognito/private browsing mode
-- Clear browser cache completely if needed
+Images live in:
+sbd-brutalist/assets/img/
 
-**3. CDN/Proxy Cache**
-- If using Cloudflare: Purge cache in Cloudflare dashboard
-- If using another CDN: Clear CDN cache
-- Some CDNs take 5-10 minutes to update
+Examples:
+• brand logos
+• hero images
+• screenshots
+• marketing visuals
 
-**4. Verify the Sync**
-- Check the GitHub Actions log - look for "🔁 Updating" or "🆕 Creating" messages
-- Verify the page exists in WordPress admin (Pages → All Pages)
-- Check that the page status is "Publish" not "Draft"
+Images are referenced using theme paths, not Media Library URLs.
 
-**5. Permalink Issues**
-- In WordPress admin, go to Settings → Permalinks
-- Click "Save Changes" (even without changing anything)
-- This refreshes WordPress permalink cache
+Canonical image URL format:
+/wp-content/themes/sbd-brutalist/assets/img/filename.ext
 
-### Sync failures
+Do not upload images through the WordPress Media Library unless explicitly requested.
 
-If the GitHub Action fails (❌):
-- Check the Actions log for error messages
-- Verify WordPress is accessible (not in maintenance mode)
-- Confirm JWT authentication plugin is active in WordPress
-- Check that secrets (WP_URL, WP_JWT_USER, WP_JWT_PASS) are configured correctly
+⸻
 
----
+Navigation
 
-## Notes
+Navigation is hard-coded in:
+sbd-brutalist/header.php
 
-- This repo does **not** contain WordPress theme files
-- Theme customization happens in WordPress directly or via separate deployment
-- Page content is the only thing synced from this repository
-- Images and media are uploaded directly to WordPress
+No WordPress menus are used unless explicitly requested.
+
+If navigation changes are requested:
+• Modify header.php
+• Adjust CSS if needed
+
+⸻
+
+Styling Rules
+
+All styling lives in:
+sbd-brutalist/style.css
+
+Guidelines:
+• High-contrast, brutalist aesthetic
+• Minimal abstraction
+• No frameworks or UI kits
+• Typography and spacing over decoration
+
+If new sections are added, corresponding CSS should be added deliberately.
+
+⸻
+
+Forbidden Actions (Failure Conditions)
+
+The agent must not:
+
+• Use the WordPress editor for layouts or content
+• Generate “paste this into WordPress” blocks
+• Create pages via REST or JWT
+• Upload images via Media Library
+• Enable Astra, block themes, or starter templates
+• Leave behind draft pages or numbered slugs (app-2, app-3, etc.)
+
+Any task that results in duplicate pages or WP UI dependency is considered incorrect.
+
+⸻
+
+Cleanup Policy
+
+If duplicates or drafts exist in WordPress:
+• They are legacy artifacts
+• The repo remains the source of truth
+• Cleanup should be minimal and one-time
+
+The agent should prevent new duplicates rather than constantly cleaning old ones.
+
+⸻
+
+Definition of Done (Every Task)
+
+A task is complete only when:
+	1.	Changes are implemented in the repo
+	2.	Code is committed to main
+	3.	GitHub Action deploys successfully
+	4.	Cache is purged if needed
+	5.	The live site reflects the change
+
+If the site does not change:
+• Assume caching first
+• Then verify correct template file
+• Then verify correct deploy path
+
+⸻
+
+Mental Model Summary
+
+• WordPress = renderer + router
+• Theme = application
+• Repo = source of truth
+• FTP deploy = release mechanism
+• WP UI = ignored after activation
+
+⸻
+
+End of README.
+
+⸻
+
+If you want next, I can:
+• generate the full page-app.php and page-offerings.php templates
+• harden the auto-page-creation logic description
+• add a one-paragraph Copilot “preamble” so it never tries JWT again
+• design a repeatable pattern for new marketing pages
+
+Just say what’s next.
