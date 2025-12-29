@@ -15,7 +15,7 @@
     
     <div class="cta">
       <a class="btn" href="/contact/">Get Early Access</a>
-      <a class="btn btn-ghost" href="/app/">Learn More</a>
+      <a class="btn btn-ghost" href="/offerings/">Our Offerings</a>
     </div>
   </section>
 
