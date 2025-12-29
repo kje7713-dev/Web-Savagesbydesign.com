@@ -89,6 +89,7 @@ async function upsert({ token, type, title, slug, status, html }) {
       content: html,
       status,
       slug,
+      modified: new Date().toISOString(),
     });
   }
 }

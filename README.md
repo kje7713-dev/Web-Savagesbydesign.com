@@ -168,7 +168,7 @@ If your updates successfully synced (GitHub Action shows ✅) but don't appear o
 - Verify the page exists in WordPress admin (Pages → All Pages)
 - Check that the page status is "Publish" not "Draft"
 
-**5. permalink Issues**
+**5. Permalink Issues**
 - In WordPress admin, go to Settings → Permalinks
 - Click "Save Changes" (even without changing anything)
 - This refreshes WordPress permalink cache
