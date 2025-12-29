@@ -1,11 +1,16 @@
-name: Sync Markdown to WordPress (JWT)
+name: Sync Markdown to WordPress (JWT) - DISABLED
+
+# This workflow is disabled per the repo's FTP-only operating mode.
+# The site is theme-driven via FTP deployment, not content-editor driven via REST/JWT.
+# To re-enable, change workflow_dispatch to push trigger and update paths.
 
 on:
   workflow_dispatch:
-  push:
-    branches: ["main"]
-    paths:
-      - "content/pages/**.md"
+  # Disabled automatic trigger - uncomment only if explicitly approved
+  # push:
+  #   branches: ["main"]
+  #   paths:
+  #     - "content/pages/**.md"
 
 jobs:
   sync:
