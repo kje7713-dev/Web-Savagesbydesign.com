@@ -6,8 +6,7 @@
   <p class="kicker">SAVAGES BY DESIGN</p>
 
   <h1 class="hero-title">
-    Your training.<br>
-    Your judgment.
+    TAKE CHARGE OF HOW YOU TRAIN
   </h1>
 
   <p class="subhead hero-subhead">
