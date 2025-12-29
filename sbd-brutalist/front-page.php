@@ -9,18 +9,9 @@
   </h1>
 
   <p class="subhead hero-subhead">
-    Stop renting other people’s programs, and forcing in your life.<br> Consult your favorite AI to build training for your life.
+    Consult your favorite AI to build training for your life.
   </p>
-
-  <p class="hero-support">
-    AI helps you think. You decide what to do.
-  </p>
-
-  <div class="cta">
-    <a class="btn" href="/app/">The App</a>
-    <a class="btn btn-ghost" href="/offerings/">Offerings</a>
-    <a class="btn btn-ghost" href="/contact/">Get Notified</a>
-  </div>
+    AI helps you think. You decide what to do. We facilitate the process.
 </section>
 
   <!-- MANIFESTO -->
