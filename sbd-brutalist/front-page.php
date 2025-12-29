@@ -2,26 +2,29 @@
 
 <main class="wrap">
 
-  <!-- HERO -->
   <section class="hero">
-    <p class="kicker">SAVAGES BY DESIGN — THE APP</p>
+  <p class="kicker">SAVAGES BY DESIGN</p>
 
-    <h1>
-      Design your training.<br>
-      No gurus. No cults. No bullshit.
-    </h1>
+  <h1 class="hero-title">
+    Your training.<br>
+    Your judgment.
+  </h1>
 
-    <p class="subhead">
-      A flexible tracking and planning tool for people who actually move — lifters, grapplers,
-      endurance athletes, outdoor people, and anyone tired of being told how they <em>should</em> train.
-    </p>
+  <p class="subhead hero-subhead">
+    Stop renting other people’s programs. Consult the world’s knowledge, apply it to your life,
+    and design training that actually fits you.
+  </p>
 
-    <div class="cta">
-      <a class="btn" href="/app/">The App</a>
-      <a class="btn btn-ghost" href="/offerings/">Offerings</a>
-      <a class="btn btn-ghost" href="/contact/">Get Notified</a>
-    </div>
-  </section>
+  <p class="hero-support">
+    AI helps you think. You decide what to do.
+  </p>
+
+  <div class="cta">
+    <a class="btn" href="/app/">The App</a>
+    <a class="btn btn-ghost" href="/offerings/">Offerings</a>
+    <a class="btn btn-ghost" href="/contact/">Get Notified</a>
+  </div>
+</section>
 
   <!-- MANIFESTO -->
   <section class="section">
