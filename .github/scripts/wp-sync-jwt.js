@@ -1,6 +1,6 @@
 /**
  * GitHub → WordPress sync using JWT auth
- * Syncs markdown files in /content to WP pages/posts
+ * Syncs markdown files in /content/pages to WP pages/posts
  */
 
 const fs = require("fs");
