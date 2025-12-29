@@ -66,7 +66,11 @@ After the GitHub Action completes, check:
 https://savagesbydesign.com/{slug}/
 ```
 
-If the page doesn't appear, check the GitHub Actions log for errors.
+**If changes don't appear immediately:**
+- **Clear WordPress cache** (if using WP Super Cache, W3 Total Cache, or similar)
+- **Clear browser cache** or open in incognito/private mode
+- **Check CDN cache** (if using Cloudflare or similar CDN)
+- **Verify the GitHub Action succeeded** - check the Actions tab for errors
 
 ---
 
@@ -135,6 +139,47 @@ To test without pushing to main:
 3. Click **Run workflow** → **Run workflow**
 
 This manually triggers the sync job.
+
+---
+
+## Troubleshooting
+
+### Changes not showing up on the site
+
+If your updates successfully synced (GitHub Action shows ✅) but don't appear on the website:
+
+**1. WordPress Cache**
+- Log into WordPress admin dashboard
+- Clear cache from your caching plugin (WP Super Cache, W3 Total Cache, etc.)
+- Some themes have built-in caching - check theme settings
+
+**2. Browser Cache**
+- Hard refresh: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac)
+- Or open the page in incognito/private browsing mode
+- Clear browser cache completely if needed
+
+**3. CDN/Proxy Cache**
+- If using Cloudflare: Purge cache in Cloudflare dashboard
+- If using another CDN: Clear CDN cache
+- Some CDNs take 5-10 minutes to update
+
+**4. Verify the Sync**
+- Check the GitHub Actions log - look for "🔁 Updating" or "🆕 Creating" messages
+- Verify the page exists in WordPress admin (Pages → All Pages)
+- Check that the page status is "Publish" not "Draft"
+
+**5. Permalink Issues**
+- In WordPress admin, go to Settings → Permalinks
+- Click "Save Changes" (even without changing anything)
+- This refreshes WordPress permalink cache
+
+### Sync failures
+
+If the GitHub Action fails (❌):
+- Check the Actions log for error messages
+- Verify WordPress is accessible (not in maintenance mode)
+- Confirm JWT authentication plugin is active in WordPress
+- Check that secrets (WP_URL, WP_JWT_USER, WP_JWT_PASS) are configured correctly
 
 ---
 

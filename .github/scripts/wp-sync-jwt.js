@@ -80,6 +80,7 @@ async function upsert({ token, type, title, slug, status, html }) {
       content: html,
       status,
       slug,
+      modified: new Date().toISOString(),
     });
   } else {
     console.log(`🆕 Creating ${endpoint.slice(0, -1)}: ${slug}`);
@@ -88,6 +89,7 @@ async function upsert({ token, type, title, slug, status, html }) {
       content: html,
       status,
       slug,
+      modified: new Date().toISOString(),
     });
   }
 }
@@ -122,6 +124,11 @@ async function upsert({ token, type, title, slug, status, html }) {
   }
 
   console.log("✅ WordPress sync complete");
+  console.log("");
+  console.log("📝 Note: If changes don't appear immediately on your site:");
+  console.log("   1. Clear WordPress cache (if using a caching plugin)");
+  console.log("   2. Clear browser cache or use incognito mode");
+  console.log("   3. Check your CDN cache (if applicable)");
 })().catch((err) => {
   console.error("❌ Sync failed:", err.message);
   process.exit(1);
