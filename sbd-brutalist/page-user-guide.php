@@ -978,7 +978,7 @@
     - Troubleshooting issues<br />
     - Handing device to someone else</p>
     <hr />
-    <h2 id="tips-best-practices">Tips &amp; Best Practices</h2>
+    <h2 id="tips--best-practices">Tips &amp; Best Practices</h2>
     <h3 id="for-beginners">For Beginners</h3>
     <ol>
     <li><strong>Start Simple</strong></li>
