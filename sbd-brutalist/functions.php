@@ -20,7 +20,8 @@ function sbd_create_required_pages() {
     'reviews' => 'Reviews',
     'deals' => 'Deals',
     'contact' => 'Contact',
-    'privacy' => 'Privacy Policy'
+    'privacy' => 'Privacy Policy',
+    'terms' => 'Terms of Service'
   ];
 
   foreach ($pages as $slug => $title) {
