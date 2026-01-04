@@ -101,7 +101,6 @@
     <p>For questions about this privacy policy, please contact:</p>
     <ul>
       <li><strong>Email:</strong> <a href="mailto:savagesbydesignhq@gmail.com">savagesbydesignhq@gmail.com</a></li>
-      <li><strong>GitHub:</strong> <a href="https://github.com/kje7713-dev/WorkoutTrackerApp">https://github.com/kje7713-dev/WorkoutTrackerApp</a></li>
     </ul>
   </section>
 
