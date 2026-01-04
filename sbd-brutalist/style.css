@@ -238,7 +238,8 @@ img{ max-width:100%; height:auto; display:block; }
   justify-content: center;
   padding: 40px 18px;
   overflow: hidden;
-  margin: 0 calc(-18px);
+  margin-left: -18px;
+  margin-right: -18px;
   width: calc(100% + 36px);
 }
 

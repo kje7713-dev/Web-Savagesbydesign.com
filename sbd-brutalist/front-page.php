@@ -24,7 +24,7 @@
       TAKE CHARGE<br>OF HOW<br>YOU TRAIN
     </h1>
     <p class="subhead hero-subhead">
-      Consult your favorite AI to build training for your life.<br>
+      Consult your favorite AI to build training for your life.
       AI helps you think. You decide what to do. We facilitate the process.
     </p>
   </div>
