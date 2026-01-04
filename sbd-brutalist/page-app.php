@@ -15,7 +15,7 @@
     
     <div class="cta">
       <a class="btn" href="/contact/">Get Early Access</a>
-      <a class="btn btn-ghost" href="/offerings/">Our Offerings</a>
+      <a class="btn btn-ghost" href="/user-guide/">Read the User Guide</a>
     </div>
   </section>
 
@@ -131,7 +131,7 @@
     
     <div class="cta">
       <a class="btn" href="/contact/">Contact Us</a>
-      <a class="btn btn-ghost" href="/">Back to Home</a>
+      <a class="btn btn-ghost" href="/user-guide/">Read the User Guide</a>
     </div>
     
     <p><em>Show up. Track it. Repeat.</em></p>
