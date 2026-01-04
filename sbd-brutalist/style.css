@@ -30,6 +30,9 @@ body{
 .wrap{ max-width:var(--max); margin:0 auto; padding:28px 18px 44px; }
 .site-main{ padding:0; }
 
+/* Add spacing between full-screen hero and content */
+.hero + .wrap{ margin-top: 0; padding-top: 44px; }
+
 /* Links (no WP blue/purple) */
 a{
   color:var(--fg);
@@ -225,14 +228,94 @@ img{ max-width:100%; height:auto; display:block; }
   }
 }
 
-/* Hero Section */
-.hero { padding: 22px 0 10px; }
-.hero-title { margin: 8px 0 14px; }
-.hero-subhead { max-width: 62ch; }
+/* Hero Section — Full-screen dominant */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 18px;
+  overflow: hidden;
+  margin: 0 calc(-18px);
+  width: calc(100% + 36px);
+}
+
+/* Video background for sizzle reel */
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+/* Overlay to ensure text readability */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(11,11,12,0.6) 0%, rgba(11,11,12,0.8) 100%);
+  z-index: 2;
+}
+
+/* Hero content */
+.hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 1200px;
+}
+
+/* Bold typographic statement */
+.hero-title {
+  font-size: clamp(48px, 12vw, 160px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin: 0 0 24px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+.hero-subhead {
+  font-size: clamp(18px, 3vw, 28px);
+  max-width: 64ch;
+  opacity: 0.95;
+  margin: 0 auto 16px;
+  line-height: 1.4;
+}
+
 .hero-support {
   margin: 10px 0 0;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: .14em;
   font-size: 12px;
+}
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  color: var(--fg);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: 10px;
+  opacity: 0.7;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(-4px); }
 }

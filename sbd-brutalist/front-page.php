@@ -1,18 +1,39 @@
 <?php get_header(); ?>
 
-<main class="wrap">
-
-  <section class="hero">
-
-  <h1 class="hero-title">
-    TAKE CHARGE OF HOW YOU TRAIN
-  </h1>
-
-  <p class="subhead hero-subhead">
-    Consult your favorite AI to build training for your life.
-  </p>
-    AI helps you think. You decide what to do. We facilitate the process.
+<section class="hero">
+  <!-- Optional: Video background for sizzle reel (uncomment and add video file) -->
+  <?php 
+  $video_url = get_template_directory_uri() . '/assets/img/hero-sizzle.mp4';
+  // Only show video if file exists - for now, we'll use pure typography
+  // Uncomment the following lines when video is available:
+  /*
+  if (file_exists(get_template_directory() . '/assets/img/hero-sizzle.mp4')) : ?>
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="<?php echo esc_url($video_url); ?>" type="video/mp4">
+    </video>
+  <?php endif;
+  */
+  ?>
+  
+  <!-- Overlay for text readability -->
+  <div class="hero-overlay"></div>
+  
+  <!-- Hero content -->
+  <div class="hero-content">
+    <h1 class="hero-title">
+      TAKE CHARGE<br>OF HOW<br>YOU TRAIN
+    </h1>
+    <p class="subhead hero-subhead">
+      Consult your favorite AI to build training for your life.<br>
+      AI helps you think. You decide what to do. We facilitate the process.
+    </p>
+  </div>
+  
+  <!-- Scroll indicator -->
+  <div class="hero-scroll">Scroll ↓</div>
 </section>
+
+<main class="wrap">
 
   <!-- MANIFESTO -->
   <section class="section">
