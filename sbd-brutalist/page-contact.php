@@ -20,7 +20,7 @@
     <p>We're building Savage By Design for people who actually train.</p>
     <p>If you have questions, want to be notified when the app launches, or just want to say hi — reach out.</p>
     
-    <p><strong>Email:</strong> <a href="mailto:contact@savagesbydesign.com">contact@savagesbydesign.com</a></p>
+    <p><strong>Email:</strong> <a href="mailto:savagesbydesignhq@gmail.com">savagesbydesignhq@gmail.com</a></p>
   </section>
 
   <!-- WHAT TO EXPECT -->
@@ -46,7 +46,7 @@
   <!-- CLOSER -->
   <section class="section closer">
     <div class="cta">
-      <a class="btn" href="mailto:contact@savagesbydesign.com">Send Email</a>
+      <a class="btn" href="mailto:savagesbydesignhq@gmail.com">Send Email</a>
       <a class="btn btn-ghost" href="/">Back to Home</a>
     </div>
   </section>
