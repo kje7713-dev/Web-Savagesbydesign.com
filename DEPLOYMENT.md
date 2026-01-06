@@ -30,6 +30,7 @@ on:
     branches: ["main"]
     paths:
       - "sbd-brutalist/**"
+      - ".github/workflows/deploy-theme-ftp.yml"
 ```
 
 **Deployment Method:** FTP (sebastianpopp/ftp-action@v2.0.0)
