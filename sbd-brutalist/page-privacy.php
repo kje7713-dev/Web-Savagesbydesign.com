@@ -16,7 +16,7 @@ I<?php get_header(); ?>
   <!-- INTRODUCTION -->
   <section class="section">
     <h2>Introduction</h2>
-    <p>This privacy policy describes how Savage By Design ("we", "our", or "the App") collects, uses, and protects your information.</p>
+    <p>This privacy policy  describes how Savage By Design ("we", "our", or "the App") collects, uses, and protects your information.</p>
   </section>
 
   <!-- INFORMATION COLLECTION -->
