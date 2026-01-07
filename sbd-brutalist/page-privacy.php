@@ -9,7 +9,7 @@ I<?php get_header(); ?>
     <h1>Privacy Policy</h1>
     
     <p class="subhead">
-      <strong>Last Updated: December 20, 2025</strong>
+      <strong>TEST Updated: December 20, 2025</strong>
     </p>
   </section>
 
