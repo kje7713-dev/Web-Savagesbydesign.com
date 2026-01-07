@@ -53,7 +53,7 @@
   <section class="section">
     <h2>You Are the Program</h2>
 
-    <p>Your life isn’t standard. Your goals aren’t normal. Your training shouldn’t be either.</p>
+    <p>Your life isn’t standard. Your goals aren’t to optimize bullshit. Your training shouldn’t be either.</p>
 
     <p>
       Some weeks you lift heavy. Some weeks you roll on the mats. Some weeks you hike hills, row intervals,
