@@ -119,6 +119,23 @@ They may contain empty content in the editor.
 
 The agent must never instruct the user to create or edit pages in WordPress Admin.
 
+### Page-Creation Logic (Idempotent & Slug-Authoritative)
+
+The page-creation logic is designed to be **idempotent** and **slug-authoritative**:
+
+- **If the slug exists** (even as draft, private, or trash), the logic should update it:
+  - Publish the page if it's not already published
+  - Correct the title if needed
+  - Ensure the page is in the proper state
+- **Only insert** if the slug truly does not exist in any state
+- **If multiple pages with the same slug exist**, keep one canonical version and move the rest to trash
+
+This approach ensures:
+1. No duplicate pages are created when the theme is reactivated
+2. Existing pages (regardless of status) are brought to the correct state
+3. The slug is always the authoritative identifier
+4. The system remains clean and predictable over time
+
 ---
 
 ## How Pages Are Implemented
