@@ -1,4 +1,4 @@
-<?php get_header(); ?>
+I<?php get_header(); ?>
 
 <main class="wrap">
 
@@ -9,7 +9,7 @@
     <h1>Privacy Policy</h1>
     
     <p class="subhead">
-      <strong>Last Updated: December 20, 2024</strong>
+      <strong>Last Updated: December 20, 2025</strong>
     </p>
   </section>
 
