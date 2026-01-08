@@ -69,32 +69,6 @@
     <p>No one tells you what <em>counts</em> as training.</p>
   </section>
 
-  <!-- AI -->
-  <section class="section section-dark">
-    <h2>AI Without the Cult</h2>
-
-    <p class="stack">
-      AI doesn’t care if your goals are fashionable.<br>
-      It doesn’t care if your lifestyle is “optimal.”<br>
-      It doesn’t care if your goal is normal.
-    </p>
-
-    <p>You use AI the way you should use any tool: to see patterns, think clearly, and explore alternatives.</p>
-
-    <p>
-      Your block isn’t going well? Life throws a curveball and now your knee won’t let you squat?
-    </p>
-
-    <p class="stack">
-      Export your data.<br>
-      Review it.<br>
-      Ask better questions.<br>
-      Design a different plan.
-    </p>
-
-    <p>No gurus required.</p>
-  </section>
-
   <!-- FLEXIBILITY -->
   <section class="section">
     <h2>Maximum Flexibility. Zero Dogma.</h2>
