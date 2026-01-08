@@ -178,6 +178,17 @@ blockquote cite, blockquote em{ color:var(--muted); }
       0 0 75px #ff0000;
   }
 }
+/* Accessibility: Disable animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .brand {
+    animation: none;
+    text-shadow: 
+      0 0 10px #ff6600,
+      0 0 20px #ff4400,
+      0 0 30px #ff2200,
+      0 0 40px #ff0000;
+  }
+}
 .nav{
   display:flex;
   flex-wrap:wrap;
