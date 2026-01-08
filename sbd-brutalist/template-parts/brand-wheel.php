@@ -1,6 +1,6 @@
 <?php
 /**
- * Template part for displaying the brand wheel image
+ * Template part for displaying the brand iOS app icon
  * 
  * @package Savage_By_Design_Brutalist
  */
