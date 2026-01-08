@@ -21,8 +21,7 @@ function sbd_create_required_pages() {
     'deals' => 'Deals',
     'contact' => 'Contact',
     'privacy' => 'Privacy Policy',
-    'terms' => 'Terms of Service',
-    'user-guide' => 'User Guide'
+    'terms' => 'Terms of Service'
   ];
 
   foreach ($pages as $slug => $title) {

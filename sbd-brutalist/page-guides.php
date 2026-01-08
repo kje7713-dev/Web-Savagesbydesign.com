@@ -28,7 +28,7 @@
     <h3>User Guide — Savage By Design App</h3>
     <p>Complete guide to using the workout tracking app. Learn how to create training blocks, run workouts, track progress, and manage your data.</p>
     <p><strong>Covers:</strong> Block creation, exercise types, segments for BJJ/yoga/martial arts, whiteboard view, AI block import, data management, and troubleshooting.</p>
-    <p><a class="btn btn-ghost" href="/user-guide/">Read the User Guide</a></p>
+    <p><a class="btn btn-ghost" href="/app/">Read the User Guide</a></p>
   </section>
 
   <!-- COMING SOON -->
