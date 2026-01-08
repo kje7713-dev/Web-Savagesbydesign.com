@@ -61,9 +61,11 @@
     </p>
 
     <ul>
-      <li><strong>Structure blocks</strong> when you want structure</li>
-      <li><strong>Log sessions</strong> when life gets messy</li>
-      <li><strong>Track effort</strong> without pretending every day is optimal</li>
+      <li><strong>Create a workout</strong> for today</li>
+      <li><strong>Create workout programs</strong> for weeks</li>
+      <li><strong>Create timed segments</strong> for sport training and curriculum design</li>
+      <li><strong>Mix and match</strong>, change as needed</li>
+      <li><strong>Collect the blocks</strong> to build you</li>
     </ul>
 
     <p>No one tells you what <em>counts</em> as training.</p>
