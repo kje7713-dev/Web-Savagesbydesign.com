@@ -24,7 +24,7 @@
       TAKE CHARGE<br>OF HOW<br>YOU TRAIN
     </h1>
     <p class="subhead hero-subhead">
-      Ask AI. Make a plan. Actually do it. No gurus required.
+      Collaborate with AI. Make a plan. Actually do it. No gurus required.
     </p>
   </div>
   
