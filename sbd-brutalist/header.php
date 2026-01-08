@@ -19,6 +19,10 @@
       </a>
     </div>
   </div>
+  <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+    <span class="nav-toggle-icon"></span>
+    MENU
+  </button>
   <nav class="nav">
     <a href="/app/">App</a>
     <a href="/offerings/">Offerings</a>
@@ -28,3 +32,35 @@
     <a href="/contact/">Contact</a>
   </nav>
 </header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const navToggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.nav');
+  
+  if (navToggle && nav) {
+    navToggle.addEventListener('click', function() {
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', !isExpanded);
+      nav.classList.toggle('nav-open');
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!nav.contains(event.target) && !navToggle.contains(event.target)) {
+        navToggle.setAttribute('aria-expanded', 'false');
+        nav.classList.remove('nav-open');
+      }
+    });
+    
+    // Close menu when clicking a nav link
+    const navLinks = nav.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        nav.classList.remove('nav-open');
+      });
+    });
+  }
+});
+</script>
