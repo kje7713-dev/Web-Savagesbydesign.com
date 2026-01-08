@@ -137,7 +137,7 @@
 
     <p class="stack">
       Useful.<br>
-      Durable.<br>
+      Flexible.<br>
       Fairly priced.
     </p>
 
