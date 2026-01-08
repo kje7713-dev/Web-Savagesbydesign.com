@@ -9,7 +9,7 @@
     <h1>Get In Touch</h1>
     
     <p class="subhead">
-      Questions? Feedback? Want early access to the app?
+      Questions? Feedback?  Want early access to the app?
     </p>
   </section>
 
