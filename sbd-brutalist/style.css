@@ -116,6 +116,9 @@ blockquote cite, blockquote em{ color:var(--muted); }
   border-bottom:1px solid var(--line);
   padding:16px 18px;
 }
+.site-header {
+  position: relative;
+}
 .site-footer{
   border-top:1px solid var(--line);
   border-bottom:none;
@@ -162,6 +165,100 @@ blockquote cite, blockquote em{ color:var(--muted); }
 .nav a:hover{
   background:var(--fg);
   color:var(--bg);
+}
+
+/* Navigation Toggle Button */
+.nav-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  padding: 10px 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: 11px;
+  cursor: pointer;
+  margin: 0 auto;
+  max-width: var(--max);
+}
+
+.nav-toggle:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.nav-toggle-icon {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+}
+
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  left: 0;
+}
+
+.nav-toggle-icon::before {
+  top: -6px;
+}
+
+.nav-toggle-icon::after {
+  bottom: -6px;
+}
+
+/* Mobile Navigation Dropdown */
+@media (max-width: 640px) {
+  .nav-toggle {
+    display: flex;
+  }
+  
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    flex-direction: column;
+    padding: 0;
+    z-index: 1000;
+  }
+  
+  .nav.nav-open {
+    display: flex;
+  }
+  
+  .nav a {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  
+  .nav a:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Desktop Navigation - Hide toggle button */
+@media (min-width: 641px) {
+  .nav-toggle {
+    display: none;
+  }
+  
+  .nav {
+    display: flex !important;
+  }
 }
 
 /* Homepage sections */
@@ -235,8 +332,8 @@ img{ max-width:100%; height:auto; display:block; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px 18px 40px;
+  justify-content: flex-start;
+  padding: 60px 18px 40px;
   overflow: hidden;
   margin-left: -18px;
   margin-right: -18px;
