@@ -351,6 +351,26 @@
     <strong>Use for:</strong> Any activity that doesn't fit standard categories</p>
     <hr />
     <h2 id="segment-use-cases">Segment Use Cases</h2>
+    <p>Segments are incredibly versatile and can be used for <strong>far more than just athletic training</strong>. This section showcases how segments can structure any time-based learning or skill development activity.</p>
+    <h3 id="traditional-athletic-training">Traditional Athletic Training</h3>
+    <ul>
+    <li>Brazilian Jiu-Jitsu (BJJ) classes</li>
+    <li>Yoga and mobility work</li>
+    <li>Wrestling practice</li>
+    <li>MMA striking classes</li>
+    <li>Hybrid athlete programs (strength + mobility)</li>
+    <li>Open mat / free training sessions</li>
+    </ul>
+    <h3 id="non-traditional-learning--skill-development">Non-Traditional Learning &amp; Skill Development</h3>
+    <ul>
+    <li><strong>Technology &amp; AI Learning:</strong> Coding bootcamps, AI/ML classes, software development</li>
+    <li><strong>Language Learning:</strong> Conversation practice, grammar drills, vocabulary building</li>
+    <li><strong>Music Practice:</strong> Instrument technique, improvisation, composition</li>
+    <li><strong>Professional Development:</strong> Public speaking, leadership training, presentation skills</li>
+    <li><strong>Academic Study:</strong> Research sessions, exam preparation, concept mastery</li>
+    <li><strong>Creative Skills:</strong> Writing workshops, design critique sessions, art practice</li>
+    </ul>
+    <p>The examples below demonstrate how segments provide structure for both athletic and non-athletic pursuits. <strong>The key is recognizing that any activity with distinct time-based phases can benefit from segment structure.</strong></p>
     <h3 id="use-case-1-brazilian-jiu-jitsu-bjj-class">Use Case 1: Brazilian Jiu-Jitsu (BJJ) Class</h3>
     <p><strong>Structure:</strong> Segment-based day representing a typical BJJ class</p>
     <p><strong>Example Day Structure:</strong></p>
@@ -567,6 +587,205 @@
     - Still captures time allocation<br />
     - Notes field for personalization<br />
     - Tracks training volume</p>
+    <h3 id="use-case-7-aitech-class-learning">Use Case 7: AI/Tech Class Learning</h3>
+    <p><strong>Structure:</strong> Segment-based learning session for technology training</p>
+    <p><strong>Example Day Structure:</strong></p>
+    <pre><code>Machine Learning Fundamentals (90 minutes)
+
+    1. Review / Lecture (15 min)
+       - Review previous week's concepts
+       - Introduction to neural networks
+       - Key concepts: Forward propagation, backpropagation
+       
+    2. Technique (30 min)
+       - Live coding demonstration
+       - Building a simple neural network in Python
+       - Key details: Layer architecture, activation functions
+       - Common errors: Dimension mismatches, learning rate issues
+       
+    3. Drill (30 min)
+       - Hands-on coding exercises
+       - Work: Implement network layer (10 min)
+       - Rest: Review solution and debug (5 min)
+       - Repeat 2x with different architectures
+       
+    4. Other - Project Work (10 min)
+       - Apply concepts to personal project
+       - Notes: Tested model on custom dataset
+       
+    5. Review (5 min)
+       - Key takeaways and next steps
+       - Questions for further study
+    </code></pre>
+    <p><strong>Why Segments Work:</strong><br />
+    - Time-based learning modules<br />
+    - Lecture, demonstration, and practice phases<br />
+    - Quality metrics: Concept understanding, code completion<br />
+    - Notes field for capturing insights and questions</p>
+    <p><strong>Tracking During Session:</strong><br />
+    - Check off completed segments<br />
+    - Log understanding level or completion rate<br />
+    - Note challenging concepts for review<br />
+    - Record resources or documentation references</p>
+    <h3 id="use-case-8-language-learning-session">Use Case 8: Language Learning Session</h3>
+    <p><strong>Structure:</strong> Segment-based language practice</p>
+    <p><strong>Example Day Structure:</strong></p>
+    <pre><code>Spanish Conversation Practice (60 minutes)
+
+    1. Warmup (10 min)
+       - Vocabulary flashcard review
+       - Quick pronunciation drills
+       - Present tense conjugation practice
+       
+    2. Technique (15 min)
+       - New grammar concept: Subjunctive mood
+       - Key details: Trigger phrases, conjugation patterns
+       - Common errors: Indicative vs. subjunctive confusion
+       - Examples with translations
+       
+    3. Drill (20 min)
+       - Sentence construction exercises
+       - Work: Create 5 sentences using subjunctive (5 min)
+       - Review: Check with answer key (2 min)
+       - Repeat 3x with different contexts
+       
+    4. Positional - Conversation Practice (10 min)
+       - Partner conversation or language exchange
+       - Scenario: Restaurant ordering
+       - Role: Customer, then switch to server
+       - Intensity: Moderate (some English allowed for clarification)
+       
+    5. Other - Listening Comprehension (3 min)
+       - Podcast or video in target language
+       - Notes: Understood main points, struggled with idioms
+       
+    6. Review (2 min)
+       - Reflection on progress
+       - Note new vocabulary learned
+    </code></pre>
+    <p><strong>Benefits of Segment Structure:</strong><br />
+    - Captures varied learning activities<br />
+    - Time allocation for each skill (reading, writing, listening, speaking)<br />
+    - Quality tracking: Vocabulary retained, grammar accuracy<br />
+    - Notes for challenging concepts</p>
+    <h3 id="use-case-9-music-practice-session">Use Case 9: Music Practice Session</h3>
+    <p><strong>Structure:</strong> Segment-based music skill development</p>
+    <p><strong>Example Day Structure:</strong></p>
+    <pre><code>Guitar Practice: Blues Improvisation (75 minutes)
+
+    1. Warmup (10 min)
+       - Finger exercises and scales
+       - Chromatic warm-up
+       - Major and minor pentatonic scales
+       
+    2. Technique (20 min)
+       - New concept: Blues turnaround phrases
+       - Key details: Rhythm, bending technique, phrasing
+       - Common errors: Rushing the turnaround, poor intonation
+       - Video reference: Blues masters demonstration
+       
+    3. Drill (20 min)
+       - Repetitive practice of turnaround licks
+       - Work: Play phrase 10x slow (5 min)
+       - Work: Play phrase 10x medium tempo (5 min)
+       - Work: Play phrase to backing track (5 min)
+       - Rest: Listen back to recording (5 min)
+       
+    4. Other - Improvisation (20 min)
+       - Free improvisation over 12-bar blues backing track
+       - Goal: Incorporate new turnaround phrases
+       - Rounds: 4 rounds × 3 minutes / 2 min rest
+       - Notes: Successfully used turnaround in rounds 2 and 4
+       
+    5. Review (5 min)
+       - Record best take for progress tracking
+       - Note areas for improvement
+       - Plan next session focus
+    </code></pre>
+    <p><strong>Why Segments Work Better:</strong><br />
+    - Time-based practice modules<br />
+    - Technique isolation before integration<br />
+    - Quality over quantity metrics<br />
+    - Recording and reflection components</p>
+    <h3 id="use-case-10-professional-skill-development">Use Case 10: Professional Skill Development</h3>
+    <p><strong>Structure:</strong> Segment-based professional training</p>
+    <p><strong>Example Day Structure:</strong></p>
+    <pre><code>Public Speaking Workshop (120 minutes)
+
+    1. Lecture / Review (20 min)
+       - Theory: Vocal variety and pacing
+       - Video examples: TED Talk analysis
+       - Key concepts: Pausing for emphasis, tone modulation
+       
+    2. Warmup (10 min)
+       - Vocal warm-up exercises
+       - Breathing and projection drills
+       - Tongue twisters for articulation
+       
+    3. Technique (25 min)
+       - Demonstration: Effective speech opening techniques
+       - Key details: Hook attention, establish credibility, preview content
+       - Common errors: Starting with apology, monotone delivery
+       - Practice: Each participant delivers 2-minute opener
+       
+    4. Drill (30 min)
+       - Timed practice rounds with specific constraints
+       - Round 1 (5 min): Focus on vocal variety only
+       - Rest (2 min): Receive peer feedback
+       - Round 2 (5 min): Focus on pacing and pauses
+       - Rest (2 min): Receive peer feedback
+       - Round 3 (5 min): Integrate all elements
+       
+    5. Other - Full Presentation (25 min)
+       - Each participant: 5-minute presentation
+       - Video recorded for self-review
+       - Notes: Audience questions, feedback points
+       
+    6. Review (10 min)
+       - Group discussion
+       - Personal reflection on strengths and areas to improve
+       - Action items for next session
+    </code></pre>
+    <p><strong>Tracking Options:</strong><br />
+    - Completion of each segment<br />
+    - Quality metrics: Confidence level, audience engagement<br />
+    - Feedback notes from instructor or peers<br />
+    - Self-assessment scores</p>
+    <h3 id="use-case-11-studyresearch-session">Use Case 11: Study/Research Session</h3>
+    <p><strong>Structure:</strong> Segment-based academic or research work</p>
+    <p><strong>Example Day Structure:</strong></p>
+    <pre><code>Research Methods Study Block (90 minutes)
+
+    1. Lecture / Review (20 min)
+       - Reading: Chapter on experimental design
+       - Key concepts: Control variables, randomization, blinding
+       - Notes: Definitions and examples
+       
+    2. Technique (25 min)
+       - Learn: How to identify confounding variables
+       - Practice examples from textbook
+       - Common errors: Missing interaction effects
+       
+    3. Drill (20 min)
+       - Problem set exercises
+       - Work: Complete 5 practice problems (15 min)
+       - Review: Check answers and understand mistakes (5 min)
+       
+    4. Other - Application (20 min)
+       - Apply concepts to thesis research design
+       - Draft experimental protocol
+       - Notes: Identified 3 potential confounds to control
+       
+    5. Review (5 min)
+       - Summarize key learnings
+       - Create flashcards for important terms
+       - Plan next study session topics
+    </code></pre>
+    <p><strong>Benefits:</strong><br />
+    - Structured study time with clear phases<br />
+    - Active learning through application<br />
+    - Self-testing and review built in<br />
+    - Progress tracking across study sessions</p>
     <hr />
     <h2 id="creating-segment-based-days">Creating Segment-Based Days</h2>
     <h3 id="method-1-json-import-pro-feature">Method 1: JSON Import (Pro Feature)</h3>
@@ -1033,14 +1252,19 @@
     - Export data backups monthly<br />
     - Screenshot your whiteboard for quick reference<br />
     - Use segments for skill-based training (BJJ, yoga, martial arts)<br />
+    - <strong>Use segments for learning activities</strong> (AI/tech classes, language learning, music practice)<br />
+    - <strong>Use segments for professional development</strong> (public speaking, skill workshops)<br />
+    - <strong>Use segments for study sessions</strong> (structured academic work, research time)<br />
     - Mix exercises and segments when appropriate (hybrid days)<br />
-    - Track quality over quantity for segment-based work</p>
+    - Track quality over quantity for segment-based work<br />
+    - Adapt segment types creatively (e.g., "Drill" for coding exercises, "Technique" for learning concepts)</p>
     <p>❌ <strong>DON'T:</strong><br />
     - Skip logging—you lose valuable data<br />
     - Delete blocks immediately after completion (archive first)<br />
     - Forget to progress weight/volume across weeks<br />
     - Ignore deload weeks—recovery is training<br />
-    - Use exercises for activities better suited to segments (e.g., yoga, BJJ classes)</p>
+    - Use exercises for activities better suited to segments (e.g., yoga, BJJ classes, learning sessions)<br />
+    - Force non-quantifiable activities into sets/reps/weight structure</p>
     <h3 id="sample-programs-to-try">Sample Programs to Try</h3>
     <p><strong>Beginner Strength (4 weeks, 3 days/week):</strong><br />
     - Day 1: Squat, Bench, Rows<br />
@@ -1073,6 +1297,23 @@
     - Day 3: Upper Body Strength (exercises) + Shoulder Mobility (segments)<br />
     - Day 4: Wrestling Conditioning (segments)<br />
     - Day 5: Full Body Lift (exercises) + Yoga Flow (segments)</p>
+    <p><strong>Machine Learning Bootcamp (8 weeks, 3 days/week) - Segments:</strong><br />
+    - Day 1: Theory &amp; Coding Practice<br />
+      - Review/Lecture → Technique (live coding) → Drill (exercises) → Project Work<br />
+    - Day 2: Advanced Concepts<br />
+      - Review → Technique → Drill → Application → Review<br />
+    - Day 3: Project Development<br />
+      - Planning → Coding Session → Testing &amp; Debugging → Documentation</p>
+    <p><strong>Language Learning Program (12 weeks, 4 days/week) - Segments:</strong><br />
+    - Day 1: Grammar &amp; Structure (Lecture → Technique → Drill → Review)<br />
+    - Day 2: Conversation Practice (Warmup → Drill → Positional/Role-play → Review)<br />
+    - Day 3: Listening &amp; Reading (Warmup → Technique → Other/Comprehension → Review)<br />
+    - Day 4: Writing &amp; Composition (Review → Technique → Drill → Other/Free writing)</p>
+    <p><strong>Professional Development (4 weeks, 2 days/week) - Segments:</strong><br />
+    - Day 1: Public Speaking Skills<br />
+      - Warmup → Lecture → Technique → Drill → Full Presentation → Review<br />
+    - Day 2: Leadership &amp; Communication<br />
+      - Review → Technique → Role-play scenarios → Group discussion → Action planning</p>
     <hr />
     <h2 id="troubleshooting">Troubleshooting</h2>
     <h3 id="common-issues">Common Issues</h3>
@@ -1102,10 +1343,12 @@
     - Check that sets/reps have valid numbers<br />
     - Type must be either Strength or Conditioning</p>
     <h3 id="getting-help">Getting Help</h3>
-    <p><strong>In-App Support:</strong><br />
-    - Tap <strong>GO PRO</strong> → <strong>Contact Support</strong> (Pro users)<br />
-    - Use GitHub Issues for bugs: <a href="https://github.com/kje7713-dev/WorkoutTrackerApp/issues">github.com/kje7713-dev/WorkoutTrackerApp/issues</a></p>
-    <p><strong>Community:</strong><br />
+    <p><strong>Contact &amp; Support:</strong><br />
+    - Email: savagesbydesignhq@gmail.com<br />
+    - Website: savagesbydesign.com<br />
+    - Tap <strong>GO PRO</strong> → <strong>Contact Support</strong> (Pro users)</p>
+    <p><strong>Community &amp; Development:</strong><br />
+    - GitHub Issues for bugs: <a href="https://github.com/kje7713-dev/WorkoutTrackerApp/issues">github.com/kje7713-dev/WorkoutTrackerApp/issues</a><br />
     - GitHub Discussions: <a href="https://github.com/kje7713-dev/WorkoutTrackerApp/discussions">github.com/kje7713-dev/WorkoutTrackerApp/discussions</a><br />
     - Share your programs and get feedback</p>
     <hr />
@@ -1164,7 +1407,13 @@
     <li>[ ] <strong>Advanced:</strong> Import a segment-based block (BJJ, yoga, etc.) via AI Block Generator</li>
     </ul>
     <hr />
-    <p><strong>Need more help?</strong> Check the <a href="README.md">Technical README</a> for developers or visit our <a href="https://github.com/kje7713-dev/WorkoutTrackerApp">GitHub repository</a> for updates and support.</p>
+    <p><strong>Need more help?</strong></p>
+    <ul>
+    <li>Email: savagesbydesignhq@gmail.com</li>
+    <li>Website: savagesbydesign.com</li>
+    <li>Check the <a href="README.md">Technical README</a> for developers</li>
+    <li>Visit our <a href="https://github.com/kje7713-dev/WorkoutTrackerApp">GitHub repository</a> for updates</li>
+    </ul>
   </section>
 
 </main>
