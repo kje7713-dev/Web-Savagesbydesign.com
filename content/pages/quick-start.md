@@ -202,7 +202,7 @@ If you get stuck or have questions:
 - **Read the [User Guide](/user-guide)** for detailed explanations
 - **Check [Troubleshooting](/user-guide#troubleshooting)** for common issues
 - **[Contact support](/contact)** if you need assistance
-- **Visit [GitHub](https://github.com/kje7713-dev/WorkoutTrackerApp)** for bug reports and discussions
+- **Email savagesbydesignhq@gmail.com** for bug reports and discussions
 
 ---
 

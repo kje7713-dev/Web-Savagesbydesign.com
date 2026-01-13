@@ -740,12 +740,11 @@ Days per week:
 <p><strong>In-App Support:</strong></p>
 <ul>
 <li>Tap <strong>GO PRO</strong> → <strong>Contact Support</strong> (Pro users)</li>
-<li>Use GitHub Issues for bugs: <a href="https://github.com/kje7713-dev/WorkoutTrackerApp/issues">github.com/kje7713-dev/WorkoutTrackerApp/issues</a></li>
+<li>Email: savagesbydesignhq@gmail.com</li>
 </ul>
 
 <p><strong>Community:</strong></p>
 <ul>
-<li>GitHub Discussions: <a href="https://github.com/kje7713-dev/WorkoutTrackerApp/discussions">github.com/kje7713-dev/WorkoutTrackerApp/discussions</a></li>
 <li>Share your programs and get feedback</li>
 </ul>
 
@@ -828,6 +827,6 @@ Days per week:
 
 <hr>
 
-<p><strong>Need more help?</strong> Visit our <a href="https://github.com/kje7713-dev/WorkoutTrackerApp">GitHub repository</a> for updates and support.</p>
+<p><strong>Need more help?</strong> Contact us at savagesbydesignhq@gmail.com for updates and support.</p>
 
 <!-- WP-PASTE-END -->
