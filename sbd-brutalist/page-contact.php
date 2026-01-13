@@ -9,7 +9,7 @@
     <h1>Get In Touch</h1>
     
     <p class="subhead">
-      Questions? Feedback?  Want early access to the app?
+      Email: <a href="mailto:savagesbydesignhq@gmail.com">savagesbydesignhq@gmail.com</a>
     </p>
   </section>
 
