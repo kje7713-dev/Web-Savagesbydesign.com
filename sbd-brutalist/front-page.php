@@ -71,6 +71,28 @@
     <p>No one tells you what <em>counts</em> as training.</p>
   </section>
 
+  <!-- APP SCREENSHOTS -->
+  <section class="section app-gallery">
+    <h2>See It In Action</h2>
+    
+    <p>Simple. Direct. Built for training that works.</p>
+
+    <div class="app-screenshots">
+      <div class="screenshot-item">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/IMG_3464.png" alt="Savage by Design app - Block overview" loading="lazy">
+      </div>
+      <div class="screenshot-item">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/IMG_3485.png" alt="Savage by Design app - Workout session" loading="lazy">
+      </div>
+      <div class="screenshot-item">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/IMG_3486.png" alt="Savage by Design app - Exercise tracking" loading="lazy">
+      </div>
+      <div class="screenshot-item">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/IMG_3487.png" alt="Savage by Design app - Progress view" loading="lazy">
+      </div>
+    </div>
+  </section>
+
   <!-- AI -->
   <section class="section section-dark">
     <h2>AI Without the Cult</h2>
