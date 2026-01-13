@@ -45,11 +45,11 @@
 
     <p class="stack">
       No secret templates.<br>
-      Or "Science” buzzwords wrapped around a checkout button.
+      No "Science” buzzwords wrapped around a checkout button.
     </p>
 
     <p>Savage by Design isn’t here to judge your goals.</p>
-    <p>You decide where you’re going. We'll help you get there. </strong>.</p>
+    <p>You decide where you’re going. We'll help you get there. </p>
   </section>
 
   <!-- PRINCIPLES -->
