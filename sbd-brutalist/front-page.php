@@ -37,7 +37,11 @@
   <!-- MANIFESTO -->
   <section class="section">
     <h2>No More Noise</h2>
-    <p>Most fitness apps don’t sell training — they sell belief systems.</p>
+    <p>Most apps try to push rigid systems wrapped in technology. We're here to give you a flexible process to support your goals.</p>
+
+    <p>Savage by Design isn't just for lifting (though you're in the right place if that's your goal) — it's an experience engineering platform.</p>
+
+    <p>From your next training block, to the next skill you want to learn, to how you structure your travel day, to how you maximize your time at Disney World, this app helps you design, plan, organize, act and track those goals.</p>
 
     <p class="stack">
       Secret templates.<br>
