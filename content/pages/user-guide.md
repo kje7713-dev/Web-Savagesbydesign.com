@@ -592,11 +592,10 @@ Your workout data is stored locally on your device. Back it up to:
 
 **In-App Support:**
 - Tap **GO PRO** → **Contact Support** (Pro users)
-- Use GitHub Issues for bugs: [github.com/kje7713-dev/WorkoutTrackerApp/issues](https://github.com/kje7713-dev/WorkoutTrackerApp/issues)
+- Email: savagesbydesignhq@gmail.com
 
 **Community:**
-- GitHub Discussions: [github.com/kje7713-dev/WorkoutTrackerApp/discussions](https://github.com/kje7713-dev/WorkoutTrackerApp/discussions)
-- Share your programs and get feedback
+- Email savagesbydesignhq@gmail.com to share your programs and get feedback
 
 ---
 
@@ -671,4 +670,4 @@ Your workout data is stored locally on your device. Back it up to:
 
 ---
 
-**Need more help?** Visit our [GitHub repository](https://github.com/kje7713-dev/WorkoutTrackerApp) for updates and support.
+**Need more help?** Contact us at savagesbydesignhq@gmail.com for updates and support.

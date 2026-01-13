@@ -1348,8 +1348,7 @@
     - Website: savagesbydesign.com<br />
     - Tap <strong>GO PRO</strong> → <strong>Contact Support</strong> (Pro users)</p>
     <p><strong>Community &amp; Development:</strong><br />
-    - GitHub Issues for bugs: <a href="https://github.com/kje7713-dev/WorkoutTrackerApp/issues">github.com/kje7713-dev/WorkoutTrackerApp/issues</a><br />
-    - GitHub Discussions: <a href="https://github.com/kje7713-dev/WorkoutTrackerApp/discussions">github.com/kje7713-dev/WorkoutTrackerApp/discussions</a><br />
+    - Email: savagesbydesignhq@gmail.com<br />
     - Share your programs and get feedback</p>
     <hr />
     <h2 id="glossary">Glossary</h2>
@@ -1412,7 +1411,7 @@
     <li>Email: savagesbydesignhq@gmail.com</li>
     <li>Website: savagesbydesign.com</li>
     <li>Check the <a href="README.md">Technical README</a> for developers</li>
-    <li>Visit our <a href="https://github.com/kje7713-dev/WorkoutTrackerApp">GitHub repository</a> for updates</li>
+    <li>Contact us at savagesbydesignhq@gmail.com for updates</li>
     </ul>
   </section>
 

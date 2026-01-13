@@ -226,7 +226,7 @@
 <li><strong>Read the <a href="/user-guide">User Guide</a></strong> for detailed explanations</li>
 <li><strong>Check <a href="/user-guide#troubleshooting">Troubleshooting</a></strong> for common issues</li>
 <li><strong><a href="/contact">Contact support</a></strong> if you need assistance</li>
-<li><strong>Visit <a href="https://github.com/kje7713-dev/WorkoutTrackerApp">GitHub</a></strong> for bug reports and discussions</li>
+<li><strong>Email savagesbydesignhq@gmail.com</strong> for bug reports and discussions</li>
 </ul>
 
 <hr>
