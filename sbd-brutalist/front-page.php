@@ -137,10 +137,6 @@
     </p>
 
     <p>If it matters to you, it matters to us.</p>
-
-    <div class="animal-kingdom-image">
-      <img src="<?php echo get_template_directory_uri(); ?>/assets/img/animal-kingdom.png" alt="Animal Kingdom" loading="lazy">
-    </div>
   </section>
 
   <!-- DATA -->
