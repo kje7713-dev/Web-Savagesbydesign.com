@@ -13,16 +13,6 @@
     </p>
   </section>
 
-  <!-- CONTACT INFO -->
-  <section class="section">
-    <h2>Reach Out</h2>
-    
-    <p>We're building Savage By Design for people who actually train.</p>
-    <p>If you have questions, want to be notified when the app launches, or just want to say hi — reach out.</p>
-    
-    <p><strong>Email:</strong> <a href="mailto:savagesbydesignhq@gmail.com">savagesbydesignhq@gmail.com</a></p>
-  </section>
-
   <!-- WHAT TO EXPECT -->
   <section class="section section-dark">
     <h2>What To Expect</h2>
