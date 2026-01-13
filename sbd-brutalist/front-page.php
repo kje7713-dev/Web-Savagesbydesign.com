@@ -90,9 +90,6 @@
       <div class="screenshot-item">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/IMG_3486.png" alt="Savage by Design app - Exercise tracking" loading="lazy">
       </div>
-      <div class="screenshot-item">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/IMG_3487.png" alt="Savage by Design app - Progress view" loading="lazy">
-      </div>
     </div>
   </section>
 
