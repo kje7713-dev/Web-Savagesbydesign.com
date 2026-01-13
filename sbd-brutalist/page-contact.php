@@ -9,7 +9,7 @@
     <h1>Get In Touch</h1>
     
     <p class="subhead">
-      Email: savagesbydesignhq@gmail.com
+      Email: <a href="mailto:savagesbydesignhq@gmail.com">savagesbydesignhq@gmail.com</a>
     </p>
   </section>
 
