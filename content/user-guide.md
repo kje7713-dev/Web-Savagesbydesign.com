@@ -745,7 +745,7 @@ Days per week:
 
 <p><strong>Community:</strong></p>
 <ul>
-<li>Share your programs and get feedback</li>
+<li>Email savagesbydesignhq@gmail.com to share your programs and get feedback</li>
 </ul>
 
 <hr>
