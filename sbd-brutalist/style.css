@@ -376,7 +376,6 @@ img{ max-width:100%; height:auto; display:block; }
   font-size: clamp(48px, 12vw, 160px);
   line-height: 0.95;
   letter-spacing: -0.04em;
-  text-transform: uppercase;
   font-weight: 900;
   margin: 0 0 24px;
   text-shadow: 0 4px 12px rgba(0,0,0,0.6);
