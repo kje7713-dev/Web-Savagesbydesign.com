@@ -139,6 +139,19 @@
     <p>If it matters to you, it matters to us.</p>
   </section>
 
+  <!-- SEE IT IN ACTION -->
+  <section class="section app-gallery">
+    <h2>See It In Action</h2>
+    
+    <p>Flexible and functional.</p>
+
+    <div class="app-screenshots">
+      <div class="screenshot-item">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/IMG_3467.png" alt="Savage by Design app - Flexible and functional view" loading="lazy">
+      </div>
+    </div>
+  </section>
+
   <!-- DATA -->
   <section class="section">
     <h2>Your Data Is Yours</h2>
