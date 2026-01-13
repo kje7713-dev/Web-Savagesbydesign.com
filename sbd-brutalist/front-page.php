@@ -126,16 +126,17 @@
   <section class="section">
     <h2>Maximum Flexibility. Zero Dogma.</h2>
 
-    <p>There’s no approved list of movements.</p>
+    <p>There’s no approved list of activities or movements.</p>
 
     <p class="stack">
       Fran to Smolov.<br>
       Kegels to keg throws.<br>
       Running, rowing, walking, downward dog.<br>
-      BJJ rounds, pickup games, trail miles.
+      BJJ rounds, pickup games, trail miles.<br>
+      Teaching a class, learning to surf, structuring guitar practice or an AI prompting seminar.
     </p>
 
-    <p>If it matters to you, it belongs in the system.</p>
+    <p>If it matters to you, it matters to us.</p>
   </section>
 
   <!-- DATA -->
