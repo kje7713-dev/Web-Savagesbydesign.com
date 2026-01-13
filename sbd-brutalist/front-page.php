@@ -44,13 +44,12 @@
     <p>From your next training block, to the next skill you want to learn, to how you structure your travel day, to how you maximize your time at Disney World, this app helps you design, plan, organize, act and track those goals.</p>
 
     <p class="stack">
-      Secret templates.<br>
-      Paywalled systems.<br>
-      “Science” buzzwords wrapped around a checkout button.
+      No secret templates.<br>
+      Or "Science” buzzwords wrapped around a checkout button.
     </p>
 
-    <p>Savage by Design isn’t here to tell you what to believe.</p>
-    <p>You decide where you’re going. The outside world is a consultant — <strong>not your leader</strong>.</p>
+    <p>Savage by Design isn’t here to judge your goals.</p>
+    <p>You decide where you’re going. We'll help you get there. </strong>.</p>
   </section>
 
   <!-- PRINCIPLES -->
