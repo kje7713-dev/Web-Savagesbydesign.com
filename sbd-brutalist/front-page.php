@@ -21,7 +21,7 @@
   <!-- Hero content -->
   <div class="hero-content">
     <h1 class="hero-title">
-      TAKE CHARGE<br>OF HOW<br>YOU TRAIN
+      take charge of how you live, train, learn and play
     </h1>
     <p class="subhead hero-subhead">
       Collaborate with AI. Make a plan. Actually do it. No gurus required.
