@@ -469,4 +469,16 @@ img{ max-width:100%; height:auto; display:block; }
   .app-screenshots {
     grid-template-columns: repeat(4, 1fr);
   }
+}}
+
+/* Animal Kingdom Image */
+.animal-kingdom-image {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.animal-kingdom-image img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
 }
