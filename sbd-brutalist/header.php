@@ -25,10 +25,6 @@
   </button>
   <nav class="nav">
     <a href="/app/">App</a>
-    <a href="/offerings/">Offerings</a>
-    <a href="/guides/">Guides</a>
-    <a href="/reviews/">Reviews</a>
-    <a href="/deals/">Deals</a>
     <a href="/contact/">Contact</a>
   </nav>
 </header>
