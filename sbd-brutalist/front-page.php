@@ -185,10 +185,7 @@
       The rest is on you.
     </p>
 
-    <div class="cta">
-      <a class="btn" href="/contact/">Get Notified When It Launches</a>
-      <a class="btn btn-ghost" href="/app/">Read About The App</a>
-    </div>
+
   </section>
 
 </main>
