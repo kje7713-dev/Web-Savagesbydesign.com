@@ -16,8 +16,9 @@
 
   <!-- VIDEO SECTION -->
   <?php 
-  $video_url = get_template_directory_uri() . '/assets/img/my movie 1.mp4';
-  if (file_exists(get_template_directory() . '/assets/img/my movie 1.mp4')) : ?>
+  $video_filename = 'my movie 1.mp4';
+  $video_url = get_template_directory_uri() . '/assets/img/' . $video_filename;
+  if (file_exists(get_template_directory() . '/assets/img/' . $video_filename)) : ?>
     <section class="video-section" style="margin: 2rem 0;">
       <video 
         width="100%" 
