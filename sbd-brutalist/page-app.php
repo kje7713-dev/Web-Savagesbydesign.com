@@ -14,6 +14,23 @@
     </p>
   </section>
 
+  <!-- VIDEO SECTION -->
+  <?php 
+  $video_url = get_template_directory_uri() . '/assets/img/my movie 1.mp4';
+  if (file_exists(get_template_directory() . '/assets/img/my movie 1.mp4')) : ?>
+    <section class="video-section" style="margin: 2rem 0;">
+      <video 
+        width="100%" 
+        style="max-width: 100%; height: auto; display: block;" 
+        controls
+        preload="metadata"
+      >
+        <source src="<?php echo esc_url($video_url); ?>" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </section>
+  <?php endif; ?>
+
   <!-- CONTENT -->
   <section class="section">
     <p><strong>Welcome to Savage By Design!</strong> This guide will help you get the most out of your workout tracking experience. Whether you're a seasoned athlete or just starting structured training, this app is designed to help you plan, execute, and track your fitness journey.</p>
