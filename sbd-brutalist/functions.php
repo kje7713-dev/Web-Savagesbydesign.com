@@ -22,7 +22,8 @@ function sbd_create_required_pages() {
     'contact' => 'Contact',
     'privacy' => 'Privacy Policy',
     'terms' => 'Terms of Service',
-    'user-guide' => 'User Guide'
+    'user-guide' => 'User Guide',
+    'pizza-chicken-pop-support' => 'Pizza Chicken Pop Support'
   ];
 
   foreach ($pages as $slug => $title) {
