@@ -1,0 +1,38 @@
+name: Deploy Root Files (FTP)
+
+# Deploys files from public-root/ to the WordPress site root.
+# This is separate from the theme deployment so that root-level files
+# (e.g. app-ads.txt for AdMob verification) can be managed independently.
+#
+# Required secret: FTP_SITE_ROOT
+#   The absolute FTP path to the WordPress public root (e.g. /public_html).
+#   This is different from FTP_DEST which points to the theme directory.
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "public-root/**"
+      - ".github/workflows/deploy-root-files-ftp.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-root-files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy root files via FTP
+        uses: sebastianpopp/ftp-action@v2.0.0
+        with:
+          host: ${{ secrets.FTP_HOST }}
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ secrets.FTP_PORT }}
+          localDir: "public-root"
+          remoteDir: "${{ secrets.FTP_SITE_ROOT }}"

@@ -169,6 +169,22 @@ ALL PAGES ARE PUBLISHED
 
 ---
 
+## Root-Level Static Files
+
+Files in `public-root/` are deployed to the WordPress site root (e.g. `public_html/`) via a separate workflow: `.github/workflows/deploy-root-files-ftp.yml`.
+
+**Required GitHub secret:** `FTP_SITE_ROOT` — the absolute FTP path to the WordPress public root (e.g. `/public_html`). Uses the same `FTP_HOST`, `FTP_USER`, `FTP_PASS`, and `FTP_PORT` secrets as the theme workflow.
+
+### Current root files
+
+| File | Purpose | Public URL |
+|------|---------|------------|
+| `public-root/app-ads.txt` | AdMob verification for Pizza Chicken Pop | `https://savagesbydesign.com/app-ads.txt` |
+
+**Important:** Do not remove or rename `app-ads.txt`. AdMob crawls this URL to verify ad publisher identity for Pizza Chicken Pop. The file must remain at the site root and return plain text with no redirects.
+
+---
+
 ## Summary
 
 **Remember:** This pipeline deploys directly to production with published status.
