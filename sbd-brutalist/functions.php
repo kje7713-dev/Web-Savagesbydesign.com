@@ -1,4 +1,13 @@
 <?php
+// Serve app-ads.txt at the site root for Google AdMob/AdSense publisher verification
+add_action('init', function () {
+  if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] === '/app-ads.txt') {
+    header('Content-Type: text/plain; charset=utf-8');
+    echo "google.com, pub-9428188855756038, DIRECT, f08c47fec0942fa0\n";
+    exit;
+  }
+}, 1);
+
 // Load theme stylesheet
 add_action('wp_enqueue_scripts', function () {
   wp_enqueue_style(
