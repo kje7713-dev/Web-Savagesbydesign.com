@@ -63,7 +63,7 @@ add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
   // Bump this string whenever sbd_get_required_pages() is updated.
-  $version = '2026-10-02-v2';
+  $version = '2026-10-02-v3';
 
   if ( get_option( 'sbd_required_pages_version' ) === $version ) {
     return;
@@ -71,4 +71,6 @@ function sbd_ensure_required_pages() {
 
   sbd_create_required_pages();
   update_option( 'sbd_required_pages_version', $version );
+  // New theme-driven page slugs need a rewrite refresh before pretty URLs resolve.
+  flush_rewrite_rules( false );
 }
