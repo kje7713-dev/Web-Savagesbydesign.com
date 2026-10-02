@@ -32,6 +32,7 @@ function sbd_get_required_pages() {
     'privacy'                   => 'Privacy Policy',
     'terms'                     => 'Terms of Service',
     'user-guide'                => 'User Guide',
+    'storydonkey'               => 'StoryDonkey Beta',
     'pizza-chicken-pop-support' => 'Pizza Chicken Pop Support',
   ];
 }
@@ -62,7 +63,7 @@ add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
   // Bump this string whenever sbd_get_required_pages() is updated.
-  $version = '2026-04-07-v1';
+  $version = '2026-10-02-v2';
 
   if ( get_option( 'sbd_required_pages_version' ) === $version ) {
     return;

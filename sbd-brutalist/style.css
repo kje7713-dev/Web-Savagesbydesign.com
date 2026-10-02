@@ -418,6 +418,30 @@ img{ max-width:100%; height:auto; display:block; }
   50% { opacity: 1; transform: translateX(-50%) translateY(-4px); }
 }
 
+/* StoryDonkey beta landing page */
+.storydonkey-page{ overflow:hidden; }
+.storydonkey-hero{ border-bottom:1px solid var(--line); background:linear-gradient(135deg,#111114 0%,#0b0b0c 62%); }
+.storydonkey-hero .wrap{ padding-top:clamp(70px,12vw,150px); padding-bottom:clamp(70px,12vw,150px); }
+.storydonkey-hero h1{ font-size:clamp(42px,8vw,92px); max-width:1000px; }
+.storydonkey-hero h1 span{ color:var(--muted); }
+.storydonkey-hero .subhead{ max-width:720px; margin-top:24px; }
+.storydonkey-note{ color:var(--muted); font-size:12px; letter-spacing:.08em; }
+.storydonkey-intro{ max-width:760px; padding:28px 0 12px; }
+.storydonkey-intro h2,.storydonkey-proof h2,.storydonkey-audience h2,.storydonkey-beta h2{ font-size:clamp(26px,4vw,46px); letter-spacing:-.02em; text-transform:none; border-top:0; padding-top:0; margin-top:0; }
+.storydonkey-steps{ margin:34px 0 70px; }
+.storydonkey-steps .card{ min-height:230px; }
+.storydonkey-number{ display:block; color:var(--muted); font-size:12px; letter-spacing:.16em; margin-bottom:32px; }
+.storydonkey-proof{ margin:0; padding:70px 0; }
+.storydonkey-proof .grid{ margin-top:36px; }
+.storydonkey-proof h3{ margin-top:0; }
+.storydonkey-audience{ padding-top:80px; padding-bottom:80px; }
+.storydonkey-audience p{ max-width:680px; }
+.storydonkey-beta{ border-top:1px solid var(--line); background:var(--fg); color:var(--bg); padding:80px 0; }
+.storydonkey-beta .kicker,.storydonkey-beta .storydonkey-note{ color:#55555a; }
+.storydonkey-beta h2{ color:var(--bg); }
+.storydonkey-beta .btn{ border-color:var(--bg); color:var(--bg); }
+.storydonkey-beta .btn:hover{ background:var(--bg); color:var(--fg); }
+
 /* App Screenshots Gallery */
 .app-gallery {
   margin: 40px 0;
