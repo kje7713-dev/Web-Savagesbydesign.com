@@ -18,6 +18,24 @@ add_action('wp_enqueue_scripts', function () {
   );
 });
 
+// Theme-owned landing route. This keeps /storydonkey/ available even when
+// WordPress has not yet materialized the routing placeholder page.
+add_action('init', function () {
+  add_rewrite_rule('^storydonkey/?$', 'index.php?sbd_storydonkey=1', 'top');
+});
+
+add_filter('query_vars', function ($vars) {
+  $vars[] = 'sbd_storydonkey';
+  return $vars;
+});
+
+add_filter('template_include', function ($template) {
+  if (get_query_var('sbd_storydonkey') === '1') {
+    return get_template_directory() . '/page-storydonkey.php';
+  }
+  return $template;
+});
+
 // Required pages manifest — bump $version whenever you add or remove entries.
 // This version string is stored in the WP options table; creation runs only
 // when the stored value differs from $version (i.e. after a new deploy).
@@ -63,7 +81,7 @@ add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
   // Bump this string whenever sbd_get_required_pages() is updated.
-  $version = '2026-10-02-v3';
+  $version = '2026-10-02-v4';
 
   if ( get_option( 'sbd_required_pages_version' ) === $version ) {
     return;
