@@ -18,6 +18,14 @@ add_action('wp_enqueue_scripts', function () {
   );
 });
 
+// Give the StoryDonkey landing page its own masthead treatment.
+add_filter('body_class', function ($classes) {
+  if (is_page('storydonkey')) {
+    $classes[] = 'storydonkey-template';
+  }
+  return $classes;
+});
+
 // Force the StoryDonkey landing page template even when an existing WordPress
 // page has a saved default template assignment from an earlier theme version.
 add_filter('template_include', function ($template) {
