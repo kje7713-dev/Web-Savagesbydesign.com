@@ -67,11 +67,10 @@
           <?php wp_nonce_field('sbd_beta_signup', 'sbd_beta_nonce'); ?>
           <label class="sr-only" for="storydonkey-email">Email address</label>
           <input id="storydonkey-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
-          <label class="sr-only" for="storydonkey-making">What are you making?</label>
-          <select id="storydonkey-making" name="making" required>
-            <option value="" disabled selected>What are you making?</option>
-            <option value="Write a Quick Story">Write a Quick Story — Get useful prose quickly from one idea.</option>
-            <option value="Build a Novel">Build a Novel — Develop your story deliberately over time.</option>
+          <label class="sr-only" for="storydonkey-arc">Which story arc are you interested in?</label>
+          <select id="storydonkey-arc" name="arc" required>
+            <option value="" disabled selected>Which story arc are you interested in?</option>
+            <option>Three-Act</option><option>Hero's Journey</option><option>Mystery</option><option>Save the Cat!</option><option>Story Circle</option><option>Freytag's Pyramid</option><option>Kishōtenketsu</option><option>Romance / HEA</option><option>Psychological / Domestic Thriller</option><option>Romantasy</option><option>Suspense / Countdown Thriller</option><option>Science-Fiction Problem / Survival</option><option>Dystopian Rebellion</option><option>Dark Romance</option><option>Epic Fantasy Quest</option><option>Seven-Point Story Structure</option><option>Horror / Escalating Dread</option><option>Sports Romance</option><option>Romantic Suspense</option><option>Conspiracy / Artifact Thriller</option><option>Progression Fantasy / LitRPG</option><option>Historical War / Survival</option><option>Coming-of-Age / Bildungsroman</option><option>Revenge</option><option>Heist / Caper</option><option>Redemption / Rebirth</option><option>Family Saga / Generational</option>
           </select>
           <input class="storydonkey-honeypot" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn" type="submit">Join the beta</button>

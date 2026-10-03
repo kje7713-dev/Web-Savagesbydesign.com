@@ -22,14 +22,14 @@ function sbd_handle_beta_signup() {
   }
 
   $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
-  $making = isset($_POST['making']) ? sanitize_text_field(wp_unslash($_POST['making'])) : '';
+  $arc = isset($_POST['arc']) ? sanitize_text_field(wp_unslash($_POST['arc'])) : '';
   if (!is_email($email)) {
     wp_safe_redirect(home_url('/storydonkey/?beta=invalid#beta'));
     exit;
   }
 
   $subject = 'StoryDonkey beta signup';
-  $body = "Email: {$email}\nWhat they want to make: {$making}\nSource: StoryDonkey landing page";
+  $body = "Email: {$email}\nStory arc: {$arc}\nSource: StoryDonkey landing page";
   wp_mail('savagesbydesignhq@gmail.com', $subject, $body, ['Reply-To: ' . $email]);
   wp_safe_redirect(home_url('/storydonkey/?beta=thanks#beta'));
   exit;
