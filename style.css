@@ -523,4 +523,4 @@ img{ max-width:100%; height:auto; display:block; }
 }
 
 /* StoryDonkey owns its landing-page masthead; do not show the parent SBD header here. */
-body.page-template-page-storydonkey .site-header{ display:none; }
+body.storydonkey-template .site-header{ display:none; }
