@@ -4,7 +4,7 @@
   <section class="storydonkey-hero">
     <div class="wrap">
       <div class="storydonkey-lockup" aria-label="StoryDonkey by Savage by Design">
-        <span class="storydonkey-mark">SD</span>
+        <img class="storydonkey-icon" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-icon.png'); ?>" alt="">
         <span><strong>STORYDONKEY</strong><small>BY SAVAGE BY DESIGN</small></span>
       </div>
       <p class="kicker">COMING TO IOS · EARLY ACCESS</p>
