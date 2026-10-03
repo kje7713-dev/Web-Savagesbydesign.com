@@ -18,6 +18,19 @@ add_action('wp_enqueue_scripts', function () {
   );
 });
 
+// Force the StoryDonkey landing page template even when an existing WordPress
+// page has a saved default template assignment from an earlier theme version.
+add_filter('template_include', function ($template) {
+  if (is_page('storydonkey')) {
+    $storydonkey_template = get_stylesheet_directory() . '/page-storydonkey.php';
+    if (file_exists($storydonkey_template)) {
+      return $storydonkey_template;
+    }
+  }
+
+  return $template;
+});
+
 // Required pages manifest — bump $version whenever you add or remove entries.
 // This version string is stored in the WP options table; creation runs only
 // when the stored value differs from $version (i.e. after a new deploy).
