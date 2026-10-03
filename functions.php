@@ -8,6 +8,18 @@ add_action('init', function () {
   }
 }, 1);
 
+// Keep beta leads in WordPress even when the host's default mail transport fails.
+add_action('init', function () {
+  register_post_type('sbd_beta_lead', [
+    'labels' => ['name' => 'StoryDonkey Beta Leads', 'singular_name' => 'StoryDonkey Beta Lead'],
+    'public' => false,
+    'show_ui' => true,
+    'show_in_menu' => true,
+    'supports' => ['title', 'editor'],
+    'menu_icon' => 'dashicons-email-alt',
+  ]);
+});
+
 // Receive StoryDonkey beta interest without exposing a third-party signup dependency.
 add_action('admin_post_nopriv_sbd_beta_signup', 'sbd_handle_beta_signup');
 add_action('admin_post_sbd_beta_signup', 'sbd_handle_beta_signup');
@@ -30,7 +42,16 @@ function sbd_handle_beta_signup() {
 
   $subject = 'StoryDonkey beta signup';
   $body = "Email: {$email}\nStory arc: {$arc}\nSource: StoryDonkey landing page";
-  wp_mail('savagesbydesignhq@gmail.com', $subject, $body, ['Reply-To: ' . $email]);
+  wp_insert_post([
+    'post_type' => 'sbd_beta_lead',
+    'post_status' => 'private',
+    'post_title' => $email,
+    'post_content' => "Email: {$email}\nStory arc: {$arc}\nSource: StoryDonkey landing page",
+  ]);
+  wp_mail('savagesbydesignhq@gmail.com', $subject, $body, [
+    'Reply-To: ' . $email,
+    'From: StoryDonkey <wordpress@savagesbydesign.com>',
+  ]);
   wp_safe_redirect(home_url('/storydonkey/?beta=thanks#beta'));
   exit;
 }
