@@ -557,3 +557,11 @@ body.storydonkey-template a:hover{ background:#151515; color:#eee8dc; }
 .storydonkey-beta .btn:hover{ background:#eee8dc; color:#151515; }
 .site-footer{ background:#151515; }
 @media (max-width:600px){ .storydonkey-hero h1{ font-size:clamp(52px,15vw,88px); } }
+
+/* The real StoryDonkey wordmark is the dark-mode white mark; keep it on its intended field. */
+.storydonkey-hero{ color:#eee8dc; background:#151515; border-bottom-color:#151515; }
+.storydonkey-wordmark{ display:block; width:min(360px,72vw); height:auto; }
+.storydonkey-hero .subhead{ color:#c9c1b6; }
+.storydonkey-hero .btn-ghost{ color:#eee8dc; border-color:#eee8dc; }
+.storydonkey-hero .btn-ghost:hover{ background:#eee8dc; color:#151515; }
+.storydonkey-hero .storydonkey-note{ color:#c9c1b6; }
