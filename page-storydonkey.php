@@ -3,9 +3,8 @@
 <main class="storydonkey-page">
   <section class="storydonkey-hero">
     <div class="wrap">
-      <div class="storydonkey-lockup" aria-label="StoryDonkey by Savage by Design">
-        <img class="storydonkey-icon" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-mark.png'); ?>" alt="">
-        <span><strong>STORYDONKEY</strong><small>BY SAVAGE BY DESIGN</small></span>
+      <div class="storydonkey-lockup">
+        <img class="storydonkey-wordmark" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-wordmark.png'); ?>" alt="StoryDonkey">
       </div>
       <p class="kicker">STORYDONKEY</p>
       <h1>Your vision for a book.<br><span>The donkey does the legwork.</span></h1>
