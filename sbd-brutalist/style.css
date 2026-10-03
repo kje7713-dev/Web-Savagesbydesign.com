@@ -442,6 +442,33 @@ img{ max-width:100%; height:auto; display:block; }
 .storydonkey-beta .btn{ border-color:var(--bg); color:var(--bg); }
 .storydonkey-beta .btn:hover{ background:var(--bg); color:var(--fg); }
 
+/* StoryDonkey landing page: brand-first, CTA in the first viewport. */
+.storydonkey-hero{ background:radial-gradient(circle at 82% 18%,#29212f 0,#111114 34%,#0b0b0c 72%); }
+.storydonkey-hero .wrap{ padding-top:clamp(34px,7vw,82px); padding-bottom:clamp(42px,8vw,92px); }
+.storydonkey-lockup{ display:flex; align-items:center; gap:12px; margin-bottom:clamp(46px,9vw,94px); }
+.storydonkey-lockup strong{ display:block; font-size:clamp(20px,3vw,30px); letter-spacing:.08em; line-height:1; }
+.storydonkey-lockup small{ display:block; margin-top:6px; color:var(--muted); font-size:9px; letter-spacing:.16em; }
+.storydonkey-mark{ display:grid; place-items:center; width:44px; height:44px; border:2px solid var(--fg); border-radius:50%; font-size:12px; font-weight:900; letter-spacing:-.08em; }
+.storydonkey-hero .kicker{ color:#d7a7ff; opacity:1; }
+.storydonkey-hero h1{ max-width:820px; font-size:clamp(48px,9vw,108px); letter-spacing:-.055em; text-transform:none; }
+.storydonkey-hero h1 span{ color:#d7a7ff; }
+.storydonkey-hero .subhead{ max-width:570px; margin-top:22px; font-size:clamp(17px,2vw,22px); line-height:1.4; color:#d8d8dc; }
+.storydonkey-hero .cta{ margin-top:28px; }
+.storydonkey-hero .btn-primary{ background:#d7a7ff; border-color:#d7a7ff; color:#15101b; }
+.storydonkey-hero .btn-primary:hover{ background:var(--fg); border-color:var(--fg); color:var(--bg); }
+.storydonkey-hero .btn-ghost{ border-color:rgba(242,242,242,.45); }
+.storydonkey-note{ margin-top:20px; }
+.storydonkey-how{ padding-top:56px; padding-bottom:64px; }
+.storydonkey-how h2{ max-width:620px; font-size:clamp(28px,4vw,48px); text-transform:none; letter-spacing:-.03em; }
+.storydonkey-steps{ margin:26px 0 0; gap:12px; }
+.storydonkey-steps .card{ min-height:0; padding:22px; }
+.storydonkey-number{ margin-bottom:18px; color:#d7a7ff; }
+.storydonkey-steps h3{ margin-top:0; }
+.storydonkey-steps p{ color:var(--muted); font-size:14px; }
+.storydonkey-beta{ padding:56px 0 64px; }
+.storydonkey-beta h2{ font-size:clamp(30px,5vw,60px); text-transform:none; letter-spacing:-.04em; }
+@media (max-width:600px){ .storydonkey-lockup{ margin-bottom:48px; } .storydonkey-hero h1{ font-size:clamp(47px,14vw,76px); } .storydonkey-hero .cta{ display:flex; flex-direction:column; align-items:flex-start; } }
+
 /* App Screenshots Gallery */
 .app-gallery {
   margin: 40px 0;
