@@ -67,10 +67,11 @@
           <?php wp_nonce_field('sbd_beta_signup', 'sbd_beta_nonce'); ?>
           <label class="sr-only" for="storydonkey-email">Email address</label>
           <input id="storydonkey-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
-          <label class="sr-only" for="storydonkey-making">What do you want to make?</label>
+          <label class="sr-only" for="storydonkey-making">What are you making?</label>
           <select id="storydonkey-making" name="making" required>
-            <option value="" disabled selected>What do you want to make?</option>
-            <option>Novel</option><option>Short story</option><option>Fan fiction</option><option>RPG / world story</option><option>Something else</option>
+            <option value="" disabled selected>What are you making?</option>
+            <option value="Write a Quick Story">Write a Quick Story — Get useful prose quickly from one idea.</option>
+            <option value="Build a Novel">Build a Novel — Develop your story deliberately over time.</option>
           </select>
           <input class="storydonkey-honeypot" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn" type="submit">Join the beta</button>
