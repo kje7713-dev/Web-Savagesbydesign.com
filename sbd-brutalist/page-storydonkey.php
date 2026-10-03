@@ -7,7 +7,7 @@
         <img class="storydonkey-icon" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-mark.png'); ?>" alt="">
         <span><strong>STORYDONKEY</strong><small>BY SAVAGE BY DESIGN</small></span>
       </div>
-      <p class="kicker">THE STORY IN YOUR HEAD</p>
+      <p class="kicker">YOUR STORY SHOULD NOT DIE IN THE OUTLINE</p>
       <h1>Stop carrying<br><span>the whole book.</span></h1>
       <p class="subhead">You have the premise. The characters. The ending you can see but can’t quite reach. StoryDonkey carries the structure, context, and continuity to get it onto the page.</p>
       <div class="cta">
@@ -19,8 +19,8 @@
   </section>
 
   <section class="wrap storydonkey-how" id="how-it-works">
-    <p class="kicker">THE WORKING ANIMAL OF CREATIVE WRITING</p>
-    <h2>You create. StoryDonkey carries the load.</h2>
+    <p class="kicker">FROM IDEA TO FINISHED STORY</p>
+    <h2>The donkey keeps receipts.</h2>
     <div class="grid storydonkey-steps">
       <article class="card"><span class="storydonkey-number">01</span><h3>Bring the idea</h3><p>The premise, the people, the impossible scene. Start wherever the story starts.</p></article>
       <article class="card"><span class="storydonkey-number">02</span><h3>Build the shape</h3><p>Turn the mess in your head into a world, an arc, and a path forward.</p></article>
