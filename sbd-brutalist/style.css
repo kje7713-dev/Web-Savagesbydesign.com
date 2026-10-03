@@ -565,6 +565,19 @@ body.storydonkey-template a:hover{ background:#151515; color:#eee8dc; }
 .storydonkey-hero .btn-ghost{ color:#eee8dc; border-color:#eee8dc; }
 .storydonkey-hero .btn-ghost:hover{ background:#eee8dc; color:#151515; }
 .storydonkey-hero .storydonkey-note{ color:#c9c1b6; }
+.storydonkey-demo{ background:#eee8dc; color:#151515; padding:clamp(64px,10vw,130px) 18px; border-bottom:4px solid #151515; }
+.storydonkey-demo .wrap{ max-width:1200px; }
+.storydonkey-demo .kicker{ color:#c8532c; }
+.storydonkey-demo h2{ max-width:900px; margin:0 0 44px; font-size:clamp(38px,6vw,78px); line-height:.95; letter-spacing:-.06em; text-transform:uppercase; }
+.storydonkey-demo h2 span{ color:#c8532c; }
+.storydonkey-demo-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; align-items:start; }
+.storydonkey-demo figure{ margin:0; }
+.storydonkey-demo figure img{ display:block; width:100%; aspect-ratio:590/1280; object-fit:cover; object-position:top; border:3px solid #151515; box-shadow:8px 8px 0 #151515; }
+.storydonkey-demo figure:nth-child(2){ margin-top:54px; }
+.storydonkey-demo figcaption{ display:grid; gap:8px; margin-top:22px; }
+.storydonkey-demo figcaption b{ font-size:12px; letter-spacing:.08em; }
+.storydonkey-demo figcaption span{ color:#55504a; font-size:17px; line-height:1.3; }
+@media (max-width:700px){ .storydonkey-demo-grid{ grid-template-columns:1fr; max-width:360px; margin:0 auto; } .storydonkey-demo figure:nth-child(2){ margin-top:34px; } }
 .storydonkey-proof{ display:flex; align-items:center; gap:clamp(12px,2vw,28px); margin-top:clamp(36px,6vw,70px); padding-top:20px; border-top:1px solid #55504a; max-width:780px; }
 .storydonkey-proof div{ display:grid; gap:3px; min-width:130px; }
 .storydonkey-proof b{ color:#e88a52; font-size:12px; }
