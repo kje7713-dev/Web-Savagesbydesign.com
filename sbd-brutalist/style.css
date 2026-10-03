@@ -524,3 +524,36 @@ img{ max-width:100%; height:auto; display:block; }
 
 /* StoryDonkey owns its landing-page masthead; do not show the parent SBD header here. */
 body.storydonkey-template .site-header{ display:none; }
+
+/* StoryDonkey campaign direction: editorial, useful, and unmistakably not SaaS. */
+body.storydonkey-template{ background:#eee8dc; color:#151515; }
+body.storydonkey-template a{ color:#151515; border-color:#151515; }
+body.storydonkey-template a:hover{ background:#151515; color:#eee8dc; }
+.storydonkey-page{ background:#eee8dc; }
+.storydonkey-hero{ color:#151515; background:#eee8dc; border-bottom:4px solid #151515; }
+.storydonkey-hero .wrap{ padding-top:34px; padding-bottom:clamp(48px,8vw,100px); }
+.storydonkey-lockup strong{ color:#151515; }
+.storydonkey-lockup small{ color:#55504a; }
+.storydonkey-lockup .storydonkey-icon{ border:2px solid #151515; }
+.storydonkey-hero .kicker{ color:#c8532c; font-weight:900; }
+.storydonkey-hero h1{ max-width:940px; font-size:clamp(58px,11vw,138px); font-weight:950; line-height:.88; text-transform:uppercase; letter-spacing:-.075em; }
+.storydonkey-hero h1 span{ color:#c8532c; }
+.storydonkey-hero .subhead{ max-width:620px; color:#34312d; font-size:clamp(18px,2.2vw,25px); line-height:1.35; }
+.storydonkey-hero .btn-primary{ background:#151515; border-color:#151515; color:#eee8dc; box-shadow:6px 6px 0 #c8532c; }
+.storydonkey-hero .btn-primary:hover{ background:#c8532c; border-color:#c8532c; color:#151515; }
+.storydonkey-hero .btn-ghost{ border-color:#151515; }
+.storydonkey-note{ color:#55504a; font-weight:700; }
+.storydonkey-how{ background:#151515; color:#eee8dc; max-width:none; padding-left:max(18px,calc((100% - var(--max))/2 + 18px)); padding-right:max(18px,calc((100% - var(--max))/2 + 18px)); }
+.storydonkey-how h2{ max-width:760px; font-size:clamp(34px,6vw,72px); text-transform:uppercase; letter-spacing:-.055em; }
+.storydonkey-how .kicker{ color:#e88a52; }
+.storydonkey-steps .card{ background:#252525; border:1px solid #55504a; }
+.storydonkey-steps h3{ color:#fff; }
+.storydonkey-steps p{ color:#c9c1b6; }
+.storydonkey-number{ color:#e88a52; }
+.storydonkey-beta{ background:#c8532c; color:#151515; border:0; }
+.storydonkey-beta .kicker{ color:#151515; opacity:.7; }
+.storydonkey-beta h2{ color:#151515; }
+.storydonkey-beta .btn{ border-color:#151515; color:#151515; box-shadow:5px 5px 0 #eee8dc; }
+.storydonkey-beta .btn:hover{ background:#eee8dc; color:#151515; }
+.site-footer{ background:#151515; }
+@media (max-width:600px){ .storydonkey-hero h1{ font-size:clamp(52px,15vw,88px); } }
