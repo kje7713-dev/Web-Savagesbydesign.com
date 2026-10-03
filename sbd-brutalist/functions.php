@@ -8,6 +8,33 @@ add_action('init', function () {
   }
 }, 1);
 
+// Receive StoryDonkey beta interest without exposing a third-party signup dependency.
+add_action('admin_post_nopriv_sbd_beta_signup', 'sbd_handle_beta_signup');
+add_action('admin_post_sbd_beta_signup', 'sbd_handle_beta_signup');
+function sbd_handle_beta_signup() {
+  if (!isset($_POST['sbd_beta_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['sbd_beta_nonce'])), 'sbd_beta_signup')) {
+    wp_die('Invalid signup request.', 'StoryDonkey beta', ['response' => 400]);
+  }
+
+  if (!empty($_POST['company'])) {
+    wp_safe_redirect(home_url('/storydonkey/?beta=thanks#beta'));
+    exit;
+  }
+
+  $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+  $making = isset($_POST['making']) ? sanitize_text_field(wp_unslash($_POST['making'])) : '';
+  if (!is_email($email)) {
+    wp_safe_redirect(home_url('/storydonkey/?beta=invalid#beta'));
+    exit;
+  }
+
+  $subject = 'StoryDonkey beta signup';
+  $body = "Email: {$email}\nWhat they want to make: {$making}\nSource: StoryDonkey landing page";
+  wp_mail('savagesbydesignhq@gmail.com', $subject, $body, ['Reply-To: ' . $email]);
+  wp_safe_redirect(home_url('/storydonkey/?beta=thanks#beta'));
+  exit;
+}
+
 // Load theme stylesheet
 add_action('wp_enqueue_scripts', function () {
   wp_enqueue_style(
