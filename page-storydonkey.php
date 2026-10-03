@@ -13,7 +13,13 @@
         <a class="btn btn-primary" href="mailto:savagesbydesignhq@gmail.com?subject=StoryDonkey%20beta%20access">Join the beta</a>
         <a class="btn btn-ghost" href="#how-it-works">How it works</a>
       </div>
-      <p class="storydonkey-note">You decide what the story becomes. The donkey keeps it moving.</p>
+      <div class="storydonkey-proof" aria-label="StoryDonkey workflow">
+        <div><b>01</b><span>YOUR VISION</span><strong>the spark</strong></div>
+        <i>→</i>
+        <div><b>02</b><span>DONKEY WORK</span><strong>the structure</strong></div>
+        <i>→</i>
+        <div><b>03</b><span>YOUR BOOK</span><strong>the finished story</strong></div>
+      </div>
     </div>
   </section>
 
@@ -27,12 +33,28 @@
     </div>
   </section>
 
-  <section class="storydonkey-beta">
+  <section class="storydonkey-beta" id="beta">
     <div class="wrap">
       <p class="kicker">COMING TO IOS · EARLY ACCESS</p>
       <h2>Make the story real.</h2>
       <p>Get early access to StoryDonkey and help shape the app built to carry a story all the way through.</p>
-      <div class="cta"><a class="btn" href="mailto:savagesbydesignhq@gmail.com?subject=StoryDonkey%20beta%20access&amp;body=I%27d%20like%20to%20join%20the%20StoryDonkey%20beta.">Join the beta</a></div>
+      <?php if (isset($_GET['beta']) && $_GET['beta'] === 'thanks') : ?>
+        <p class="storydonkey-success">You’re on the list. We’ll be in touch.</p>
+      <?php else : ?>
+        <form class="storydonkey-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+          <input type="hidden" name="action" value="sbd_beta_signup">
+          <?php wp_nonce_field('sbd_beta_signup', 'sbd_beta_nonce'); ?>
+          <label class="sr-only" for="storydonkey-email">Email address</label>
+          <input id="storydonkey-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+          <label class="sr-only" for="storydonkey-making">What do you want to make?</label>
+          <select id="storydonkey-making" name="making" required>
+            <option value="" disabled selected>What do you want to make?</option>
+            <option>Novel</option><option>Short story</option><option>Fan fiction</option><option>RPG / world story</option><option>Something else</option>
+          </select>
+          <input class="storydonkey-honeypot" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn" type="submit">Join the beta</button>
+        </form>
+      <?php endif; ?>
     </div>
   </section>
 </main>
