@@ -23,6 +23,7 @@ jobs:
           user: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           localDir: "sbd-brutalist"
+          # FTP_DEST is relative to the FTP account root (already public_html).
           remoteDir: "${{ secrets.FTP_DEST }}"
 
       - name: Purge LiteSpeed cache
