@@ -23,6 +23,27 @@
     </div>
   </section>
 
+  <section class="storydonkey-demo" id="see-it">
+    <div class="wrap">
+      <p class="kicker">SEE THE DONKEY WORK</p>
+      <h2>From a story in your head<br><span>to something you can share.</span></h2>
+      <div class="storydonkey-demo-grid">
+        <figure>
+          <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-demo/story-start.jpg'); ?>" alt="StoryDonkey projects screen showing story projects">
+          <figcaption><b>01 · START WITH THE IDEA</b><span>Your projects, characters, and story sparks in one place.</span></figcaption>
+        </figure>
+        <figure>
+          <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-demo/story-shape.jpg'); ?>" alt="StoryDonkey novel workspace showing outline sections">
+          <figcaption><b>02 · SHAPE THE STORY</b><span>Build the path, sections, and next useful step.</span></figcaption>
+        </figure>
+        <figure>
+          <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-demo/story-share.jpg'); ?>" alt="StoryDonkey shared outputs screen showing a finished story">
+          <figcaption><b>03 · READ AND SHARE</b><span>Get the work out of the workspace and into the world.</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap storydonkey-how" id="how-it-works">
     <p class="kicker">FROM IDEA TO FINISHED STORY</p>
     <h2>The donkey keeps receipts.</h2>
