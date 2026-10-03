@@ -19,7 +19,7 @@ jobs:
       - name: Deploy theme via FTP (verbose)
         uses: sebastianpopp/ftp-action@v2.0.0
         with:
-          host: ftp.savagesbydesign.com
+          host: 157.173.208.128
           user: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           localDir: "sbd-brutalist"
