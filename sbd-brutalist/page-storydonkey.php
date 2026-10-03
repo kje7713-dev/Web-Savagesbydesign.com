@@ -7,14 +7,14 @@
         <img class="storydonkey-icon" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/storydonkey-mark.png'); ?>" alt="">
         <span><strong>STORYDONKEY</strong><small>BY SAVAGE BY DESIGN</small></span>
       </div>
-      <p class="kicker">THE STORY IS YOURS</p>
-      <h1>You see to the vision.<br><span>Donkey handles the legwork.</span></h1>
+      <p class="kicker">STORYDONKEY</p>
+      <h1>Your vision for a book.<br><span>The donkey does the legwork.</span></h1>
       <p class="subhead">StoryDonkey carries the structure, context, and continuity so you can stay focused on what the story is trying to become.</p>
       <div class="cta">
         <a class="btn btn-primary" href="mailto:savagesbydesignhq@gmail.com?subject=StoryDonkey%20beta%20access">Join the beta</a>
         <a class="btn btn-ghost" href="#how-it-works">How it works</a>
       </div>
-      <p class="storydonkey-note">You bring the vision. Donkey does the hauling.</p>
+      <p class="storydonkey-note">You decide what the story becomes. The donkey keeps it moving.</p>
     </div>
   </section>
 
