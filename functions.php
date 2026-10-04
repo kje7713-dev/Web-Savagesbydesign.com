@@ -24,7 +24,13 @@ add_action('init', function () {
 add_action('admin_post_nopriv_sbd_beta_signup', 'sbd_handle_beta_signup');
 add_action('admin_post_sbd_beta_signup', 'sbd_handle_beta_signup');
 function sbd_handle_beta_signup() {
-  if (!isset($_POST['sbd_beta_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['sbd_beta_nonce'])), 'sbd_beta_signup')) {
+  $nonce_valid = isset($_POST['sbd_beta_nonce']) && wp_verify_nonce(
+    sanitize_text_field(wp_unslash($_POST['sbd_beta_nonce'])),
+    'sbd_beta_signup'
+  );
+  $token = isset($_POST['sbd_beta_token']) ? sanitize_text_field(wp_unslash($_POST['sbd_beta_token'])) : '';
+  $cache_safe_token = hash_hmac('sha256', 'sbd_beta_signup', wp_salt('auth'));
+  if (!$nonce_valid && !hash_equals($cache_safe_token, $token)) {
     wp_die('Invalid signup request.', 'StoryDonkey beta', ['response' => 400]);
   }
 
