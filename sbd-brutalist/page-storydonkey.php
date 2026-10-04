@@ -10,7 +10,7 @@
       <h1>Your vision for a book.<br><span>The donkey does the legwork.</span></h1>
       <p class="subhead">StoryDonkey carries the structure, context, and continuity so you can stay focused on what the story is trying to become.</p>
       <div class="cta">
-        <a class="btn btn-primary" href="mailto:savagesbydesignhq@gmail.com?subject=StoryDonkey%20beta%20access">Join the beta</a>
+        <a class="btn btn-primary" href="#beta">Join the beta</a>
         <a class="btn btn-ghost" href="#how-it-works">How it works</a>
       </div>
       <div class="storydonkey-proof" aria-label="StoryDonkey workflow">
@@ -65,6 +65,8 @@
         <form class="storydonkey-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
           <input type="hidden" name="action" value="sbd_beta_signup">
           <?php wp_nonce_field('sbd_beta_signup', 'sbd_beta_nonce'); ?>
+          <input type="hidden" name="sbd_beta_token" value="<?php echo esc_attr(hash_hmac('sha256', 'sbd_beta_signup', wp_salt('auth'))); ?>">
+          <input type="hidden" name="sbd_beta_token" value="<?php echo esc_attr(hash_hmac('sha256', 'sbd_beta_signup', wp_salt('auth'))); ?>">
           <label class="sr-only" for="storydonkey-email">Email address</label>
           <input id="storydonkey-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
           <label class="sr-only" for="storydonkey-arc">Which story arc are you interested in?</label>
