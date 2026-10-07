@@ -42,6 +42,8 @@ The canonical map is `sbd_theme_routes()` in `sbd-brutalist/functions.php`. An e
 
 The workflow writes a non-secret deployment marker containing the commit SHA and timestamp. The theme exposes that marker as a safe HTML meta value so smoke tests prove which commit production is serving.
 
+For route investigations, the smoke test adds `sbd_diag=1`. When PHP handles that request, it emits only safe diagnostic headers: `X-SBD-Theme`, `X-SBD-Route-Seen`, `X-SBD-Route-Matched`, `X-SBD-Template-Exists`, `X-SBD-Template-Redirect`, and `X-SBD-Deploy`. The diagnostic response also requests LiteSpeed no-cache treatment. Missing diagnostic headers are evidence that the response may have been served before the active theme ran; they are not treated as proof that PHP handled the route.
+
 ## Legacy WordPress pages
 
 The theme still creates older site pages such as `/app/`, `/contact/`, `/privacy/`, `/terms/`, `/user-guide/`, and `/pizza-chicken-pop-support/` when needed. Creation checks `wp_insert_post()` errors and does not mark the migration complete after a failure. StoryDonkey routes are not part of this database migration.
@@ -53,5 +55,5 @@ The theme still creates older site pages such as `/app/`, `/contact/`, `/privacy
 - Do not add another page-creation version bump to retry a StoryDonkey route.
 - Do not add parallel rewrite, query-var, template, or alias workarounds.
 - Do not declare success because FTP returned success; verify the public URL and expected body text.
-- Do not treat a homepage curl response as proof that LiteSpeed was purged. Smoke tests use commit-specific query strings and document the purge limitation.
+- Do not treat a homepage curl response as proof that LiteSpeed was purged. Smoke tests inspect every route, print status/final URL/cache and route-diagnostic evidence, and fail only after all routes have been reported. Query strings alone are not assumed to bypass LiteSpeed 404 caching.
 - Do not push directly to `main`; use a PR unless the owner explicitly instructs otherwise.

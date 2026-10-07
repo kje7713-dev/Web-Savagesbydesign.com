@@ -86,10 +86,48 @@ function sbd_theme_routes() {
   ];
 }
 
+function sbd_route_path() {
+  $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+  return trim(is_string($path) ? $path : '', '/');
+}
+
+function sbd_route_diagnostics_enabled() {
+  return isset($_GET['sbd_diag']) && (string) $_GET['sbd_diag'] === '1';
+}
+
+function sbd_route_diagnostic_header($name, $value) {
+  if (!sbd_route_diagnostics_enabled()) {
+    return;
+  }
+
+  header($name . ': ' . preg_replace('/[^A-Za-z0-9._\/-]/', '', (string) $value));
+}
+
 function sbd_current_theme_route() {
-  $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+  $path = sbd_route_path();
   return array_key_exists($path, sbd_theme_routes()) ? $path : null;
 }
+
+add_action('send_headers', function () {
+  if (!sbd_route_diagnostics_enabled()) {
+    return;
+  }
+
+  $path = sbd_route_path();
+  $routes = sbd_theme_routes();
+  $matched = array_key_exists($path, $routes);
+  $template_exists = $matched && file_exists(get_stylesheet_directory() . '/' . $routes[$path]);
+  $marker_file = get_stylesheet_directory() . '/deployment-marker.txt';
+  $marker = file_exists($marker_file) ? trim((string) file_get_contents($marker_file)) : '';
+
+  header('X-SBD-Theme: active');
+  header('X-SBD-Route-Seen: ' . preg_replace('/[^A-Za-z0-9._\/-]/', '', $path));
+  header('X-SBD-Route-Matched: ' . ($matched ? 'yes' : 'no'));
+  header('X-SBD-Template-Exists: ' . ($template_exists ? 'yes' : 'no'));
+  header('X-SBD-Template-Redirect: pending');
+  header('X-SBD-Deploy: ' . preg_replace('/[^A-Za-z0-9._-]/', '', $marker));
+  header('X-LiteSpeed-Cache-Control: no-cache');
+});
 
 add_filter('body_class', function ($classes) {
   if (sbd_current_theme_route() === 'storydonkey') {
@@ -99,6 +137,7 @@ add_filter('body_class', function ($classes) {
 });
 
 add_action('template_redirect', function () {
+  sbd_route_diagnostic_header('X-SBD-Template-Redirect', 'fired');
   $route = sbd_current_theme_route();
   if ($route === null) {
     return;
