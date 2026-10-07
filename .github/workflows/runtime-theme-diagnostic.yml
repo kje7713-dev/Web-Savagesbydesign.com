@@ -1,0 +1,86 @@
+name: Runtime Theme Diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout diagnostic
+        uses: actions/checkout@v4
+
+      - name: Deploy temporary runtime diagnostic
+        uses: sebastianpopp/ftp-action@v2.0.0
+        with:
+          host: ${{ secrets.FTP_HOST }}
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ secrets.FTP_PORT }}
+          localDir: "public-root"
+          remoteDir: "${{ secrets.FTP_SITE_ROOT }}"
+
+      - name: Query live WordPress runtime and classify
+        env:
+          SBD_DEPLOY_TOKEN: ${{ secrets.SBD_DEPLOY_TOKEN }}
+        run: |
+          set -euo pipefail
+          deployed_sha="$(sha256sum sbd-brutalist/functions.php | awk '{print $1}')"
+          printf 'deployed_functions_sha256=%s\n' "$deployed_sha"
+          http_status="$(curl --silent --show-error --max-time 30 \
+            --request POST \
+            --data-urlencode "token=${SBD_DEPLOY_TOKEN}" \
+            --output /tmp/sbd-runtime-diagnostic.json \
+            --write-out '%{http_code}' \
+            https://savagesbydesign.com/sbd-runtime-diagnostic.php)"
+          printf 'diagnostic_http_status=%s\n' "$http_status"
+          cat /tmp/sbd-runtime-diagnostic.json
+          [ "$http_status" = 200 ]
+          python3 - /tmp/sbd-runtime-diagnostic.json "$deployed_sha" <<'PY'
+          import json
+          import sys
+
+          path, deployed_sha = sys.argv[1:]
+          data = json.load(open(path, encoding='utf-8'))
+          runtime_sha = data.get('runtime_functions_sha256', '')
+          active_stylesheet = data.get('active_stylesheet', '')
+          active_template = data.get('active_template', '')
+          hook_registered = data.get('bootstrap_hook_registered') is True
+
+          if active_stylesheet != 'sbd-brutalist' or active_template != 'sbd-brutalist':
+              classification = 'active-theme-is-not-deployed-theme'
+          elif runtime_sha != deployed_sha:
+              classification = 'ftp-theme-copy-is-not-runtime-theme-copy'
+          elif hook_registered:
+              classification = 'runtime-matches-deployment'
+          else:
+              classification = 'runtime-matches-deployment-but-bootstrap-hook-not-registered'
+
+          for key in (
+              'active_stylesheet', 'active_template',
+              'stylesheet_directory_basename', 'template_directory_basename',
+              'runtime_functions_sha256', 'deployment_marker_sha',
+              'bootstrap_hook_registered', 'required_pages_version',
+          ):
+              print(f'{key}={data.get(key)}')
+          print(f'deployed_functions_sha256={deployed_sha}')
+          print(f'hashes_match={runtime_sha == deployed_sha}')
+          print(f'classification={classification}')
+          PY
+
+      - name: Remove temporary runtime diagnostic
+        if: always()
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_HOST\"; rm \"$FTP_SITE_ROOT/sbd-runtime-diagnostic.php\"; quit"
