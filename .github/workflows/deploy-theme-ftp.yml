@@ -42,7 +42,7 @@ jobs:
           FTP_PASS: ${{ secrets.FTP_PASS }}
           FTP_DEST: ${{ secrets.FTP_DEST }}
         run: |
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_DEST/functions.php\" \"$FTP_DEST/deployment-marker.txt\" \"$FTP_DEST/page-storydonkey.php\" \"$FTP_DEST/page-storydonkey-privacy.php\" \"$FTP_DEST/page-storydonkey-terms.php\" \"$FTP_DEST/page-storydonkey-support.php\"; quit"
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_DEST/functions.php\" \"$FTP_DEST/deployment-marker.txt\" \"$FTP_DEST/sbd-runtime-marker-181799f.txt\" \"$FTP_DEST/page-storydonkey.php\" \"$FTP_DEST/page-storydonkey-privacy.php\" \"$FTP_DEST/page-storydonkey-terms.php\" \"$FTP_DEST/page-storydonkey-support.php\"; quit"
 
       - name: Verify deployed bytes match checkout
         env:
@@ -53,11 +53,44 @@ jobs:
           set -euo pipefail
           remote_dir="$(mktemp -d)"
           trap 'rm -rf "$remote_dir"' EXIT
-          for file in functions.php deployment-marker.txt page-storydonkey.php page-storydonkey-privacy.php page-storydonkey-terms.php page-storydonkey-support.php; do
+          for file in functions.php deployment-marker.txt sbd-runtime-marker-181799f.txt page-storydonkey.php page-storydonkey-privacy.php page-storydonkey-terms.php page-storydonkey-support.php; do
             lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_DEST/$file\" -o \"$remote_dir/$file\"; quit"
             cmp -- "sbd-brutalist/$file" "$remote_dir/$file"
             printf 'verified-bytes %s\n' "$file"
           done
+
+      - name: Verify static marker at public theme URL
+        run: |
+          set -euo pipefail
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
+          headers="$temp_dir/headers"
+          body="$temp_dir/body"
+          result="$(curl --silent --show-error --location --max-time 30 \
+            -D "$headers" -o "$body" -w '%{http_code}\t%{url_effective}' \
+            "https://savagesbydesign.com/wp-content/themes/sbd-brutalist/sbd-runtime-marker-181799f.txt?probe=181799f")"
+          status="${result%%$'\t'*}"
+          effective_url="${result#*$'\t'}"
+          content_type="$(grep -i '^Content-Type:' "$headers" | tail -1 | cut -d: -f2- | tr -d '\r' | sed 's/^ *//' || true)"
+          cache_header="$(grep -i '^X-LiteSpeed-Cache:' "$headers" | tail -1 | cut -d: -f2- | tr -d '\r' | sed 's/^ *//' || true)"
+          response_body="$(cat "$body")"
+          normalized_body="$(tr -d '\r\n' < "$body")"
+          printf 'marker_http_status=%s\n' "$status"
+          printf 'marker_effective_url=%s\n' "$effective_url"
+          printf 'marker_content_type=%s\n' "${content_type:-}"
+          printf 'marker_x_litespeed_cache=%s\n' "${cache_header:-}"
+          printf 'marker_response_body=%s\n' "$response_body"
+
+          if [ "$status" = 200 ] && [ "$normalized_body" = '181799f081bc03e532edf629ebfeb2385d445799' ]; then
+            echo 'classification=FTP_DEST_matches_public_sbd_brutalist_directory'
+          elif [ "$status" = 404 ]; then
+            echo 'classification=FTP_DEST_not_public_sbd_brutalist_directory'
+          elif [ "$status" = 200 ]; then
+            echo 'classification=public_theme_directory_is_different_copy'
+          else
+            echo 'classification=public_marker_request_unexpected_status'
+            exit 1
+          fi
 
       - name: Bootstrap WordPress and purge affected URLs
         env:
