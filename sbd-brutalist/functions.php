@@ -88,6 +88,30 @@ add_filter('query_vars', function ($vars) {
   return $vars;
 });
 
+// Serve these routes before WordPress can render its 404 template. This keeps
+// the legal pages available even when rewrite-rule persistence is unavailable
+// on the host or the placeholder pages have not yet been created.
+add_action('template_redirect', function () {
+  $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+  $direct_routes = [
+    'storydonkey-privacy'      => 'page-storydonkey-privacy.php',
+    'storydonkey-terms'        => 'page-storydonkey-terms.php',
+    'storydonkey-support'      => 'page-storydonkey-support.php',
+    'storydonkey-legal-privacy' => 'page-storydonkey-privacy.php',
+    'storydonkey-legal-terms'   => 'page-storydonkey-terms.php',
+    'storydonkey-legal-support' => 'page-storydonkey-support.php',
+  ];
+
+  if (isset($direct_routes[$path])) {
+    $direct_template = get_stylesheet_directory() . '/' . $direct_routes[$path];
+    if (file_exists($direct_template)) {
+      status_header(200);
+      include $direct_template;
+      exit;
+    }
+  }
+}, 0);
+
 // Give the StoryDonkey landing page its own masthead treatment.
 add_filter('body_class', function ($classes) {
   if (is_page('storydonkey')) {
