@@ -8,6 +8,8 @@ on:
       - ".github/workflows/**"
       - "DEPLOYMENT.md"
       - "AGENTS.md"
+  push:
+    branches: ["codex/**"]
 
 permissions:
   contents: read
@@ -33,7 +35,7 @@ jobs:
           find sbd-brutalist -type f -name '*.php' -print0 | xargs -0 -n1 php -l
 
       - name: Check diff whitespace
-        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
+        run: git diff --check origin/main...HEAD
 
       - name: Check workflow YAML syntax
         run: ruby -e "require 'yaml'; Dir['.github/workflows/*.yml'].each { |f| YAML.load_file(f); puts \"valid: #{f}\" }"
