@@ -44,6 +44,18 @@ jobs:
         run: |
           lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; rm \"$FTP_DEST/sbd-runtime-marker-181799f.txt\"; quit" || true
 
+      - name: Verify temporary static marker is absent from FTP
+        env:
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_DEST: ${{ secrets.FTP_DEST }}
+        run: |
+          if lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_DEST/sbd-runtime-marker-181799f.txt\"; quit" >/dev/null 2>&1; then
+            echo 'temporary marker still exists under FTP_DEST'
+            exit 1
+          fi
+          echo 'verified-absent sbd-runtime-marker-181799f.txt'
+
       - name: Verify required files exist under FTP_DEST
         env:
           FTP_USER: ${{ secrets.FTP_USER }}
