@@ -55,6 +55,20 @@ The StoryDonkey smoke tests cover:
 - `/storydonkey-terms/` → `StoryDonkey Terms of Use`
 - `/storydonkey-support/` → `StoryDonkey Support`
 
+## Deployment lifecycle
+
+The production workflow runs these steps in order:
+
+1. Upload the theme over FTP.
+2. Verify required remote files exist.
+3. Verify deployed bytes match the checkout.
+4. Send an authenticated POST to WordPress `admin-post.php` using the `sbd_deploy_bootstrap` action.
+5. The bootstrap executes WordPress/PHP, explicitly runs the checked required-page creation, verifies all four StoryDonkey placeholders are published `page` posts, and updates the migration version only after success.
+6. The bootstrap requests LiteSpeed purges for the four affected public URLs through `litespeed_purge_url` when the hook is available. It reports `unavailable` safely if the hook is not loaded.
+7. Run public GET smoke tests requiring HTTP 200, expected text, and the exact deployed commit SHA.
+
+The bootstrap token is never stored in this repository. Configure the GitHub Actions `SBD_DEPLOY_TOKEN` secret to match a server-side `SBD_DEPLOY_TOKEN` constant or environment variable available to WordPress. Do not print or expose the token. FTP success alone does not prove that WordPress executed PHP: cached GETs can be served without running `init`, so the authenticated POST is the deterministic page-creation and cache-purge step.
+
 The workflow writes a non-secret deployment marker containing the commit SHA and timestamp. The theme exposes that marker as a safe HTML meta value so smoke tests prove which commit production is serving.
 
 ## Legacy WordPress pages

@@ -59,6 +59,16 @@ jobs:
             printf 'verified-bytes %s\n' "$file"
           done
 
+      - name: Bootstrap WordPress and purge affected URLs
+        env:
+          SBD_DEPLOY_TOKEN: ${{ secrets.SBD_DEPLOY_TOKEN }}
+        run: |
+          curl --fail --silent --show-error --max-time 30 \
+            --request POST \
+            --data-urlencode "action=sbd_deploy_bootstrap" \
+            --data-urlencode "token=${SBD_DEPLOY_TOKEN}" \
+            https://savagesbydesign.com/wp-admin/admin-post.php
+
       - name: Smoke-test production routes
         env:
           GITHUB_SHA: ${{ github.sha }}
