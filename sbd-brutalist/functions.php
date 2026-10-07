@@ -72,91 +72,12 @@ add_action('wp_enqueue_scripts', function () {
   );
 });
 
-// Repository-owned StoryDonkey pages use one deterministic theme route map.
-// WordPress still hands unknown pretty URLs to index.php; this early handler
-// serves only explicitly approved routes before canonical/404 redirects and
-// preserves the normal theme environment (get_header(), wp_head(), get_footer(),
-// and wp_footer()).
-function sbd_theme_routes() {
-  return [
-    'storydonkey'         => 'page-storydonkey.php',
-    'storydonkey-privacy' => 'page-storydonkey-privacy.php',
-    'storydonkey-terms'   => 'page-storydonkey-terms.php',
-    'storydonkey-support' => 'page-storydonkey-support.php',
-  ];
-}
-
-function sbd_route_path() {
-  $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
-  return trim(is_string($path) ? $path : '', '/');
-}
-
-function sbd_route_diagnostics_enabled() {
-  return isset($_GET['sbd_diag']) && (string) $_GET['sbd_diag'] === '1';
-}
-
-function sbd_route_diagnostic_header($name, $value) {
-  if (!sbd_route_diagnostics_enabled()) {
-    return;
-  }
-
-  header($name . ': ' . preg_replace('/[^A-Za-z0-9._\/-]/', '', (string) $value));
-}
-
-function sbd_current_theme_route() {
-  $path = sbd_route_path();
-  return array_key_exists($path, sbd_theme_routes()) ? $path : null;
-}
-
-add_action('send_headers', function () {
-  if (!sbd_route_diagnostics_enabled()) {
-    return;
-  }
-
-  $path = sbd_route_path();
-  $routes = sbd_theme_routes();
-  $matched = array_key_exists($path, $routes);
-  $template_exists = $matched && file_exists(get_stylesheet_directory() . '/' . $routes[$path]);
-  $marker_file = get_stylesheet_directory() . '/deployment-marker.txt';
-  $marker = file_exists($marker_file) ? trim((string) file_get_contents($marker_file)) : '';
-
-  header('X-SBD-Theme: active');
-  header('X-SBD-Route-Seen: ' . preg_replace('/[^A-Za-z0-9._\/-]/', '', $path));
-  header('X-SBD-Route-Matched: ' . ($matched ? 'yes' : 'no'));
-  header('X-SBD-Template-Exists: ' . ($template_exists ? 'yes' : 'no'));
-  header('X-SBD-Template-Redirect: pending');
-  header('X-SBD-Deploy: ' . preg_replace('/[^A-Za-z0-9._-]/', '', $marker));
-  header('X-LiteSpeed-Cache-Control: no-cache');
-});
-
 add_filter('body_class', function ($classes) {
-  if (sbd_current_theme_route() === 'storydonkey') {
+  if (is_page('storydonkey')) {
     $classes[] = 'storydonkey-template';
   }
   return $classes;
 });
-
-add_action('template_redirect', function () {
-  sbd_route_diagnostic_header('X-SBD-Template-Redirect', 'fired');
-  $route = sbd_current_theme_route();
-  if ($route === null) {
-    return;
-  }
-
-  $route_template = get_stylesheet_directory() . '/' . sbd_theme_routes()[$route];
-  if (!file_exists($route_template)) {
-    error_log('StoryDonkey route template missing: ' . $route_template);
-    return;
-  }
-
-  global $wp_query;
-  if ($wp_query instanceof WP_Query) {
-    $wp_query->is_404 = false;
-  }
-  status_header(200);
-  include $route_template;
-  exit;
-}, 0);
 
 add_action('wp_head', function () {
   $marker_file = get_stylesheet_directory() . '/deployment-marker.txt';
@@ -183,7 +104,10 @@ function sbd_get_required_pages() {
     'terms'                     => 'Terms of Service',
     'user-guide'                => 'User Guide',
     'pizza-chicken-pop-support' => 'Pizza Chicken Pop Support',
-    'storydonkey-whatever'     => 'StoryDonkey Whatever',
+    'storydonkey'               => 'StoryDonkey',
+    'storydonkey-privacy'       => 'StoryDonkey Privacy Policy',
+    'storydonkey-terms'         => 'StoryDonkey Terms of Use',
+    'storydonkey-support'       => 'StoryDonkey Support',
   ];
 }
 
