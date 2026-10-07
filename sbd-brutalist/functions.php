@@ -72,79 +72,55 @@ add_action('wp_enqueue_scripts', function () {
   );
 });
 
-// Theme-owned routes. These bypass WordPress page/template state and keep
-// StoryDonkey and its legal pages available even when placeholder pages are
-// missing or stale.
-add_action('init', function () {
-  add_rewrite_rule(
-    '^(storydonkey|storydonkey-privacy|storydonkey-terms|storydonkey-support|storydonkey-legal-privacy|storydonkey-legal-terms|storydonkey-legal-support)/?$',
-    'index.php?sbd_storydonkey_route=$matches[1]',
-    'top'
-  );
-});
-
-add_filter('query_vars', function ($vars) {
-  $vars[] = 'sbd_storydonkey_route';
-  return $vars;
-});
-
-// Serve these routes before WordPress can render its 404 template. This keeps
-// the legal pages available even when rewrite-rule persistence is unavailable
-// on the host or the placeholder pages have not yet been created.
-add_action('template_redirect', function () {
-  $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
-  $direct_routes = [
-    'storydonkey-privacy'      => 'page-storydonkey-privacy.php',
-    'storydonkey-terms'        => 'page-storydonkey-terms.php',
-    'storydonkey-support'      => 'page-storydonkey-support.php',
-    'storydonkey-legal-privacy' => 'page-storydonkey-privacy.php',
-    'storydonkey-legal-terms'   => 'page-storydonkey-terms.php',
-    'storydonkey-legal-support' => 'page-storydonkey-support.php',
+// Repository-owned StoryDonkey pages use one deterministic theme route map.
+// WordPress still hands unknown pretty URLs to index.php; this filter replaces
+// the 404 template only for explicitly approved routes and preserves the normal
+// theme environment (get_header(), wp_head(), get_footer(), and wp_footer()).
+function sbd_theme_routes() {
+  return [
+    'storydonkey'         => 'page-storydonkey.php',
+    'storydonkey-privacy' => 'page-storydonkey-privacy.php',
+    'storydonkey-terms'   => 'page-storydonkey-terms.php',
+    'storydonkey-support' => 'page-storydonkey-support.php',
   ];
+}
 
-  if (isset($direct_routes[$path])) {
-    $direct_template = get_stylesheet_directory() . '/' . $direct_routes[$path];
-    if (file_exists($direct_template)) {
-      status_header(200);
-      include $direct_template;
-      exit;
-    }
-  }
-}, 0);
+function sbd_current_theme_route() {
+  $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+  return array_key_exists($path, sbd_theme_routes()) ? $path : null;
+}
 
-// Give the StoryDonkey landing page its own masthead treatment.
 add_filter('body_class', function ($classes) {
-  if (is_page('storydonkey')) {
+  if (sbd_current_theme_route() === 'storydonkey') {
     $classes[] = 'storydonkey-template';
   }
   return $classes;
 });
 
-// Force the StoryDonkey landing page template even when an existing WordPress
-// page has a saved default template assignment from an earlier theme version.
 add_filter('template_include', function ($template) {
-  $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
-  $direct_routes = [
-    'storydonkey'         => 'page-storydonkey.php',
-    'storydonkey-privacy' => 'page-storydonkey-privacy.php',
-    'storydonkey-terms'   => 'page-storydonkey-terms.php',
-    'storydonkey-support'      => 'page-storydonkey-support.php',
-    'storydonkey-legal-privacy' => 'page-storydonkey-privacy.php',
-    'storydonkey-legal-terms'   => 'page-storydonkey-terms.php',
-    'storydonkey-legal-support' => 'page-storydonkey-support.php',
-  ];
-  $route = get_query_var('sbd_storydonkey_route');
-  $route = $route ?: $path;
-
-  if (isset($direct_routes[$route])) {
-    $direct_template = get_stylesheet_directory() . '/' . $direct_routes[$route];
-    if (file_exists($direct_template)) {
-      status_header(200);
-      return $direct_template;
-    }
+  $route = sbd_current_theme_route();
+  if ($route === null) {
+    return $template;
   }
 
-  return $template;
+  $route_template = get_stylesheet_directory() . '/' . sbd_theme_routes()[$route];
+  if (!file_exists($route_template)) {
+    error_log('StoryDonkey route template missing: ' . $route_template);
+    return $template;
+  }
+
+  status_header(200);
+  return $route_template;
+});
+
+add_action('wp_head', function () {
+  $marker_file = get_stylesheet_directory() . '/deployment-marker.txt';
+  if (file_exists($marker_file)) {
+    $marker = trim((string) file_get_contents($marker_file));
+    if ($marker !== '') {
+      echo '<meta name="sbd-deployment" content="' . esc_attr($marker) . '">';
+    }
+  }
 });
 
 // Required pages manifest — bump $version whenever you add or remove entries.
@@ -161,27 +137,32 @@ function sbd_get_required_pages() {
     'privacy'                   => 'Privacy Policy',
     'terms'                     => 'Terms of Service',
     'user-guide'                => 'User Guide',
-    'storydonkey'               => 'StoryDonkey Beta',
-    'storydonkey-privacy'       => 'StoryDonkey Privacy Policy',
-    'storydonkey-terms'         => 'StoryDonkey Terms of Use',
-    'storydonkey-support'       => 'StoryDonkey Support',
     'pizza-chicken-pop-support' => 'Pizza Chicken Pop Support',
   ];
 }
 
 // Create any missing required pages (idempotent — never duplicates).
 function sbd_create_required_pages() {
-  foreach ( sbd_get_required_pages() as $slug => $title ) {
-    if ( ! get_page_by_path( $slug ) ) {
-      wp_insert_post( [
-        'post_title'   => $title,
-        'post_name'    => $slug,
-        'post_status'  => 'publish',
-        'post_type'    => 'page',
-        'post_content' => '',
-      ] );
+  foreach (sbd_get_required_pages() as $slug => $title) {
+    if (get_page_by_path($slug)) {
+      continue;
+    }
+
+    $page_id = wp_insert_post([
+      'post_title'   => $title,
+      'post_name'    => $slug,
+      'post_status'  => 'publish',
+      'post_type'    => 'page',
+      'post_content' => '',
+    ], true);
+
+    if (is_wp_error($page_id)) {
+      error_log('Unable to create required page ' . $slug . ': ' . $page_id->get_error_message());
+      return $page_id;
     }
   }
+
+  return true;
 }
 
 // Run on theme activation (covers first-time setup).
@@ -194,15 +175,17 @@ add_action( 'after_switch_theme', 'sbd_create_required_pages' );
 add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
-  // Bump this string whenever sbd_get_required_pages() is updated.
-  $version = '2026-10-07-v9';
+  // Bump this string only when a legacy required page is added or removed.
+  $version = '2026-10-07-v10';
 
-  if ( get_option( 'sbd_required_pages_version' ) === $version ) {
+  if (get_option('sbd_required_pages_version') === $version) {
     return;
   }
 
-  sbd_create_required_pages();
-  update_option( 'sbd_required_pages_version', $version );
-  // New theme-driven page slugs need a rewrite refresh before pretty URLs resolve.
-  flush_rewrite_rules( false );
+  $result = sbd_create_required_pages();
+  if (is_wp_error($result)) {
+    return;
+  }
+
+  update_option('sbd_required_pages_version', $version);
 }

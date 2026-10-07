@@ -7,38 +7,61 @@ on:
       - "sbd-brutalist/**"
       - ".github/workflows/deploy-theme-ftp.yml"
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Checkout repo
+      - name: Checkout exact commit
         uses: actions/checkout@v4
 
-      - name: Deploy theme via FTP (force refresh)
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Write deployment marker
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          printf 'sha=%s\ndeployed_at=%s\n' "$GITHUB_SHA" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > sbd-brutalist/deployment-marker.txt
+
+      - name: Deploy theme via FTP
         env:
           FTP_USER: ${{ secrets.FTP_USER }}
           FTP_PASS: ${{ secrets.FTP_PASS }}
           FTP_DEST: ${{ secrets.FTP_DEST }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
-          # Host timestamps can be newer than the checkout. --ignore-time is
-          # required so changed PHP files and new templates are uploaded.
           lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mirror --reverse --continue --dereference --ignore-time -x '^\\.git/$' sbd-brutalist \"$FTP_DEST\"; quit"
 
-      - name: Verify legal templates landed in active theme directory
+      - name: Verify required files exist under FTP_DEST
         env:
           FTP_USER: ${{ secrets.FTP_USER }}
           FTP_PASS: ${{ secrets.FTP_PASS }}
           FTP_DEST: ${{ secrets.FTP_DEST }}
         run: |
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_DEST/functions.php\" \"$FTP_DEST/page-storydonkey-privacy.php\" \"$FTP_DEST/page-storydonkey-terms.php\" \"$FTP_DEST/page-storydonkey-support.php\"; quit"
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_DEST/functions.php\" \"$FTP_DEST/deployment-marker.txt\" \"$FTP_DEST/page-storydonkey.php\" \"$FTP_DEST/page-storydonkey-privacy.php\" \"$FTP_DEST/page-storydonkey-terms.php\" \"$FTP_DEST/page-storydonkey-support.php\"; quit"
 
-      - name: Purge LiteSpeed cache
+      - name: Smoke-test production routes
+        env:
+          GITHUB_SHA: ${{ github.sha }}
         run: |
-          curl -s -o /dev/null -w "%{http_code}" \
-            -X GET \
-            "https://savagesbydesign.com/?litespeed=purge&type=all" \
-            -H "X-LiteSpeed-Purge: *"
+          set -euo pipefail
+          check_route() {
+            slug="$1"
+            expected="$2"
+            url="https://savagesbydesign.com/${slug}/?deploy=${GITHUB_SHA}"
+            body="$(curl --fail --silent --show-error --location --retry 2 --max-time 30 "$url")"
+            grep -Fq "$expected" <<<"$body"
+            grep -Fq "${GITHUB_SHA}" <<<"$body"
+          }
+          check_route "storydonkey" "StoryDonkey"
+          check_route "storydonkey-privacy" "StoryDonkey Privacy Policy"
+          check_route "storydonkey-terms" "StoryDonkey Terms of Use"
+          check_route "storydonkey-support" "StoryDonkey Support"
+
+      - name: Note cache limitation
+        run: |
+          echo "Production smoke tests use commit-specific query strings. LiteSpeed purge is not treated as proof of invalidation."

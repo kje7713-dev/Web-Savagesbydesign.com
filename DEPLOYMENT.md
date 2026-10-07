@@ -1,196 +1,57 @@
-# Deployment Reference
+# Production deployment
 
-## Critical Rule: Always Publish, Never Draft
+This repository is the source of truth for the theme-driven WordPress site.
 
-**All pages and content deployed through the brutalist theme pipeline must be published.**
-
-This repository operates under a strict **publish-only** policy. Pages are never created or deployed in draft status.
-
----
-
-## Deployment Pipeline Overview
-
-The site uses a **theme-driven FTP deployment pipeline** via GitHub Actions.
-
-### How It Works
-
-1. **Source of Truth:** All content lives in this repository under `sbd-brutalist/`
-2. **Trigger:** Push to `main` branch with changes to `sbd-brutalist/**`
-3. **Action:** `.github/workflows/deploy-theme-ftp.yml` deploys via FTP
-4. **Target:** Hostinger WordPress installation at `wp-content/themes/sbd-brutalist`
-5. **Status:** All pages are created with `post_status => 'publish'`
-
-### GitHub Actions Workflow
-
-**File:** `.github/workflows/deploy-theme-ftp.yml`
-
-```yaml
-on:
-  push:
-    branches: ["main"]
-    paths:
-      - "sbd-brutalist/**"
-      - ".github/workflows/deploy-theme-ftp.yml"
+```text
+sbd-brutalist/
+      ↓
+push/merge to main
+      ↓
+.github/workflows/deploy-theme-ftp.yml
+      ↓
+Hostinger FTP: 157.173.208.128
+      ↓
+FTP_DEST (remote active theme directory)
+      ↓
+active WordPress theme
+      ↓
+public production smoke tests
 ```
 
-**Deployment Method:** FTP (sebastianpopp/ftp-action@v2.0.0)
+The workflow deploys the contents of `sbd-brutalist/` with `lftp mirror --reverse --continue --dereference --ignore-time`. The fixed FTP IP is intentional: the historical hostname failed DNS resolution. `FTP_DEST` is a GitHub Actions secret whose value is not stored in this repository; it must point to the active WordPress theme directory relative to the FTP account root. Do not guess or rewrite it.
 
----
+`public-root/` is a separate deployment path for root files such as `app-ads.txt`. Its `FTP_SITE_ROOT` secret is separate from `FTP_DEST`.
 
-## Page Creation: Publish Only
+## Repository-owned StoryDonkey pages
 
-Pages are automatically created by the theme on activation.
+StoryDonkey routes are owned by the theme and do not depend on WordPress database placeholder pages:
 
-**File:** `sbd-brutalist/functions.php`
+- `/storydonkey/`
+- `/storydonkey-privacy/`
+- `/storydonkey-terms/`
+- `/storydonkey-support/`
 
-**Function:** `sbd_create_required_pages()`
+The canonical map is `sbd_theme_routes()` in `sbd-brutalist/functions.php`. A new repository-owned page requires:
 
-**Critical Line:**
-```php
-'post_status' => 'publish',  // ALWAYS publish, NEVER draft
-```
+1. Add its PHP template under `sbd-brutalist/`.
+2. Add its approved slug and template to `sbd_theme_routes()`.
+3. Add its expected text to the production smoke test.
+4. Open a PR.
+5. Merge to `main`.
+6. Treat deployment as successful only when the public smoke test passes.
 
-### Pages Created on Theme Activation
+The workflow writes a non-secret deployment marker containing the commit SHA and timestamp. The theme exposes that marker as a safe HTML meta value so smoke tests prove which commit production is serving.
 
-All pages are created with published status:
+## Legacy WordPress pages
 
-- `/app` (App)
-- `/offerings` (Offerings)
-- `/guides` (Guides)
-- `/reviews` (Reviews)
-- `/deals` (Deals)
-- `/contact` (Contact)
-- `/privacy` (Privacy Policy)
-- `/terms` (Terms of Service)
-- `/user-guide` (User Guide)
+The theme still creates older site pages such as `/app/`, `/contact/`, `/privacy/`, `/terms/`, `/user-guide/`, and `/pizza-chicken-pop-support/` when needed. Creation checks `wp_insert_post()` errors and does not mark the migration complete after a failure. StoryDonkey routes are not part of this database migration.
 
----
+## Explicit prohibitions
 
-## Why Publish-Only?
-
-1. **Theme-Driven Architecture:** WordPress is used as a renderer, not a content editor
-2. **Template Hierarchy:** Page templates (`page-*.php`) control all visible content
-3. **No WP UI Dependency:** Pages are routing placeholders only
-4. **Single Source of Truth:** The repository controls what's live
-5. **FTP Deploy = Live Deploy:** When code hits production, it goes live
-
----
-
-## Deployment Checklist
-
-When deploying changes:
-
-- [ ] Edit files in `sbd-brutalist/` directory
-- [ ] Commit and push to `main` branch
-- [ ] GitHub Actions deploys via FTP automatically
-- [ ] Purge LiteSpeed cache: **WordPress Admin → LiteSpeed Cache → Toolbox → Purge All**
-- [ ] Verify changes in private/incognito browser window
-- [ ] Confirm pages are **published** (not draft)
-
----
-
-## Forbidden: Draft Status
-
-**Do not create pages in draft status.**
-
-The following are violations of the deployment pipeline:
-
-- ❌ Creating pages with `'post_status' => 'draft'`
-- ❌ Using WordPress UI to create draft pages
-- ❌ Using REST/JWT API to sync draft content
-- ❌ Deploying content that isn't immediately visible
-
-**If a page exists in draft status, it is legacy/cleanup and must be published or deleted.**
-
----
-
-## Post-Deployment Cache Purge
-
-**Critical:** Hostinger/LiteSpeed caches aggressively.
-
-After ANY deployment:
-
-1. Login to WordPress Admin
-2. Navigate to **LiteSpeed Cache → Toolbox → Purge All**
-3. Open site in private/incognito browser
-4. Verify changes are visible
-
-**Failure to purge cache will make it appear as if deployment failed.**
-
----
-
-## Workflow Files
-
-### Active Deployment Workflow
-
-**File:** `.github/workflows/deploy-theme-ftp.yml`
-- **Trigger:** Push to `main` with `sbd-brutalist/**` changes
-- **Action:** FTP deploy to production
-- **Status:** Active and operational
-
-### Disabled Workflow (Reference Only)
-
-**File:** `.github/workflows/wp-sync.yml`
-- **Status:** Disabled (workflow_dispatch only)
-- **Purpose:** JWT content sync (not used in theme-driven mode)
-- **Note:** Theme-driven FTP deployment is the only active pipeline
-
----
-
-## Mental Model
-
-```
-Repository (sbd-brutalist/) 
-    ↓
-Push to main
-    ↓
-GitHub Actions (deploy-theme-ftp.yml)
-    ↓
-FTP Upload to Production
-    ↓
-WordPress Serves Templates
-    ↓
-ALL PAGES ARE PUBLISHED
-```
-
----
-
-## Quick Reference
-
-| Aspect | Value |
-|--------|-------|
-| Deployment Method | FTP via GitHub Actions |
-| Trigger | Push to `main` with theme changes |
-| Theme Directory | `sbd-brutalist/` |
-| Target Location | `wp-content/themes/sbd-brutalist` |
-| Page Status | **Always `publish`** |
-| Cache | Must purge after deploy |
-| Source of Truth | This repository |
-
----
-
-## Root-Level Static Files
-
-Files in `public-root/` are deployed to the WordPress site root (e.g. `public_html/`) via a separate workflow: `.github/workflows/deploy-root-files-ftp.yml`.
-
-**Required GitHub secret:** `FTP_SITE_ROOT` — the absolute FTP path to the WordPress public root (e.g. `/public_html`). Uses the same `FTP_HOST`, `FTP_USER`, `FTP_PASS`, and `FTP_PORT` secrets as the theme workflow.
-
-### Current root files
-
-| File | Purpose | Public URL |
-|------|---------|------------|
-| `public-root/app-ads.txt` | AdMob verification for Pizza Chicken Pop | `https://savagesbydesign.com/app-ads.txt` |
-
-**Important:** Do not remove or rename `app-ads.txt`. AdMob crawls this URL to verify ad publisher identity for Pizza Chicken Pop. The file must remain at the site root and return plain text with no redirects.
-
----
-
-## Summary
-
-**Remember:** This pipeline deploys directly to production with published status.
-
-There is no staging, no draft mode, no preview environment.
-
-**When you push to main, it goes live as published.**
-
-Plan accordingly.
+- Do not change the FTP host, `FTP_DEST`, credentials, or deployment architecture for an ordinary page.
+- Do not create repository-owned StoryDonkey pages in WordPress Admin.
+- Do not add another page-creation version bump to retry a StoryDonkey route.
+- Do not add parallel rewrite, query-var, template, or alias workarounds.
+- Do not declare success because FTP returned success; verify the public URL and expected body text.
+- Do not treat a homepage curl response as proof that LiteSpeed was purged. Smoke tests use commit-specific query strings and document the purge limitation.
+- Do not push directly to `main`; use a PR unless the owner explicitly instructs otherwise.
