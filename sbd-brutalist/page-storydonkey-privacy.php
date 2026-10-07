@@ -49,6 +49,11 @@
     <p>You may ask us to access, correct, or delete personal information we control, subject to legal and operational limits. You may unsubscribe from non-essential email communications by using the unsubscribe option where provided or contacting support.</p>
   </section>
 
+  <section class="section section-dark">
+    <h2>Apple App Store disclosure</h2>
+    <p>If you download StoryDonkey from Apple’s App Store, Apple may process purchase, subscription, device, and account information under Apple’s own terms and privacy policy. Apple’s privacy policy is available at <a href="https://www.apple.com/legal/privacy/" rel="noopener">apple.com/legal/privacy</a>. We do not receive your payment card details from Apple.</p>
+  </section>
+
   <section class="section">
     <h2>Children</h2>
     <p>StoryDonkey is not directed to children under 13, and we do not knowingly collect personal information from children under 13.</p>

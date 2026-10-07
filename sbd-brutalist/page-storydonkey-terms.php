@@ -65,6 +65,12 @@
     <p>We may suspend or terminate access if you violate these Terms, create risk, abuse the service, or if we discontinue the service. We may update these Terms by posting a revised version at this URL. Continued use after the effective date means you accept the revised Terms.</p>
   </section>
 
+  <section class="section section-dark">
+    <h2>Apple App Store terms</h2>
+    <p>If you obtain StoryDonkey through Apple’s App Store, your use is also subject to Apple’s <a href="https://www.apple.com/legal/internet-services/itunes/" rel="noopener">Licensed Application End User License Agreement</a> and applicable App Store terms. Apple is not responsible for StoryDonkey, its maintenance, support, warranties, or claims relating to it. To the extent permitted by law, Apple is a third-party beneficiary of these Terms and may enforce them against you.</p>
+    <p>Any subscription or in-app purchase is processed through Apple. Apple controls billing, renewals, cancellation, and refund processing. Manage subscriptions through your Apple account settings and direct refund requests to Apple. Pricing, duration, trial eligibility, and renewal details will be shown before purchase.</p>
+  </section>
+
   <section class="section">
     <h2>Governing law and contact</h2>
     <p>These Terms are governed by the laws applicable to Savages By Design, without regard to conflict-of-law rules, except where applicable law provides otherwise. Contact: <a href="mailto:savagesbydesignhq@gmail.com">savagesbydesignhq@gmail.com</a></p>
