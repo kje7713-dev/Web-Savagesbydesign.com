@@ -77,7 +77,7 @@ add_action('wp_enqueue_scripts', function () {
 // missing or stale.
 add_action('init', function () {
   add_rewrite_rule(
-    '^(storydonkey|storydonkey-privacy|storydonkey-terms|storydonkey-support)/?$',
+    '^(storydonkey|storydonkey-privacy|storydonkey-terms|storydonkey-support|storydonkey-legal-privacy|storydonkey-legal-terms|storydonkey-legal-support)/?$',
     'index.php?sbd_storydonkey_route=$matches[1]',
     'top'
   );
@@ -104,7 +104,10 @@ add_filter('template_include', function ($template) {
     'storydonkey'         => 'page-storydonkey.php',
     'storydonkey-privacy' => 'page-storydonkey-privacy.php',
     'storydonkey-terms'   => 'page-storydonkey-terms.php',
-    'storydonkey-support' => 'page-storydonkey-support.php',
+    'storydonkey-support'      => 'page-storydonkey-support.php',
+    'storydonkey-legal-privacy' => 'page-storydonkey-privacy.php',
+    'storydonkey-legal-terms'   => 'page-storydonkey-terms.php',
+    'storydonkey-legal-support' => 'page-storydonkey-support.php',
   ];
   $route = get_query_var('sbd_storydonkey_route');
   $route = $route ?: $path;
@@ -168,7 +171,7 @@ add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
   // Bump this string whenever sbd_get_required_pages() is updated.
-  $version = '2026-10-07-v7';
+  $version = '2026-10-07-v8';
 
   if ( get_option( 'sbd_required_pages_version' ) === $version ) {
     return;
