@@ -14,6 +14,9 @@ jobs:
       - name: Checkout diagnostic
         uses: actions/checkout@v4
 
+      - name: Stage unique temporary runtime diagnostic
+        run: cp public-root/sbd-runtime-diagnostic.php "public-root/sbd-runtime-diagnostic-${GITHUB_RUN_ID}.php"
+
       - name: Deploy temporary runtime diagnostic
         uses: sebastianpopp/ftp-action@v2.0.0
         with:
@@ -36,7 +39,7 @@ jobs:
             --header "Cache-Control: no-store" \
             --output /tmp/sbd-runtime-diagnostic.json \
             --write-out '%{http_code}' \
-            "https://savagesbydesign.com/sbd-runtime-diagnostic.php?run=${GITHUB_RUN_ID}")"
+            "https://savagesbydesign.com/sbd-runtime-diagnostic-${GITHUB_RUN_ID}.php")"
           printf 'diagnostic_http_status=%s\n' "$http_status"
           cat /tmp/sbd-runtime-diagnostic.json
           [ "$http_status" = 200 ]
@@ -80,7 +83,8 @@ jobs:
           FTP_USER: ${{ secrets.FTP_USER }}
           FTP_PASS: ${{ secrets.FTP_PASS }}
           FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
           sudo apt-get update && sudo apt-get install -y lftp
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_HOST\"; rm \"$FTP_SITE_ROOT/sbd-runtime-diagnostic.php\"; quit"
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_HOST\"; rm \"$FTP_SITE_ROOT/sbd-runtime-diagnostic.php\" \"$FTP_SITE_ROOT/sbd-runtime-diagnostic-$GITHUB_RUN_ID.php\"; quit"
