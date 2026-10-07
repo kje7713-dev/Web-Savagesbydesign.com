@@ -1,0 +1,39 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "sbd-brutalist/**"
+      - ".github/workflows/**"
+      - "DEPLOYMENT.md"
+      - "AGENTS.md"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR with history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+
+      - name: Check PHP syntax
+        run: |
+          set -euo pipefail
+          find sbd-brutalist -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check diff whitespace
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
+
+      - name: Check workflow YAML syntax
+        run: ruby -e "require 'yaml'; Dir['.github/workflows/*.yml'].each { |f| YAML.load_file(f); puts \"valid: #{f}\" }"

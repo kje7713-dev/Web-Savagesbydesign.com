@@ -73,9 +73,10 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 // Repository-owned StoryDonkey pages use one deterministic theme route map.
-// WordPress still hands unknown pretty URLs to index.php; this filter replaces
-// the 404 template only for explicitly approved routes and preserves the normal
-// theme environment (get_header(), wp_head(), get_footer(), and wp_footer()).
+// WordPress still hands unknown pretty URLs to index.php; this early handler
+// serves only explicitly approved routes before canonical/404 redirects and
+// preserves the normal theme environment (get_header(), wp_head(), get_footer(),
+// and wp_footer()).
 function sbd_theme_routes() {
   return [
     'storydonkey'         => 'page-storydonkey.php',
@@ -97,21 +98,26 @@ add_filter('body_class', function ($classes) {
   return $classes;
 });
 
-add_filter('template_include', function ($template) {
+add_action('template_redirect', function () {
   $route = sbd_current_theme_route();
   if ($route === null) {
-    return $template;
+    return;
   }
 
   $route_template = get_stylesheet_directory() . '/' . sbd_theme_routes()[$route];
   if (!file_exists($route_template)) {
     error_log('StoryDonkey route template missing: ' . $route_template);
-    return $template;
+    return;
   }
 
+  global $wp_query;
+  if ($wp_query instanceof WP_Query) {
+    $wp_query->is_404 = false;
+  }
   status_header(200);
-  return $route_template;
-});
+  include $route_template;
+  exit;
+}, 0);
 
 add_action('wp_head', function () {
   $marker_file = get_stylesheet_directory() . '/deployment-marker.txt';

@@ -31,7 +31,7 @@ StoryDonkey routes are owned by the theme and do not depend on WordPress databas
 - `/storydonkey-terms/`
 - `/storydonkey-support/`
 
-The canonical map is `sbd_theme_routes()` in `sbd-brutalist/functions.php`. A new repository-owned page requires:
+The canonical map is `sbd_theme_routes()` in `sbd-brutalist/functions.php`. An early priority-0 `template_redirect` handler serves only those exact paths before WordPress canonical/404 redirects. A new repository-owned page requires:
 
 1. Add its PHP template under `sbd-brutalist/`.
 2. Add its approved slug and template to `sbd_theme_routes()`.
