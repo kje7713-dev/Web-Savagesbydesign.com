@@ -110,6 +110,9 @@ function sbd_get_required_pages() {
     'terms'                     => 'Terms of Service',
     'user-guide'                => 'User Guide',
     'storydonkey'               => 'StoryDonkey Beta',
+    'storydonkey-privacy'       => 'StoryDonkey Privacy Policy',
+    'storydonkey-terms'         => 'StoryDonkey Terms of Use',
+    'storydonkey-support'       => 'StoryDonkey Support',
     'pizza-chicken-pop-support' => 'Pizza Chicken Pop Support',
   ];
 }
@@ -140,7 +143,7 @@ add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
   // Bump this string whenever sbd_get_required_pages() is updated.
-  $version = '2026-10-03-v5';
+  $version = '2026-10-07-v6';
 
   if ( get_option( 'sbd_required_pages_version' ) === $version ) {
     return;
