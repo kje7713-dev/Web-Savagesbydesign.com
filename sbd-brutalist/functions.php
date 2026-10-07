@@ -84,11 +84,18 @@ add_filter('body_class', function ($classes) {
 // page has a saved default template assignment from an earlier theme version.
 add_filter('template_include', function ($template) {
   $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
-  if ($path === 'storydonkey' || is_page('storydonkey')) {
-    $storydonkey_template = get_stylesheet_directory() . '/page-storydonkey.php';
-    if (file_exists($storydonkey_template)) {
+  $direct_routes = [
+    'storydonkey'         => 'page-storydonkey.php',
+    'storydonkey-privacy' => 'page-storydonkey-privacy.php',
+    'storydonkey-terms'   => 'page-storydonkey-terms.php',
+    'storydonkey-support' => 'page-storydonkey-support.php',
+  ];
+
+  if (isset($direct_routes[$path])) {
+    $direct_template = get_stylesheet_directory() . '/' . $direct_routes[$path];
+    if (file_exists($direct_template)) {
       status_header(200);
-      return $storydonkey_template;
+      return $direct_template;
     }
   }
 
