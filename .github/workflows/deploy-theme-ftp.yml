@@ -34,7 +34,7 @@ jobs:
           FTP_PASS: ${{ secrets.FTP_PASS }}
           FTP_DEST: ${{ secrets.FTP_DEST }}
         run: |
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mirror --reverse --continue --dereference --ignore-time -x '^\\.git/$' sbd-brutalist \"$FTP_DEST\"; quit"
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mirror --reverse --continue --dereference --ignore-time -x '^\\.git/$' sbd-brutalist \"$FTP_DEST\"; put sbd-brutalist/deployment-marker.txt -o \"$FTP_DEST/deployment-marker.txt\"; quit"
 
       - name: Verify required files exist under FTP_DEST
         env:
