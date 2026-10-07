@@ -38,4 +38,11 @@ jobs:
         run: git diff --check origin/main...HEAD
 
       - name: Check workflow YAML syntax
-        run: ruby -e "require 'yaml'; Dir['.github/workflows/*.yml'].each { |f| YAML.load_file(f); puts \"valid: #{f}\" }"
+        run: |
+          ruby <<'RUBY'
+          require 'yaml'
+          Dir['.github/workflows/*.yml'].each do |file|
+            YAML.load_file(file)
+            puts "valid: #{file}"
+          end
+          RUBY
