@@ -22,38 +22,63 @@ The workflow deploys the contents of `sbd-brutalist/` with `lftp mirror --revers
 
 `public-root/` is a separate deployment path for root files such as `app-ads.txt`. Its `FTP_SITE_ROOT` secret is separate from `FTP_DEST`.
 
-## Repository-owned StoryDonkey pages
+## New repository-controlled WordPress pages
 
-StoryDonkey routes are owned by the theme and do not depend on WordPress database placeholder pages:
+WordPress holds only a published routing placeholder. Page content and design remain in the repository. The normal architecture is:
 
-- `/storydonkey/`
-- `/storydonkey-privacy/`
-- `/storydonkey-terms/`
-- `/storydonkey-support/`
+```text
+published WordPress page
+        ↓
+WordPress resolves the canonical slug
+        ↓
+page-{slug}.php
+```
 
-The canonical map is `sbd_theme_routes()` in `sbd-brutalist/functions.php`. An early priority-0 `template_redirect` handler serves only those exact paths before WordPress canonical/404 redirects. A new repository-owned page requires:
+For a new page:
 
-1. Add its PHP template under `sbd-brutalist/`.
-2. Add its approved slug and template to `sbd_theme_routes()`.
-3. Add its expected text to the production smoke test.
-4. Open a PR.
-5. Merge to `main`.
-6. Treat deployment as successful only when the public smoke test passes.
+1. Choose the canonical slug.
+2. Add the slug/title to `sbd_get_required_pages()` in `sbd-brutalist/functions.php`.
+3. Create `page-{slug}.php` in `sbd-brutalist/`.
+4. Bump the required-page migration version once.
+5. Add the public URL and expected content to the production smoke tests.
+6. Open a PR.
+7. WordPress creates the published placeholder during the checked migration.
+8. Normal WordPress template hierarchy selects `page-{slug}.php`.
+9. Treat deployment as successful only when the public smoke test passes.
+
+Agents must not create the page manually in WordPress Admin or build custom rewrite, query-var, template-router, direct-include, or URL-alias workarounds for ordinary repository-controlled pages.
+
+The StoryDonkey smoke tests cover:
+
+- `/storydonkey/` → `StoryDonkey`
+- `/storydonkey-privacy/` → `StoryDonkey Privacy Policy`
+- `/storydonkey-terms/` → `StoryDonkey Terms of Use`
+- `/storydonkey-support/` → `StoryDonkey Support`
+
+## Deployment lifecycle
+
+The production workflow runs these steps in order:
+
+1. Upload the theme over FTP.
+2. Verify required remote files exist.
+3. Verify deployed bytes match the checkout.
+4. Send an authenticated POST to WordPress `admin-post.php` using the `sbd_deploy_bootstrap` action.
+5. The bootstrap executes WordPress/PHP, explicitly runs the checked required-page creation, verifies all four StoryDonkey placeholders are published `page` posts, and updates the migration version only after success.
+6. The bootstrap requests LiteSpeed purges for the four affected public URLs through `litespeed_purge_url` when the hook is available. It reports `unavailable` safely if the hook is not loaded.
+7. Run public GET smoke tests requiring HTTP 200, expected text, and the exact deployed commit SHA.
+
+The bootstrap token is never stored in this repository. Configure the GitHub Actions `SBD_DEPLOY_TOKEN` secret to match a server-side `SBD_DEPLOY_TOKEN` constant or environment variable available to WordPress. Do not print or expose the token. FTP success alone does not prove that WordPress executed PHP: cached GETs can be served without running `init`, so the authenticated POST is the deterministic page-creation and cache-purge step.
 
 The workflow writes a non-secret deployment marker containing the commit SHA and timestamp. The theme exposes that marker as a safe HTML meta value so smoke tests prove which commit production is serving.
 
-For route investigations, the smoke test adds `sbd_diag=1`. When PHP handles that request, it emits only safe diagnostic headers: `X-SBD-Theme`, `X-SBD-Route-Seen`, `X-SBD-Route-Matched`, `X-SBD-Template-Exists`, `X-SBD-Template-Redirect`, and `X-SBD-Deploy`. The diagnostic response also requests LiteSpeed no-cache treatment. Missing diagnostic headers are evidence that the response may have been served before the active theme ran; they are not treated as proof that PHP handled the route.
-
 ## Legacy WordPress pages
 
-The theme still creates older site pages such as `/app/`, `/contact/`, `/privacy/`, `/terms/`, `/user-guide/`, and `/pizza-chicken-pop-support/` when needed. Creation checks `wp_insert_post()` errors and does not mark the migration complete after a failure. StoryDonkey routes are not part of this database migration.
+The theme still creates older site pages such as `/app/`, `/contact/`, `/privacy/`, `/terms/`, `/user-guide/`, and `/pizza-chicken-pop-support/` when needed. Creation checks `wp_insert_post()` errors and does not mark the migration complete after a failure.
 
 ## Explicit prohibitions
 
 - Do not change the FTP host, `FTP_DEST`, credentials, or deployment architecture for an ordinary page.
-- Do not create repository-owned StoryDonkey pages in WordPress Admin.
-- Do not add another page-creation version bump to retry a StoryDonkey route.
+- Do not create repository-controlled pages in WordPress Admin.
 - Do not add parallel rewrite, query-var, template, or alias workarounds.
-- Do not declare success because FTP returned success; verify the public URL and expected body text.
-- Do not treat a homepage curl response as proof that LiteSpeed was purged. Smoke tests inspect every route, print status/final URL/cache and route-diagnostic evidence, and fail only after all routes have been reported. Query strings alone are not assumed to bypass LiteSpeed 404 caching.
+- Do not declare success because FTP returned success; verify every public URL and expected body text.
 - Do not push directly to `main`; use a PR unless the owner explicitly instructs otherwise.

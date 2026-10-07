@@ -59,6 +59,16 @@ jobs:
             printf 'verified-bytes %s\n' "$file"
           done
 
+      - name: Bootstrap WordPress and purge affected URLs
+        env:
+          SBD_DEPLOY_TOKEN: ${{ secrets.SBD_DEPLOY_TOKEN }}
+        run: |
+          curl --fail --silent --show-error --max-time 30 \
+            --request POST \
+            --data-urlencode "action=sbd_deploy_bootstrap" \
+            --data-urlencode "token=${SBD_DEPLOY_TOKEN}" \
+            https://savagesbydesign.com/wp-admin/admin-post.php
+
       - name: Smoke-test production routes
         env:
           GITHUB_SHA: ${{ github.sha }}
@@ -73,7 +83,7 @@ jobs:
             expected="$2"
             headers="$temp_dir/${slug}.headers"
             body="$temp_dir/${slug}.body"
-            url="https://savagesbydesign.com/${slug}/?deploy=${GITHUB_SHA}&sbd_diag=1"
+            url="https://savagesbydesign.com/${slug}/?deploy=${GITHUB_SHA}"
             result="$(curl --silent --show-error --location --retry 2 --max-time 30 \
               -D "$headers" -o "$body" -w '%{http_code}\t%{url_effective}' "$url" 2>&1)"
             curl_status=$?
@@ -85,24 +95,15 @@ jobs:
               grep -i "^$1:" "$headers" | tail -1 | cut -d: -f2- | tr -d '\r' | sed 's/^ *//' || true
             }
 
-            theme="$(header_value 'X-SBD-Theme')"
-            route_seen="$(header_value 'X-SBD-Route-Seen')"
-            route_matched="$(header_value 'X-SBD-Route-Matched')"
-            redirect_fired="$(header_value 'X-SBD-Template-Redirect')"
-            template_exists="$(header_value 'X-SBD-Template-Exists')"
-            deploy="$(header_value 'X-SBD-Deploy')"
             cache="$(header_value 'X-LiteSpeed-Cache')"
             expected_ok=no
             sha_ok=no
             [ "$curl_status" -eq 0 ] && grep -Fq "$expected" "$body" && expected_ok=yes
             [ "$curl_status" -eq 0 ] && grep -Fq "$GITHUB_SHA" "$body" && sha_ok=yes
-            route_marker=no
-            [ "$theme" = active ] && [ "$route_matched" = yes ] && [ "$redirect_fired" = fired ] && route_marker=yes
+            printf '%-24s status=%-9s sha=%-3s expected=%-3s cache=%s final=%s\n' \
+              "$slug" "$status" "$sha_ok" "$expected_ok" "${cache:-?}" "$final_url"
 
-            printf '%-20s status=%-9s sha=%-3s route-marker=%-3s expected=%-3s theme=%-6s deploy=%-12s seen=%-28s matched=%-3s template=%-3s redirect=%-6s cache=%s final=%s\n' \
-              "$slug" "$status" "$sha_ok" "$route_marker" "$expected_ok" "$theme" "${deploy:-?}" "$route_seen" "$route_matched" "$template_exists" "$redirect_fired" "${cache:-?}" "$final_url"
-
-            if [ "$status" != 200 ] || [ "$sha_ok" != yes ] || [ "$route_marker" != yes ] || [ "$expected_ok" != yes ]; then
+            if [ "$status" != 200 ] || [ "$sha_ok" != yes ] || [ "$expected_ok" != yes ]; then
               failures=$((failures + 1))
             fi
           }
