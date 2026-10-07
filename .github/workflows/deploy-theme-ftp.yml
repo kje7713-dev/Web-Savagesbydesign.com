@@ -25,6 +25,9 @@ jobs:
           localDir: "sbd-brutalist"
           # FTP_DEST is relative to the FTP account root (already public_html).
           remoteDir: "${{ secrets.FTP_DEST }}"
+          # Host timestamps can be newer than the checkout, causing changed PHP
+          # files and newly added templates to be skipped by lftp mirror.
+          options: "--ignore-time"
 
       - name: Purge LiteSpeed cache
         run: |
