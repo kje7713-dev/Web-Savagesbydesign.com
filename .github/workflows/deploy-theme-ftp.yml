@@ -42,7 +42,7 @@ jobs:
           FTP_PASS: ${{ secrets.FTP_PASS }}
           FTP_DEST: ${{ secrets.FTP_DEST }}
         run: |
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_DEST/functions.php\" \"$FTP_DEST/deployment-marker.txt\" \"$FTP_DEST/page-storydonkey.php\" \"$FTP_DEST/page-storydonkey-privacy.php\" \"$FTP_DEST/page-storydonkey-terms.php\" \"$FTP_DEST/page-storydonkey-support.php\"; quit"
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_DEST/functions.php\" \"$FTP_DEST/deployment-marker.txt\" \"$FTP_DEST/page-storydonkey.php\" \"$FTP_DEST/page-storydonkey-privacy.php\" \"$FTP_DEST/page-storydonkey-terms.php\" \"$FTP_DEST/page-storydonkey-support.php\" \"$FTP_DEST/page-storydonkey-whatever.php\"; quit"
 
       - name: Verify deployed bytes match checkout
         env:
@@ -53,7 +53,7 @@ jobs:
           set -euo pipefail
           remote_dir="$(mktemp -d)"
           trap 'rm -rf "$remote_dir"' EXIT
-          for file in functions.php deployment-marker.txt page-storydonkey.php page-storydonkey-privacy.php page-storydonkey-terms.php page-storydonkey-support.php; do
+          for file in functions.php deployment-marker.txt page-storydonkey.php page-storydonkey-privacy.php page-storydonkey-terms.php page-storydonkey-support.php page-storydonkey-whatever.php; do
             lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_DEST/$file\" -o \"$remote_dir/$file\"; quit"
             cmp -- "sbd-brutalist/$file" "$remote_dir/$file"
             printf 'verified-bytes %s\n' "$file"
@@ -111,6 +111,7 @@ jobs:
           check_route "storydonkey-privacy" "StoryDonkey Privacy Policy"
           check_route "storydonkey-terms" "StoryDonkey Terms of Use"
           check_route "storydonkey-support" "StoryDonkey Support"
+          check_route "storydonkey-whatever" "StoryDonkey Whatever"
           [ "$failures" -eq 0 ] || exit 1
 
       - name: Note cache limitation
