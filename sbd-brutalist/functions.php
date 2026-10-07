@@ -171,7 +171,7 @@ add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
   // Bump this string whenever sbd_get_required_pages() is updated.
-  $version = '2026-10-07-v8';
+  $version = '2026-10-07-v9';
 
   if ( get_option( 'sbd_required_pages_version' ) === $version ) {
     return;
