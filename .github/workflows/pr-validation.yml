@@ -37,6 +37,14 @@ jobs:
       - name: Check diff whitespace
         run: git diff --check origin/main...HEAD
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build and validate static foundation
+        run: npm run check
+
       - name: Check workflow YAML syntax
         run: |
           ruby <<'RUBY'
