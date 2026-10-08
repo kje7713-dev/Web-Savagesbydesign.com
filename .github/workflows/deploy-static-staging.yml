@@ -81,10 +81,10 @@ jobs:
         run: |
           set -euo pipefail
           ssh_opts=(-i "$HOME/.ssh/staging_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/staging_known_hosts" -o BatchMode=yes -o ConnectTimeout=20 -p "$STAGING_SSH_PORT")
-          resolved_path="$(ssh "${ssh_opts[@]}" "$STAGING_SSH_USER@$STAGING_SSH_HOST" -- sh -s -- "$STAGING_SFTP_DEST" <<'REMOTE'
+          resolved_path="$(ssh "${ssh_opts[@]}" "$STAGING_SSH_USER@$STAGING_SSH_HOST" sh -s -- "$STAGING_SFTP_DEST" <<'REMOTE'
           set -eu
           test "$#" -eq 1
-          test -d -- "$1"
+          test -d "$1"
           realpath -e -- "$1"
           REMOTE
           )"
@@ -103,8 +103,32 @@ jobs:
           STAGING_SFTP_DEST: ${{ secrets.STAGING_SFTP_DEST }}
         run: |
           set -euo pipefail
-          printf 'cd %s\nput -r dist/* .\n' "$STAGING_SFTP_DEST" |
-            sftp -b - -i "$HOME/.ssh/staging_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/staging_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
+          batch_file="$(mktemp)"
+          trap 'rm -f "$batch_file"' EXIT
+          printf 'cd "%s"\n' "$STAGING_SFTP_DEST" > "$batch_file"
+
+          # Create every generated directory first. The leading '-' makes mkdir
+          # idempotent on reruns while every put remains fatal on transfer errors.
+          while IFS= read -r -d '' directory; do
+            relative="${directory#dist/}"
+            if [ "$relative" != "$directory" ]; then
+              case "$relative" in
+                *[!A-Za-z0-9._/-]*) echo "Unsupported generated path: $relative" >&2; exit 1 ;;
+              esac
+              printf -- '-mkdir "%s"\n' "$relative" >> "$batch_file"
+            fi
+          done < <(find dist -type d -print0 | sort -z)
+
+          # Upload each file to its exact path under the verified SFTP cwd.
+          while IFS= read -r -d '' file; do
+            relative="${file#dist/}"
+            case "$relative" in
+              *[!A-Za-z0-9._/-]*) echo "Unsupported generated path: $relative" >&2; exit 1 ;;
+            esac
+            printf 'put "%s" "%s"\n' "$file" "$relative" >> "$batch_file"
+          done < <(find dist -type f -print0 | sort -z)
+
+          sftp -b "$batch_file" -i "$HOME/.ssh/staging_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/staging_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
 
       - name: Smoke-test staging routes
         env:
