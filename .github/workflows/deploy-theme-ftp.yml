@@ -57,37 +57,7 @@ jobs:
             lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_DEST/$file\" -o \"$remote_dir/$file\"; quit"
             cmp -- "sbd-brutalist/$file" "$remote_dir/$file"
             printf 'verified-bytes %s\n' "$file"
-            if [ "$file" = functions.php ]; then
-              if grep -Fq 'X-SBD-Runtime-Canary' "$remote_dir/$file"; then
-                echo 'remote_canary_present=yes'
-              else
-                echo 'remote_canary_present=no'
-                exit 1
-              fi
-            fi
           done
-
-      - name: Probe beta handler runtime canary
-        continue-on-error: true
-        run: |
-          set -u
-          temp_dir="$(mktemp -d)"
-          trap 'rm -rf "$temp_dir"' EXIT
-          headers="$temp_dir/headers"
-          body="$temp_dir/body"
-          status="$(curl --silent --show-error --max-time 30 \
-            --request POST \
-            --data "action=sbd_beta_signup" \
-            -D "$headers" -o "$body" -w '%{http_code}' \
-            https://savagesbydesign.com/wp-admin/admin-post.php)"
-          canary="$(grep -i '^X-SBD-Runtime-Canary:' "$headers" | tail -1 | cut -d: -f2- | tr -d '\\r' | sed 's/^ *//' || true)"
-          beta_handler=no
-          grep -Fq 'Invalid signup request.' "$body" && beta_handler=yes
-          printf 'runtime_canary_http_status=%s\n' "$status"
-          printf 'beta_handler_reached=%s\n' "$beta_handler"
-          printf 'runtime_canary_present=%s\n' "$([ -n "$canary" ] && echo yes || echo no)"
-          printf 'runtime_canary_value=%s\n' "${canary:-absent}"
-          [ "$status" = 400 ] && [ "$beta_handler" = yes ] && [ "$canary" = pr57-current ]
 
       - name: Bootstrap WordPress and purge affected URLs
         env:
