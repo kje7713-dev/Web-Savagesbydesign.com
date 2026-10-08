@@ -17,7 +17,7 @@ This audit is non-destructive. No WordPress records, production files, deploymen
 | `/contact/` | `sbd-brutalist/page-contact.php` | WordPress header/footer | Static page source |
 | `/privacy/` | `sbd-brutalist/page-privacy.php` | WordPress header/footer | Static page source |
 | `/terms/` | `sbd-brutalist/page-terms.php` | WordPress header/footer | Static page source |
-| `/user-guide/` | WordPress page record; no `page-user-guide.php` exists | Current route is effectively a blank/default page; `content/user-guide.md` is not wired to the theme | Static placeholder included; content parity requires a later product decision |
+| `/user-guide/` | WordPress page record; no `page-user-guide.php` exists; canonical content in `content/user-guide.md` | Current production fetch returns only the shared footer, while the repository contains the full guide body | Canonical guide body migrated into static source; metadata/visual parity remains to verify |
 | `/pizza-chicken-pop-support/` | `sbd-brutalist/page-pizza-chicken-pop-support.php` | WordPress header/footer | Static page source |
 | `/storydonkey/` | `sbd-brutalist/page-storydonkey.php` | Signup POST, nonce/token, lead CPT, email, WordPress asset URLs | Static page source; signup backend remains a blocker |
 | `/storydonkey-privacy/` | `sbd-brutalist/page-storydonkey-privacy.php` | WordPress header/footer | Static page source |
@@ -68,7 +68,6 @@ The foundation intentionally does not change production deployment or remove Wor
 ## Remaining blockers
 
 1. Replace StoryDonkey signup persistence/notification with an approved HTTPS backend before staging or production cutover.
-2. Decide whether `/user-guide/` should preserve its currently blank/default production output or adopt the existing Markdown guide content.
-3. Confirm complete metadata parity (titles, descriptions, canonical/OG/Twitter tags) from rendered production before cutover.
-4. Determine the Hostinger document root and provision a staging location without touching production.
-5. Add staging upload, route smoke tests, link crawl, and visual comparison after the static output is accepted locally.
+2. Confirm complete metadata parity (titles, descriptions, canonical/OG/Twitter tags) from rendered production before cutover.
+3. Determine the Hostinger document root and provision a staging location without touching production.
+4. Add staging upload, route smoke tests, link crawl, and visual comparison after the static output is accepted locally.
