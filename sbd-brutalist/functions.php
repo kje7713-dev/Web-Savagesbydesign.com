@@ -24,6 +24,8 @@ add_action('init', function () {
 add_action('admin_post_nopriv_sbd_beta_signup', 'sbd_handle_beta_signup');
 add_action('admin_post_sbd_beta_signup', 'sbd_handle_beta_signup');
 function sbd_handle_beta_signup() {
+  header('X-SBD-Runtime-Canary: pr57-current');
+
   $nonce_valid = isset($_POST['sbd_beta_nonce']) && wp_verify_nonce(
     sanitize_text_field(wp_unslash($_POST['sbd_beta_nonce'])),
     'sbd_beta_signup'
