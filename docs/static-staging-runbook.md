@@ -23,9 +23,9 @@ Configure these secrets on the `staging` GitHub environment:
 - `STAGING_FTP_PORT` — approved FTPS port, normally `21` or the value Hostinger provides
 - `STAGING_FTP_USER`
 - `STAGING_FTP_PASS`
-- `STAGING_FTP_DEST` — explicit staging directory, not the production document root
+- `STAGING_FTP_DEST` — destination containing an explicit staging name; the operator must confirm it is the actual staging document root, not the production document root
 
-The workflow refuses an empty configuration, non-HTTPS base URL, or a destination that is not visibly named as a web hosting directory. The operator must still verify that the destination is staging before saving the secrets.
+The workflow refuses an empty configuration, a non-HTTPS base URL, or a destination that does not contain the string `staging`. That string check does not independently prove document-root correctness; the operator remains responsible for confirming that the FTP destination is the actual staging document root before saving the secret.
 
 ## Operator sequence
 
