@@ -1,4 +1,11 @@
-<?php get_header(); ?>
+<?php
+/*
+Template Name: storydonkey-privacy
+Template Post Type: page
+*/
+
+get_header();
+?>
 
 <main class="wrap">
   <section class="hero">
