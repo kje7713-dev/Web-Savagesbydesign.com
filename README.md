@@ -6,7 +6,7 @@ This repository is the single source of truth for the Savages By Design public w
 The site runs on WordPress, but WordPress is used strictly as a rendering engine.
 All layout, structure, copy, and assets are driven from this repository and deployed via FTP.
 
-The WordPress UI is not used for page creation, layout, or content editing.
+The WordPress UI is used to create and publish blank routing pages. Content and design remain in repository templates.
 
 ---
 
@@ -29,7 +29,7 @@ If a task requires the WordPress UI, that task must be explicitly approved first
 - **CMS Runtime:** WordPress
 - **Active Theme:** sbd-brutalist
 - **Deployment:** GitHub Actions → FTP
-- **Cache Layer:** LiteSpeed (must be purged after theme changes)
+- **Cache Layer:** LiteSpeed (the owner may manually purge it after creating a page)
 
 WordPress stores minimal placeholder pages for routing only.
 All visible content is rendered from PHP templates in the theme.
@@ -55,8 +55,8 @@ FTP user is rooted at:
 
 When changes are pushed to main:
 1. GitHub Actions deploys the theme via FTP
-2. WordPress immediately serves the updated templates
-3. LiteSpeed cache may need to be purged to see changes
+2. The workflow verifies deployed bytes
+3. Production smoke tests verify the public routes and deployment marker
 
 ---
 
@@ -64,17 +64,10 @@ When changes are pushed to main:
 
 Hostinger/LiteSpeed aggressively caches theme files.
 
-After any change to:
-- PHP templates
-- CSS
-- Images
-
-You must purge cache:
+After manually creating a required WordPress page, the owner may purge cache once:
 **WordPress Admin → LiteSpeed Cache → Toolbox → Purge All**
 
-Then refresh in a private/incognito browser tab.
-
-Failure to purge cache will make it appear as if changes "did nothing".
+Ordinary theme deployments do not purge LiteSpeed automatically.
 
 ---
 
@@ -83,7 +76,7 @@ Failure to purge cache will make it appear as if changes "did nothing".
 ```
 sbd-brutalist/
 ├── style.css           # Theme header + all styling
-├── functions.php       # Enqueue CSS, theme behavior, auto page creation
+├── functions.php       # Enqueue CSS, theme behavior, beta signup, legacy migration
 ├── header.php          # Site header + navigation
 ├── footer.php          # Site footer
 ├── front-page.php      # Homepage (fully template-driven)
@@ -98,43 +91,20 @@ No content lives in the WordPress editor.
 
 ---
 
-## Page Creation & Routing (Zero WP UI)
+## Page Creation & Routing
 
-All required pages are auto-created by the theme.
+The owner manually creates and publishes blank WordPress pages with canonical slugs. The repository supplies the content and design through normal WordPress template hierarchy.
 
-The theme is responsible for ensuring the following routes exist:
+WordPress pages act only as routing placeholders and may contain empty editor content. The owner creates and publishes the page record; the repository controls the rendered content and design. The agent must not auto-create pages, invent slugs, or add custom routing. The owner supplies the exact slug before the agent creates `page-{slug}.php`.
 
-- `/` (homepage)
-- `/app`
-- `/offerings`
-- `/guides`
-- `/reviews`
-- `/deals`
-- `/contact`
+The required StoryDonkey page records are:
 
-These pages are created and published automatically by theme code when the theme is activated.
+- `/storydonkey/` (already exists)
+- `/storydonkey-privacy/`
+- `/storydonkey-terms/`
+- `/storydonkey-support/`
 
-WordPress pages act only as routing placeholders.
-They may contain empty content in the editor.
-
-The agent must never instruct the user to create or edit pages in WordPress Admin.
-
-### Page-Creation Logic (Idempotent & Slug-Authoritative)
-
-The page-creation logic is designed to be **idempotent** and **slug-authoritative**:
-
-- **If the slug exists** (even as draft, private, or trash), the logic should update it:
-  - Publish the page if it's not already published
-  - Correct the title if needed
-  - Ensure the page is in the proper state
-- **Only insert** if the slug truly does not exist in any state
-- **If multiple pages with the same slug exist**, keep one canonical version and move the rest to trash
-
-This approach ensures:
-1. No duplicate pages are created when the theme is reactivated
-2. Existing pages (regardless of status) are brought to the correct state
-3. The slug is always the authoritative identifier
-4. The system remains clean and predictable over time
+The owner manually creates the three missing pages with those exact slugs before production smoke tests can pass.
 
 ---
 
@@ -278,7 +248,7 @@ If the site does not change:
 1. Edit files in the `sbd-brutalist/` directory
 2. Commit and push to `main` branch
 3. GitHub Actions automatically deploys via FTP
-4. Purge LiteSpeed cache in WordPress Admin
+4. The workflow verifies deployed bytes and public smoke tests
 5. Verify changes in a private browser window
 
 ### Repository Layout
@@ -286,7 +256,7 @@ If the site does not change:
 ```
 sbd-brutalist/          # WordPress theme (deployed via FTP)
 ├── style.css           # Theme stylesheet with header metadata
-├── functions.php       # Theme initialization and auto-page creation
+├── functions.php       # Theme initialization, beta signup, and legacy migration
 ├── header.php          # Site header and navigation
 ├── footer.php          # Site footer
 ├── front-page.php      # Homepage template

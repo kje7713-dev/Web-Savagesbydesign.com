@@ -59,16 +59,6 @@ jobs:
             printf 'verified-bytes %s\n' "$file"
           done
 
-      - name: Bootstrap WordPress and purge affected URLs
-        env:
-          SBD_DEPLOY_TOKEN: ${{ secrets.SBD_DEPLOY_TOKEN }}
-        run: |
-          curl --fail --silent --show-error --max-time 30 \
-            --request POST \
-            --data-urlencode "action=sbd_deploy_bootstrap" \
-            --data-urlencode "token=${SBD_DEPLOY_TOKEN}" \
-            https://savagesbydesign.com/wp-admin/admin-post.php
-
       - name: Smoke-test production routes
         env:
           GITHUB_SHA: ${{ github.sha }}
@@ -113,7 +103,3 @@ jobs:
           check_route "storydonkey-terms" "StoryDonkey Terms of Use"
           check_route "storydonkey-support" "StoryDonkey Support"
           [ "$failures" -eq 0 ] || exit 1
-
-      - name: Note cache limitation
-        run: |
-          echo "Production smoke tests use commit-specific query strings. LiteSpeed purge is not treated as proof of invalidation."

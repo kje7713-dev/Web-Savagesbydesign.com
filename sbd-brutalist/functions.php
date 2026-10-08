@@ -104,23 +104,6 @@ function sbd_get_required_pages() {
     'terms'                     => 'Terms of Service',
     'user-guide'                => 'User Guide',
     'pizza-chicken-pop-support' => 'Pizza Chicken Pop Support',
-    'storydonkey'               => 'StoryDonkey',
-    'storydonkey-privacy'       => 'StoryDonkey Privacy Policy',
-    'storydonkey-terms'         => 'StoryDonkey Terms of Use',
-    'storydonkey-support'       => 'StoryDonkey Support',
-  ];
-}
-
-function sbd_required_pages_version() {
-  return '2026-10-07-v11';
-}
-
-function sbd_storydonkey_page_slugs() {
-  return [
-    'storydonkey',
-    'storydonkey-privacy',
-    'storydonkey-terms',
-    'storydonkey-support',
   ];
 }
 
@@ -148,17 +131,6 @@ function sbd_create_required_pages() {
   return true;
 }
 
-function sbd_required_pages_are_published() {
-  foreach (sbd_storydonkey_page_slugs() as $slug) {
-    $page = get_page_by_path($slug, OBJECT, 'page');
-    if (!$page || 'page' !== $page->post_type || 'publish' !== $page->post_status) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 // Run on theme activation (covers first-time setup).
 add_action( 'after_switch_theme', 'sbd_create_required_pages' );
 
@@ -169,7 +141,8 @@ add_action( 'after_switch_theme', 'sbd_create_required_pages' );
 add_action( 'init', 'sbd_ensure_required_pages' );
 
 function sbd_ensure_required_pages() {
-  $version = sbd_required_pages_version();
+  // Bump this string only when a legacy required page is added or removed.
+  $version = '2026-10-07-v11';
 
   if (get_option('sbd_required_pages_version') === $version) {
     return;
@@ -182,65 +155,3 @@ function sbd_ensure_required_pages() {
 
   update_option('sbd_required_pages_version', $version);
 }
-
-function sbd_deploy_token() {
-  if (defined('SBD_DEPLOY_TOKEN')) {
-    return (string) SBD_DEPLOY_TOKEN;
-  }
-
-  $token = getenv('SBD_DEPLOY_TOKEN');
-  return is_string($token) ? $token : '';
-}
-
-function sbd_deploy_bootstrap_response($status, $payload) {
-  nocache_headers();
-  header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-  header('Content-Type: application/json; charset=utf-8');
-  status_header($status);
-  echo wp_json_encode($payload);
-  exit;
-}
-
-function sbd_handle_deploy_bootstrap() {
-  $provided_token = isset($_POST['token']) ? (string) wp_unslash($_POST['token']) : '';
-  $expected_token = sbd_deploy_token();
-  if ($expected_token === '' || $provided_token === '' || !hash_equals($expected_token, $provided_token)) {
-    sbd_deploy_bootstrap_response(403, [
-      'ok' => false,
-      'error' => 'invalid token',
-    ]);
-  }
-
-  $result = sbd_create_required_pages();
-  if (is_wp_error($result)) {
-    sbd_deploy_bootstrap_response(500, [
-      'ok' => false,
-      'error' => 'required page creation failed',
-    ]);
-  }
-
-  if (!sbd_required_pages_are_published()) {
-    sbd_deploy_bootstrap_response(500, [
-      'ok' => false,
-      'error' => 'required pages are not published',
-    ]);
-  }
-
-  update_option('sbd_required_pages_version', sbd_required_pages_version());
-
-  $purge_available = has_action('litespeed_purge_url');
-  if ($purge_available) {
-    foreach (sbd_storydonkey_page_slugs() as $slug) {
-      do_action('litespeed_purge_url', '/' . $slug . '/');
-    }
-  }
-
-  sbd_deploy_bootstrap_response(200, [
-    'ok' => true,
-    'required_pages' => 'verified',
-    'cache_purge' => $purge_available ? 'requested' : 'unavailable',
-  ]);
-}
-
-add_action('admin_post_nopriv_sbd_deploy_bootstrap', 'sbd_handle_deploy_bootstrap');
-add_action('admin_post_sbd_deploy_bootstrap', 'sbd_handle_deploy_bootstrap');

@@ -3,20 +3,24 @@
 This repository is the source of truth for the theme-driven WordPress site.
 
 ```text
-sbd-brutalist/
+WordPress Admin
       ↓
-push/merge to main
+blank published page with canonical slug
       ↓
-.github/workflows/deploy-theme-ftp.yml
+repository page-{slug}.php
       ↓
-Hostinger FTP: 157.173.208.128
+GitHub Actions theme deployment
       ↓
-FTP_DEST (remote active theme directory)
+FTP theme upload
       ↓
-active WordPress theme
+byte verification
       ↓
-public production smoke tests
+public smoke tests
 ```
+
+WordPress owns only the page record and canonical slug. Git owns the content and design. The site owner manually creates each WordPress page once; agents must not attempt to automate WordPress page creation. No deployment token is required for ordinary page deployment.
+
+## Deployment configuration
 
 The workflow deploys the contents of `sbd-brutalist/` with `lftp mirror --reverse --continue --dereference --ignore-time`. The fixed FTP IP is intentional: the historical hostname failed DNS resolution. `FTP_DEST` is a GitHub Actions secret whose value is not stored in this repository; it must point to the active WordPress theme directory relative to the FTP account root. Do not guess or rewrite it.
 
@@ -24,61 +28,72 @@ The workflow deploys the contents of `sbd-brutalist/` with `lftp mirror --revers
 
 ## New repository-controlled WordPress pages
 
-WordPress holds only a published routing placeholder. Page content and design remain in the repository. The normal architecture is:
+The permanent page architecture is:
 
 ```text
-published WordPress page
+site owner creates and publishes blank WordPress page
         ↓
-WordPress resolves the canonical slug
+exact canonical slug is known
         ↓
-page-{slug}.php
+repository contains page-{slug}.php
+        ↓
+WordPress normal template hierarchy selects page-{slug}.php
 ```
 
 For a new page:
 
-1. Choose the canonical slug.
-2. Add the slug/title to `sbd_get_required_pages()` in `sbd-brutalist/functions.php`.
-3. Create `page-{slug}.php` in `sbd-brutalist/`.
-4. Bump the required-page migration version once.
-5. Add the public URL and expected content to the production smoke tests.
-6. Open a PR.
-7. WordPress creates the published placeholder during the checked migration.
-8. Normal WordPress template hierarchy selects `page-{slug}.php`.
-9. Treat deployment as successful only when the public smoke test passes.
+1. The owner manually creates and publishes a blank WordPress page.
+2. The owner gives the agent the exact canonical slug.
+3. The agent creates or updates `sbd-brutalist/page-{slug}.php`.
+4. The agent keeps all content and design in that repository template.
+5. The agent adds the public URL and expected text to production smoke tests.
+6. The agent opens a PR.
+7. Deployment uploads and byte-verifies the template.
+8. WordPress normal template hierarchy selects the template.
+9. Deployment is successful only when the public smoke test passes.
 
-Agents must not create the page manually in WordPress Admin or build custom rewrite, query-var, template-router, direct-include, or URL-alias workarounds for ordinary repository-controlled pages.
+Do not auto-create WordPress pages, invent slugs, add custom routing, or add deployment endpoints for page creation. Do not declare production success until the owner has created the required WordPress page records and the public smoke tests pass.
 
-The StoryDonkey smoke tests cover:
+The required StoryDonkey page records are manually-created blank pages with these exact slugs:
 
-- `/storydonkey/` → `StoryDonkey`
-- `/storydonkey-privacy/` → `StoryDonkey Privacy Policy`
-- `/storydonkey-terms/` → `StoryDonkey Terms of Use`
-- `/storydonkey-support/` → `StoryDonkey Support`
+- `storydonkey` (already exists)
+- `storydonkey-privacy`
+- `storydonkey-terms`
+- `storydonkey-support`
+
+The corresponding repository templates are:
+
+- `sbd-brutalist/page-storydonkey.php`
+- `sbd-brutalist/page-storydonkey-privacy.php`
+- `sbd-brutalist/page-storydonkey-terms.php`
+- `sbd-brutalist/page-storydonkey-support.php`
 
 ## Deployment lifecycle
 
 The production workflow runs these steps in order:
 
-1. Upload the theme over FTP.
-2. Verify required remote files exist.
-3. Verify deployed bytes match the checkout.
-4. Send an authenticated POST to WordPress `admin-post.php` using the `sbd_deploy_bootstrap` action.
-5. The bootstrap executes WordPress/PHP, explicitly runs the checked required-page creation, verifies all four StoryDonkey placeholders are published `page` posts, and updates the migration version only after success.
-6. The bootstrap requests LiteSpeed purges for the four affected public URLs through `litespeed_purge_url` when the hook is available. It reports `unavailable` safely if the hook is not loaded.
-7. Run public GET smoke tests requiring HTTP 200, expected text, and the exact deployed commit SHA.
+1. Check out the commit.
+2. Write the non-secret deployment marker.
+3. Upload the theme over FTP.
+4. Verify required remote files exist.
+5. Verify deployed bytes match the checkout.
+6. Run public GET smoke tests requiring HTTP 200, expected text, and the exact deployed commit SHA.
 
-The bootstrap token is never stored in this repository. Configure the GitHub Actions `SBD_DEPLOY_TOKEN` secret to match a server-side `SBD_DEPLOY_TOKEN` constant or environment variable available to WordPress. Do not print or expose the token. FTP success alone does not prove that WordPress executed PHP: cached GETs can be served without running `init`, so the authenticated POST is the deterministic page-creation and cache-purge step.
+The workflow does not create WordPress pages, call a deployment endpoint, require an authentication token, or purge LiteSpeed. After manually creating the required WordPress page records, the owner may manually purge LiteSpeed once if needed. Ordinary template updates continue through normal theme deployment and smoke tests.
 
 The workflow writes a non-secret deployment marker containing the commit SHA and timestamp. The theme exposes that marker as a safe HTML meta value so smoke tests prove which commit production is serving.
 
 ## Legacy WordPress pages
 
-The theme still creates older site pages such as `/app/`, `/contact/`, `/privacy/`, `/terms/`, `/user-guide/`, and `/pizza-chicken-pop-support/` when needed. Creation checks `wp_insert_post()` errors and does not mark the migration complete after a failure.
+The theme still creates older site pages such as `/app/`, `/contact/`, `/privacy/`, `/terms/`, `/user-guide/`, and `/pizza-chicken-pop-support/` when needed through the existing legacy migration. That mechanism is separate from StoryDonkey pages and must not be extended for new manually-created StoryDonkey pages.
 
 ## Explicit prohibitions
 
 - Do not change the FTP host, `FTP_DEST`, credentials, or deployment architecture for an ordinary page.
-- Do not create repository-controlled pages in WordPress Admin.
+- Do not automate creation of the required StoryDonkey WordPress page records.
+- Do not invent slugs.
 - Do not add parallel rewrite, query-var, template, or alias workarounds.
+- Do not add deployment bootstrap endpoints or deployment tokens for page creation.
+- Do not purge LiteSpeed from deployment code.
 - Do not declare success because FTP returned success; verify every public URL and expected body text.
 - Do not push directly to `main`; use a PR unless the owner explicitly instructs otherwise.
