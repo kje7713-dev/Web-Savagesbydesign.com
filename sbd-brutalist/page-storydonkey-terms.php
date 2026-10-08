@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: StoryDonkey Terms
+Template Name: storydonkey-terms
 Template Post Type: page
 */
 

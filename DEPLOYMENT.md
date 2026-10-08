@@ -71,9 +71,9 @@ The corresponding repository templates are:
 
 The three legal StoryDonkey templates are explicit selectable page templates:
 
-- `StoryDonkey Privacy` → `storydonkey-privacy`
-- `StoryDonkey Terms` → `storydonkey-terms`
-- `StoryDonkey Support` → `storydonkey-support`
+- `storydonkey-privacy` → `storydonkey-privacy`
+- `storydonkey-terms` → `storydonkey-terms`
+- `storydonkey-support` → `storydonkey-support`
 
 After deployment, the owner assigns each template to its matching WordPress page once. Do not add routing logic or automatic page creation.
 

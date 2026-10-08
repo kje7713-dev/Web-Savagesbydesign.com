@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: StoryDonkey Privacy
+Template Name: storydonkey-privacy
 Template Post Type: page
 */
 
