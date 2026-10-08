@@ -30,44 +30,105 @@ jobs:
           SBD_DEPLOYMENT_SHA: ${{ github.sha }}
         run: npm run check
 
-      - name: Install lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
-
       - name: Require staging-only configuration
         env:
           STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
-          STAGING_FTP_HOST: ${{ secrets.STAGING_FTP_HOST }}
-          STAGING_FTP_PORT: ${{ secrets.STAGING_FTP_PORT }}
-          STAGING_FTP_USER: ${{ secrets.STAGING_FTP_USER }}
-          STAGING_FTP_PASS: ${{ secrets.STAGING_FTP_PASS }}
-          STAGING_FTP_DEST: ${{ secrets.STAGING_FTP_DEST }}
+          STAGING_SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          STAGING_SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+          STAGING_SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          STAGING_SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          STAGING_SSH_KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+          STAGING_SFTP_DEST: ${{ secrets.STAGING_SFTP_DEST }}
         run: |
           set -euo pipefail
           : "${STAGING_BASE_URL:?STAGING_BASE_URL is required}"
-          : "${STAGING_FTP_HOST:?STAGING_FTP_HOST is required}"
-          : "${STAGING_FTP_PORT:?STAGING_FTP_PORT is required}"
-          : "${STAGING_FTP_USER:?STAGING_FTP_USER is required}"
-          : "${STAGING_FTP_PASS:?STAGING_FTP_PASS is required}"
-          : "${STAGING_FTP_DEST:?STAGING_FTP_DEST is required}"
+          : "${STAGING_SSH_HOST:?STAGING_SSH_HOST is required}"
+          : "${STAGING_SSH_PORT:?STAGING_SSH_PORT is required}"
+          : "${STAGING_SSH_USER:?STAGING_SSH_USER is required}"
+          : "${STAGING_SSH_PRIVATE_KEY:?STAGING_SSH_PRIVATE_KEY is required}"
+          : "${STAGING_SSH_KNOWN_HOSTS:?STAGING_SSH_KNOWN_HOSTS is required}"
+          : "${STAGING_SFTP_DEST:?STAGING_SFTP_DEST is required}"
           case "$STAGING_BASE_URL" in
             https://*) ;;
             *) echo 'STAGING_BASE_URL must use HTTPS'; exit 1 ;;
           esac
-          case "$STAGING_FTP_DEST" in
-            *staging*) ;;
-            *) echo 'STAGING_FTP_DEST must include an explicit staging path'; exit 1 ;;
-          esac
+          test "$STAGING_SSH_HOST" = '157.173.208.128' || { echo 'STAGING_SSH_HOST must be the approved Hostinger staging host'; exit 1; }
+          test "$STAGING_SSH_PORT" = '65002' || { echo 'STAGING_SSH_PORT must be 65002'; exit 1; }
+          test "$STAGING_SSH_USER" = 'u818755784' || { echo 'STAGING_SSH_USER must be the approved staging account'; exit 1; }
+          test "$STAGING_SFTP_DEST" = '/home/u818755784/domains/savagesbydesign.com/public_html/staging' || {
+            echo 'STAGING_SFTP_DEST must be exactly the verified staging document root'; exit 1;
+          }
 
-      - name: Upload static output to staging
+      - name: Prepare strict SSH host verification
         env:
-          STAGING_FTP_HOST: ${{ secrets.STAGING_FTP_HOST }}
-          STAGING_FTP_PORT: ${{ secrets.STAGING_FTP_PORT }}
-          STAGING_FTP_USER: ${{ secrets.STAGING_FTP_USER }}
-          STAGING_FTP_PASS: ${{ secrets.STAGING_FTP_PASS }}
-          STAGING_FTP_DEST: ${{ secrets.STAGING_FTP_DEST }}
+          STAGING_SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          STAGING_SSH_KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
         run: |
           set -euo pipefail
-          lftp -c "set ftp:ssl-force true; set ssl:verify-certificate true; set net:timeout 30; open -p \"$STAGING_FTP_PORT\" -u \"$STAGING_FTP_USER\",\"$STAGING_FTP_PASS\" \"$STAGING_FTP_HOST\"; mirror --reverse --delete --continue --dereference --ignore-time dist \"$STAGING_FTP_DEST\"; quit"
+          umask 077
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$STAGING_SSH_PRIVATE_KEY" > "$HOME/.ssh/staging_deploy_key"
+          printf '%s\n' "$STAGING_SSH_KNOWN_HOSTS" > "$HOME/.ssh/staging_known_hosts"
+          chmod 600 "$HOME/.ssh/staging_deploy_key" "$HOME/.ssh/staging_known_hosts"
+          ssh-keygen -lf "$HOME/.ssh/staging_known_hosts" >/dev/null
+
+      - name: Verify exact staging destination over SSH and SFTP
+        env:
+          STAGING_SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          STAGING_SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+          STAGING_SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          STAGING_SFTP_DEST: ${{ secrets.STAGING_SFTP_DEST }}
+        run: |
+          set -euo pipefail
+          ssh_opts=(-i "$HOME/.ssh/staging_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/staging_known_hosts" -o BatchMode=yes -o ConnectTimeout=20 -p "$STAGING_SSH_PORT")
+          resolved_path="$(ssh "${ssh_opts[@]}" "$STAGING_SSH_USER@$STAGING_SSH_HOST" sh -s -- "$STAGING_SFTP_DEST" <<'REMOTE'
+          set -eu
+          test "$#" -eq 1
+          test -d "$1"
+          realpath -e -- "$1"
+          REMOTE
+          )"
+          test "$resolved_path" = "$STAGING_SFTP_DEST" || {
+            echo "Resolved SSH destination is not the exact staging root: $resolved_path"; exit 1;
+          }
+          printf 'verified SSH destination: %s\n' "$resolved_path"
+          printf 'pwd\ncd %s\npwd\nls -ld %s\n' "$STAGING_SFTP_DEST" "$STAGING_SFTP_DEST" |
+            sftp -q -b - -i "$HOME/.ssh/staging_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/staging_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
+
+      - name: Upload static output to verified staging path via SFTP
+        env:
+          STAGING_SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          STAGING_SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+          STAGING_SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          STAGING_SFTP_DEST: ${{ secrets.STAGING_SFTP_DEST }}
+        run: |
+          set -euo pipefail
+          batch_file="$(mktemp)"
+          trap 'rm -f "$batch_file"' EXIT
+          printf 'cd "%s"\n' "$STAGING_SFTP_DEST" > "$batch_file"
+
+          # Create every generated directory first. The leading '-' makes mkdir
+          # idempotent on reruns while every put remains fatal on transfer errors.
+          while IFS= read -r -d '' directory; do
+            relative="${directory#dist/}"
+            if [ "$relative" != "$directory" ]; then
+              case "$relative" in
+                *[!A-Za-z0-9._/-]*) echo "Unsupported generated path: $relative" >&2; exit 1 ;;
+              esac
+              printf -- '-mkdir "%s"\n' "$relative" >> "$batch_file"
+            fi
+          done < <(find dist -type d -print0 | sort -z)
+
+          # Upload each file to its exact path under the verified SFTP cwd.
+          while IFS= read -r -d '' file; do
+            relative="${file#dist/}"
+            case "$relative" in
+              *[!A-Za-z0-9._/-]*) echo "Unsupported generated path: $relative" >&2; exit 1 ;;
+            esac
+            printf 'put "%s" "%s"\n' "$file" "$relative" >> "$batch_file"
+          done < <(find dist -type f -print0 | sort -z)
+
+          sftp -b "$batch_file" -i "$HOME/.ssh/staging_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/staging_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
 
       - name: Smoke-test staging routes
         env:
