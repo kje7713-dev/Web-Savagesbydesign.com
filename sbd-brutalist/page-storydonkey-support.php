@@ -1,11 +1,4 @@
-<?php
-/*
-Template Name: storydonkey-support
-Template Post Type: page
-*/
-
-get_header();
-?>
+<?php get_header(); ?>
 
 <main class="wrap">
   <section class="hero">

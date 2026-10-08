@@ -1,24 +1,16 @@
 # Repository instructions
 
-## NEW REPO-CONTROLLED WORDPRESS PAGE
+## Repo-controlled WordPress pages
 
-1. The site owner manually creates and publishes a blank WordPress page.
-2. The site owner provides the exact canonical slug to the agent.
-3. The agent creates `page-{slug}.php` in `sbd-brutalist/`.
-4. The agent keeps all content and design in the repository template.
-5. When manual assignment is required, the template includes an explicit WordPress `Template Name` header and the site owner assigns it to the page once in WordPress Admin.
-6. The agent adds the public URL and expected text to production smoke tests.
-7. The agent opens a PR.
-8. Deployment uploads and verifies the template.
-9. Deployment is successful only when the production smoke test passes.
+1. Declare required pages in `sbd_get_required_pages()` in `sbd-brutalist/functions.php`.
+2. The existing idempotent reconciliation guarantees that each manifest entry has a WordPress page record with the intended slug; it leaves an existing record alone when `get_page_by_path($slug)` finds it.
+3. Keep page content and design in `sbd-brutalist/page-{slug}.php`.
+4. Let WordPress's normal page template hierarchy select `page-{slug}.php` from the exact `post_name`.
+5. Add every public URL and expected text to the production smoke tests.
+6. Open a focused PR; deployment uploads and verifies the template, and production is successful only when the smoke tests pass.
 
-Do not auto-create WordPress pages.
-Do not invent slugs.
-Do not create custom routing for ordinary pages.
-Do not add deployment bootstrap endpoints for page creation.
+Do not invent slugs, manually assign templates, add custom routing, add URL aliases, add direct template includes, or add deployment bootstrap endpoints for ordinary pages.
 
-WordPress owns the published page record and canonical slug. Git owns the page content and design. Do not build custom rewrite, query-var, template-router, direct-include, or URL-alias workarounds for ordinary repository-controlled pages.
+WordPress owns the page record and canonical slug. Git owns the page content and design. This same required-page and slug-template model applies to StoryDonkey and all other repo-controlled pages.
 
-Legacy non-StoryDonkey pages may retain their checked, publish-only placeholder migration behavior. Do not remove that shared legacy mechanism when adding or maintaining a manually-created StoryDonkey page.
-
-Do not modify the FTP host, `FTP_DEST`, deployment credentials, or deployment architecture when adding ordinary pages. Do not push directly to `main`; use a PR unless the owner explicitly instructs otherwise. Deployment is not complete merely because GitHub Actions uploaded files; verify every production URL and expected body content.
+Do not modify the FTP host, `FTP_DEST`, deployment credentials, or deployment architecture. Do not push directly to `main`; use a PR unless the owner explicitly instructs otherwise. Deployment is not complete merely because GitHub Actions uploaded files; verify every production URL and expected body content.
