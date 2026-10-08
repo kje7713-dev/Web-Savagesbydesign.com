@@ -9,7 +9,7 @@
 
   <section class="section">
     <h2>About this policy</h2>
-    <p>This policy explains how Savages By Design handles information for StoryDonkey, an app for developing stories from an initial idea through planning, writing, continuity, and revision. “We,” “us,” and “our” mean Savages By Design. “StoryDonkey” means the app, website, and related services.</p>
+    <p>This policy  explains how Savages By Design handles information for StoryDonkey, an app for developing stories from an initial idea through planning, writing, continuity, and revision. “We,” “us,” and “our” mean Savages By Design. “StoryDonkey” means the app, website, and related services.</p>
   </section>
 
   <section class="section section-dark">
