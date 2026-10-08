@@ -1,4 +1,11 @@
-<?php get_header(); ?>
+<?php
+/*
+Template Name: StoryDonkey Terms
+Template Post Type: page
+*/
+
+get_header();
+?>
 
 <main class="wrap">
   <section class="hero">

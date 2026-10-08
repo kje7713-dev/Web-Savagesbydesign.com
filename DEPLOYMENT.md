@@ -35,22 +35,23 @@ site owner creates and publishes blank WordPress page
         ↓
 exact canonical slug is known
         ↓
-repository contains page-{slug}.php
+repository contains an explicit page template
         ↓
-WordPress normal template hierarchy selects page-{slug}.php
+site owner assigns that template to the WordPress page once
 ```
 
 For a new page:
 
 1. The owner manually creates and publishes a blank WordPress page.
 2. The owner gives the agent the exact canonical slug.
-3. The agent creates or updates `sbd-brutalist/page-{slug}.php`.
-4. The agent keeps all content and design in that repository template.
-5. The agent adds the public URL and expected text to production smoke tests.
-6. The agent opens a PR.
-7. Deployment uploads and byte-verifies the template.
-8. WordPress normal template hierarchy selects the template.
-9. Deployment is successful only when the public smoke test passes.
+3. The agent creates or updates the repository PHP template.
+4. When manual assignment is required, the template includes an explicit WordPress `Template Name` header.
+5. The owner assigns that template to the WordPress page once in WordPress Admin.
+6. The agent keeps all content and design in that repository template.
+7. The agent adds the public URL and expected text to production smoke tests.
+8. The agent opens a PR.
+9. Deployment uploads and byte-verifies the template.
+10. Deployment is successful only when the public smoke test passes.
 
 Do not auto-create WordPress pages, invent slugs, add custom routing, or add deployment endpoints for page creation. Do not declare production success until the owner has created the required WordPress page records and the public smoke tests pass.
 
@@ -67,6 +68,14 @@ The corresponding repository templates are:
 - `sbd-brutalist/page-storydonkey-privacy.php`
 - `sbd-brutalist/page-storydonkey-terms.php`
 - `sbd-brutalist/page-storydonkey-support.php`
+
+The three legal StoryDonkey templates are explicit selectable page templates:
+
+- `StoryDonkey Privacy` → `storydonkey-privacy`
+- `StoryDonkey Terms` → `storydonkey-terms`
+- `StoryDonkey Support` → `storydonkey-support`
+
+After deployment, the owner assigns each template to its matching WordPress page once. Do not add routing logic or automatic page creation.
 
 ## Deployment lifecycle
 

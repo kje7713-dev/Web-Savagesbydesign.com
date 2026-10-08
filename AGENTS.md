@@ -6,10 +6,10 @@
 2. The site owner provides the exact canonical slug to the agent.
 3. The agent creates `page-{slug}.php` in `sbd-brutalist/`.
 4. The agent keeps all content and design in the repository template.
-5. The agent adds the public URL and expected text to production smoke tests.
-6. The agent opens a PR.
-7. Deployment uploads and verifies the template.
-8. WordPress normal template hierarchy selects `page-{slug}.php`.
+5. When manual assignment is required, the template includes an explicit WordPress `Template Name` header and the site owner assigns it to the page once in WordPress Admin.
+6. The agent adds the public URL and expected text to production smoke tests.
+7. The agent opens a PR.
+8. Deployment uploads and verifies the template.
 9. Deployment is successful only when the production smoke test passes.
 
 Do not auto-create WordPress pages.
