@@ -2,19 +2,23 @@
 
 ## NEW REPO-CONTROLLED WORDPRESS PAGE
 
-1. Choose the canonical slug.
-2. Add the slug/title to `sbd_get_required_pages()` in `sbd-brutalist/functions.php`.
-3. Create `page-{slug}.php` in `sbd-brutalist/`.
-4. Bump the required-page migration version once.
-5. Add the public URL and expected content to the production smoke tests.
-6. Open a PR; do not push directly to `main` unless explicitly instructed by the owner.
-7. WordPress creates the published routing placeholder.
-8. WordPress normal routing selects `page-{slug}.php`.
-9. The deployment workflow authenticates its POST bootstrap request, verifies the required placeholders, purges the affected LiteSpeed URLs, and then runs the production smoke tests.
-10. Deployment is successful only when the production smoke test passes.
+1. The site owner manually creates and publishes a blank WordPress page.
+2. The site owner provides the exact canonical slug to the agent.
+3. The agent creates `page-{slug}.php` in `sbd-brutalist/`.
+4. The agent keeps all content and design in the repository template.
+5. The agent adds the public URL and expected text to production smoke tests.
+6. The agent opens a PR.
+7. Deployment uploads and verifies the template.
+8. WordPress normal template hierarchy selects `page-{slug}.php`.
+9. Deployment is successful only when the production smoke test passes.
 
-WordPress holds only the published routing placeholder. Page content and design stay in the repository. Do not create these pages manually in WordPress Admin. Do not build custom rewrite, query-var, template-router, direct-include, or URL-alias workarounds for ordinary repository-controlled pages.
+Do not auto-create WordPress pages.
+Do not invent slugs.
+Do not create custom routing for ordinary pages.
+Do not add deployment bootstrap endpoints for page creation.
 
-Do not modify the FTP host, `FTP_DEST`, deployment credentials, or deployment architecture when adding ordinary pages. Do not modify the shared deployment bootstrap architecture for an ordinary new page. Deployment is not complete merely because GitHub Actions uploaded files; verify every production URL and expected body content.
+WordPress owns the published page record and canonical slug. Git owns the page content and design. Do not build custom rewrite, query-var, template-router, direct-include, or URL-alias workarounds for ordinary repository-controlled pages.
 
-Legacy non-StoryDonkey pages may retain their checked, publish-only placeholder migration behavior.
+Legacy non-StoryDonkey pages may retain their checked, publish-only placeholder migration behavior. Do not remove that shared legacy mechanism when adding or maintaining a manually-created StoryDonkey page.
+
+Do not modify the FTP host, `FTP_DEST`, deployment credentials, or deployment architecture when adding ordinary pages. Do not push directly to `main`; use a PR unless the owner explicitly instructs otherwise. Deployment is not complete merely because GitHub Actions uploaded files; verify every production URL and expected body content.
