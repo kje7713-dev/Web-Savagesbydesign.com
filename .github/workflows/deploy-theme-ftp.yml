@@ -36,18 +36,6 @@ jobs:
         run: |
           lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mirror --reverse --continue --dereference --ignore-time -x '^\\.git/$' sbd-brutalist \"$FTP_DEST\"; put sbd-brutalist/deployment-marker.txt -o \"$FTP_DEST/deployment-marker.txt\"; quit"
 
-      - name: Hash deployed style.css without exposing FTP details
-        env:
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
-          FTP_DEST: ${{ secrets.FTP_DEST }}
-        run: |
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_DEST/style.css\" -o /tmp/deployed-style.css; quit"
-          printf 'ftp_style_sha256='
-          sha256sum /tmp/deployed-style.css | awk '{print $1}'
-          printf 'repo_style_sha256='
-          sha256sum sbd-brutalist/style.css | awk '{print $1}'
-
       - name: Verify required files exist under FTP_DEST
         env:
           FTP_USER: ${{ secrets.FTP_USER }}
