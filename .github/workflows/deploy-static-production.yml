@@ -77,6 +77,9 @@ jobs:
               printf 'put "dist/%s/index.html" -o "index.html"\n' "$route"
               printf 'cd "%s"\n' "$FTP_SITE_ROOT"
             done
+            printf 'put "dist/storydonkey-privacy/index.html" -o "%s/storydonkey-privacy-static.html"\n' "$FTP_SITE_ROOT"
+            printf 'put "dist/storydonkey-terms/index.html" -o "%s/storydonkey-terms-static.html"\n' "$FTP_SITE_ROOT"
+            printf 'put "dist/storydonkey-support/index.html" -o "%s/storydonkey-support-static.html"\n' "$FTP_SITE_ROOT"
             printf 'put "dist/.htaccess" -o "%s/.htaccess"\n' "$FTP_SITE_ROOT"
             printf 'put "dist/app-ads.txt" -o "%s/app-ads.txt"\n' "$FTP_SITE_ROOT"
             printf 'mirror --reverse --continue --dereference --ignore-time dist/assets "%s/assets"\n' "$FTP_SITE_ROOT"
@@ -115,7 +118,8 @@ jobs:
           rm -f "$remote_file"
           lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_SITE_ROOT/.htaccess\" -o \"$remote_file\"; quit"
           grep -Fq 'DirectoryIndex index.html' "$remote_file"
-          grep -Fq 'RewriteEngine Off' "$remote_file"
+          grep -Fq 'RewriteEngine On' "$remote_file"
+          grep -Fq 'storydonkey-privacy-static.html' "$remote_file"
 
       - name: Smoke-test static production routes
         env:

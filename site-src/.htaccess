@@ -2,6 +2,6 @@
 Options -Indexes
 DirectoryIndex index.html
 RewriteEngine On
-RewriteRule ^storydonkey-privacy/?$ /storydonkey-privacy/index.html [L]
-RewriteRule ^storydonkey-terms/?$ /storydonkey-terms/index.html [L]
-RewriteRule ^storydonkey-support/?$ /storydonkey-support/index.html [L]
+RewriteRule ^storydonkey-privacy/?$ /storydonkey-privacy-static.html [L]
+RewriteRule ^storydonkey-terms/?$ /storydonkey-terms-static.html [L]
+RewriteRule ^storydonkey-support/?$ /storydonkey-support-static.html [L]
