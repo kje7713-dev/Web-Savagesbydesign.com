@@ -1,6 +1,26 @@
 # Production deployment
 
-This repository is the source of truth for the theme-driven WordPress site.
+The repository contains both the legacy WordPress theme deployment and the
+validated static site. The manual static production cutover is the path for
+retiring WordPress without changing DNS.
+
+## Static production cutover
+
+Run **Cut Over Production to Static Site** manually with the input `CUTOVER`.
+The workflow builds and validates all 15 static routes, uploads `dist/` to the
+verified `FTP_SITE_ROOT` (`/public_html`), replaces the active WordPress
+`.htaccess` with the static routing guard, and smoke-tests every public route.
+It does not delete the old WordPress files, preserving a rollback path while
+the owner confirms the cutover. Once production is verified, the old WordPress
+files and database can be archived or removed separately.
+
+The static build serves route directories directly through `index.html`; it
+does not require PHP, WordPress, a database, or a deployment token.
+
+## Legacy WordPress deployment
+
+Until the static cutover is verified, this remains the source of truth for the
+theme-driven WordPress site:
 
 ```text
 `sbd_get_required_pages()` manifest

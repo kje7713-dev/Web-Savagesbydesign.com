@@ -41,6 +41,7 @@ await cp(
 );
 await cp(path.join(repoRoot, 'sbd-brutalist', 'style.css'), path.join(distDir, 'assets', 'style.css'));
 await cp(path.join(repoRoot, 'public-root', 'app-ads.txt'), path.join(distDir, 'app-ads.txt'));
+await cp(path.join(repoRoot, 'site-src', '.htaccess'), path.join(distDir, '.htaccess'));
 
 const header = await readFile(path.join(partials, 'header.html'), 'utf8');
 const footer = await readFile(path.join(partials, 'footer.html'), 'utf8');
