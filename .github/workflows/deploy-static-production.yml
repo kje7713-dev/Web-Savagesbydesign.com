@@ -95,7 +95,7 @@ jobs:
             mv -- "$root/index.php" "$backup"
           fi
           test ! -e "$root/index.php"
-          test -e "$backup"
+          find "$root" -maxdepth 1 -name '.wordpress-index-backup-*.php' -type f -print -quit | grep -q .
           REMOTE
 
       - name: Upload static output to verified production path via SFTP
