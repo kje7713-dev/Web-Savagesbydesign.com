@@ -73,7 +73,9 @@ jobs:
             printf 'put "dist/index.html" -o "%s/index.html"\n' "$FTP_SITE_ROOT"
             for route in app offerings guides reviews deals contact privacy terms user-guide pizza-chicken-pop-support storydonkey storydonkey-privacy storydonkey-terms storydonkey-support; do
               printf 'mkdir -p "%s/%s"\n' "$FTP_SITE_ROOT" "$route"
-              printf 'put "dist/%s/index.html" -o "%s/%s/index.html"\n' "$route" "$FTP_SITE_ROOT" "$route"
+              printf 'cd "%s/%s"\n' "$FTP_SITE_ROOT" "$route"
+              printf 'put "dist/%s/index.html" -o "index.html"\n' "$route"
+              printf 'cd "%s"\n' "$FTP_SITE_ROOT"
             done
             printf 'put "dist/.htaccess" -o "%s/.htaccess"\n' "$FTP_SITE_ROOT"
             printf 'put "dist/app-ads.txt" -o "%s/app-ads.txt"\n' "$FTP_SITE_ROOT"
@@ -81,6 +83,24 @@ jobs:
             printf 'quit\n'
           } > "$batch_file"
           lftp -f "$batch_file"
+
+      - name: Verify uploaded route bytes
+        env:
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+        run: |
+          set -euo pipefail
+          for route in app offerings guides reviews deals contact privacy terms user-guide pizza-chicken-pop-support storydonkey storydonkey-privacy storydonkey-terms storydonkey-support; do
+            remote_file="$(mktemp)"
+            rm -f "$remote_file"
+            trap 'rm -f "$remote_file"' EXIT
+            lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_SITE_ROOT/$route/index.html\" -o \"$remote_file\"; quit"
+            cmp "dist/$route/index.html" "$remote_file"
+            rm -f "$remote_file"
+            trap - EXIT
+          done
 
       - name: Verify static routing guard is live
         env:
