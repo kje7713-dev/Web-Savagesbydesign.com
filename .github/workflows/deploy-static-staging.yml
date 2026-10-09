@@ -28,7 +28,6 @@ jobs:
       - name: Build and validate static output
         env:
           SBD_DEPLOYMENT_SHA: ${{ github.sha }}
-          STORYDONKEY_BETA_SIGNUP_ENDPOINT: ${{ secrets.STORYDONKEY_BETA_SIGNUP_ENDPOINT }}
         run: npm run check
 
       - name: Require staging-only configuration
@@ -40,7 +39,6 @@ jobs:
           STAGING_SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
           STAGING_SSH_KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
           STAGING_SFTP_DEST: ${{ secrets.STAGING_SFTP_DEST }}
-          STORYDONKEY_BETA_SIGNUP_ENDPOINT: ${{ secrets.STORYDONKEY_BETA_SIGNUP_ENDPOINT }}
         run: |
           set -euo pipefail
           : "${STAGING_BASE_URL:?STAGING_BASE_URL is required}"
@@ -50,7 +48,6 @@ jobs:
           : "${STAGING_SSH_PRIVATE_KEY:?STAGING_SSH_PRIVATE_KEY is required}"
           : "${STAGING_SSH_KNOWN_HOSTS:?STAGING_SSH_KNOWN_HOSTS is required}"
           : "${STAGING_SFTP_DEST:?STAGING_SFTP_DEST is required}"
-          : "${STORYDONKEY_BETA_SIGNUP_ENDPOINT:?STORYDONKEY_BETA_SIGNUP_ENDPOINT is required}"
           case "$STAGING_BASE_URL" in
             https://*) ;;
             *) echo 'STAGING_BASE_URL must use HTTPS'; exit 1 ;;
@@ -61,10 +58,6 @@ jobs:
           test "$STAGING_SFTP_DEST" = '/home/u818755784/domains/savagesbydesign.com/public_html/staging' || {
             echo 'STAGING_SFTP_DEST must be exactly the verified staging document root'; exit 1;
           }
-          case "$STORYDONKEY_BETA_SIGNUP_ENDPOINT" in
-            https://*.supabase.co/functions/v1/storydonkey-beta-signup) ;;
-            *) echo 'STORYDONKEY_BETA_SIGNUP_ENDPOINT must be the approved HTTPS Supabase function URL'; exit 1 ;;
-          esac
 
       - name: Prepare strict SSH host verification
         env:

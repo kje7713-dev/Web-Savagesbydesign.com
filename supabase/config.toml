@@ -1,3 +1,0 @@
-# Public browser form: the function performs its own method, origin, and input checks.
-[functions.storydonkey-beta-signup]
-verify_jwt = false

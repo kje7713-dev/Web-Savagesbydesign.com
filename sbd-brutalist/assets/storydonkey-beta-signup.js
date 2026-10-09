@@ -1,13 +1,12 @@
-const DEFAULT_ERROR = "We could not send that yet. Please try again.";
+const RECIPIENT = "savagesbydesignhq@gmail.com";
+const SUBJECT = "StoryDonkey Beta Request";
 
-export function createBetaSignupSubmitter(
-  { form, fetchImpl = fetch, setStatus },
-) {
-  let submitting = false;
+export function createBetaSignupSubmitter({ form, openEmail, setStatus }) {
+  let opened = false;
 
-  return async function submit(event) {
+  return function submit(event) {
     event.preventDefault();
-    if (submitting) return;
+    if (opened) return;
 
     if (!form.checkValidity()) {
       setStatus("Please enter a valid email and choose a story arc.", "error");
@@ -15,37 +14,19 @@ export function createBetaSignupSubmitter(
       return;
     }
 
-    const endpoint = form.dataset.signupEndpoint;
-    if (!endpoint) {
-      setStatus(DEFAULT_ERROR, "error");
-      return;
-    }
+    const email = form.elements.email.value.trim();
+    const arc = form.elements.arc.value;
+    const body = [
+      "Please add me to the StoryDonkey beta.",
+      "",
+      `Email: ${email}`,
+      `Story arc: ${arc}`,
+    ].join("\n");
+    const mailto = `mailto:${RECIPIENT}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(body)}`;
 
-    const values = {
-      email: form.elements.email.value.trim(),
-      arc: form.elements.arc.value,
-      company: form.elements.company.value,
-    };
-    const button = form.querySelector('button[type="submit"]');
-    submitting = true;
-    if (button) button.disabled = true;
-    setStatus("Sending your beta request…", "pending");
-
-    try {
-      const response = await fetchImpl(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      if (!response.ok) throw new Error("signup request failed");
-      form.reset();
-      setStatus("You’re on the list. We’ll be in touch.", "success");
-    } catch {
-      setStatus(DEFAULT_ERROR, "error");
-    } finally {
-      submitting = false;
-      if (button) button.disabled = false;
-    }
+    opened = true;
+    setStatus("Opening your email app. Send the prefilled message to join the beta.", "pending");
+    openEmail(mailto);
   };
 }
 
@@ -55,17 +36,22 @@ export function mountBetaSignup(form) {
     status.textContent = message;
     status.dataset.state = state;
   };
-  const submit = createBetaSignupSubmitter({ form, setStatus });
+  const submit = createBetaSignupSubmitter({
+    form,
+    openEmail: (url) => {
+      window.location.href = url;
+    },
+    setStatus,
+  });
   form.addEventListener("submit", submit);
   form.addEventListener(
     "invalid",
-    () =>
-      setStatus("Please enter a valid email and choose a story arc.", "error"),
+    () => setStatus("Please enter a valid email and choose a story arc.", "error"),
     true,
   );
 }
 
 if (typeof document !== "undefined") {
-  document.querySelectorAll('[data-signup-backend="resend-edge-function"]')
+  document.querySelectorAll('[data-signup-backend="mailto"]')
     .forEach(mountBetaSignup);
 }

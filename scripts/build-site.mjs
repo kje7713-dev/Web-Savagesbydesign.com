@@ -26,7 +26,6 @@ const routes = {
 };
 
 const deploymentSha = process.env.SBD_DEPLOYMENT_SHA || process.env.GITHUB_SHA || 'local';
-const signupEndpoint = process.env.STORYDONKEY_BETA_SIGNUP_ENDPOINT || '';
 const year = new Date().getUTCFullYear();
 
 await rm(distDir, { recursive: true, force: true });
@@ -52,8 +51,7 @@ for (const [route, metadata] of Object.entries(routes)) {
     .replaceAll('{{DEPLOYMENT_SHA}}', deploymentSha)
     .replaceAll('{{YEAR}}', String(year))
     .replaceAll('{{TITLE}}', metadata.title)
-    .replaceAll('{{BODY_CLASS}}', metadata.bodyClass)
-    .replaceAll('{{STORYDONKEY_BETA_SIGNUP_ENDPOINT}}', signupEndpoint);
+    .replaceAll('{{BODY_CLASS}}', metadata.bodyClass);
   const destination = route === 'index' ? distDir : path.join(distDir, route);
   await mkdir(destination, { recursive: true });
   await writeFile(path.join(destination, 'index.html'), html);
