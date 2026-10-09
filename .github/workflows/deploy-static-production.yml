@@ -58,6 +58,19 @@ jobs:
             echo 'FTP_SITE_ROOT must be exactly /public_html for this cutover'; exit 1;
           }
 
+      - name: Disable WordPress front controller with rollback copy
+        env:
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_SITE_ROOT/index.php\"; quit" >/dev/null 2>&1; then
+            lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mv \"$FTP_SITE_ROOT/index.php\" \"$FTP_SITE_ROOT/.wordpress-index-backup-$GITHUB_SHA.php\"; quit"
+          fi
+
       - name: Upload static build over the active document root
         env:
           FTP_PORT: ${{ secrets.FTP_PORT }}
