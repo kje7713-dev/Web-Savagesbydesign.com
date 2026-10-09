@@ -1,9 +1,8 @@
 name: Cut Over Production to Static Site
 
-# Manual, explicit production cutover. This uploads the validated static build to
-# the existing Hostinger document root and replaces WordPress .htaccess with the
-# static routing guard. It intentionally does not delete old WordPress files,
-# preserving a rollback path until the owner confirms the cutover.
+# Manual, explicit production cutover over the verified Hostinger SSH/SFTP
+# path. The old WordPress files remain available for rollback; index.php is
+# moved to a SHA-stamped backup before static files are uploaded.
 
 on:
   workflow_dispatch:
@@ -15,6 +14,9 @@ on:
 
 permissions:
   contents: read
+
+env:
+  PRODUCTION_SFTP_DEST: /home/u818755784/domains/savagesbydesign.com/public_html
 
 jobs:
   cutover:
@@ -39,102 +41,90 @@ jobs:
           SBD_DEPLOYMENT_SHA: ${{ github.sha }}
         run: npm run check
 
-      - name: Install lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
-
-      - name: Require the verified production root
+      - name: Prepare strict SSH host verification
         env:
-          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
+          STAGING_SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          STAGING_SSH_KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
         run: |
           set -euo pipefail
-          : "${FTP_SITE_ROOT:?FTP_SITE_ROOT is required}"
-          : "${FTP_PORT:?FTP_PORT is required}"
-          : "${FTP_USER:?FTP_USER is required}"
-          : "${FTP_PASS:?FTP_PASS is required}"
-          test "$FTP_SITE_ROOT" = '/public_html' || {
-            echo 'FTP_SITE_ROOT must be exactly /public_html for this cutover'; exit 1;
-          }
+          umask 077
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$STAGING_SSH_PRIVATE_KEY" > "$HOME/.ssh/production_deploy_key"
+          printf '%s\n' "$STAGING_SSH_KNOWN_HOSTS" > "$HOME/.ssh/production_known_hosts"
+          chmod 600 "$HOME/.ssh/production_deploy_key" "$HOME/.ssh/production_known_hosts"
+          ssh-keygen -lf "$HOME/.ssh/production_known_hosts" >/dev/null
+
+      - name: Verify exact production destination over SSH and SFTP
+        env:
+          STAGING_SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          STAGING_SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+          STAGING_SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          PRODUCTION_SFTP_DEST: ${{ env.PRODUCTION_SFTP_DEST }}
+        run: |
+          set -euo pipefail
+          ssh_opts=(-i "$HOME/.ssh/production_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/production_known_hosts" -o BatchMode=yes -o ConnectTimeout=20 -p "$STAGING_SSH_PORT")
+          resolved_path="$(ssh "${ssh_opts[@]}" "$STAGING_SSH_USER@$STAGING_SSH_HOST" sh -s -- "$PRODUCTION_SFTP_DEST" <<'REMOTE'
+          set -eu
+          test "$#" -eq 1
+          test -d "$1"
+          realpath -e -- "$1"
+          REMOTE
+          )"
+          test "$resolved_path" = "$PRODUCTION_SFTP_DEST"
+          printf 'verified SSH destination: %s\n' "$resolved_path"
+          printf 'pwd\ncd %s\npwd\n' "$PRODUCTION_SFTP_DEST" |
+            sftp -q -b - -i "$HOME/.ssh/production_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/production_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
 
       - name: Disable WordPress front controller with rollback copy
         env:
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
-          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+          STAGING_SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          STAGING_SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+          STAGING_SSH_USER: ${{ secrets.STAGING_SSH_USER }}
           GITHUB_SHA: ${{ github.sha }}
+          PRODUCTION_SFTP_DEST: ${{ env.PRODUCTION_SFTP_DEST }}
         run: |
           set -euo pipefail
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mv \"$FTP_SITE_ROOT/index.php\" \"$FTP_SITE_ROOT/.wordpress-index-backup-$GITHUB_SHA.php\"; quit" || true
-          if lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_SITE_ROOT/index.php\"; quit" >/dev/null 2>&1; then
-            echo 'WordPress index.php is still present after cutover'; exit 1
+          ssh_opts=(-i "$HOME/.ssh/production_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/production_known_hosts" -o BatchMode=yes -o ConnectTimeout=20 -p "$STAGING_SSH_PORT")
+          ssh "${ssh_opts[@]}" "$STAGING_SSH_USER@$STAGING_SSH_HOST" sh -s -- "$PRODUCTION_SFTP_DEST" "$GITHUB_SHA" <<'REMOTE'
+          set -eu
+          root="$1"
+          sha="$2"
+          backup="$root/.wordpress-index-backup-$sha.php"
+          if [ -e "$root/index.php" ]; then
+            mv -- "$root/index.php" "$backup"
           fi
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; cls -1 \"$FTP_SITE_ROOT/.wordpress-index-backup-$GITHUB_SHA.php\"; quit" >/dev/null
+          test ! -e "$root/index.php"
+          test -e "$backup"
+          REMOTE
 
-      - name: Upload static build over the active document root
+      - name: Upload static output to verified production path via SFTP
         env:
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
-          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+          STAGING_SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          STAGING_SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+          STAGING_SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          PRODUCTION_SFTP_DEST: ${{ env.PRODUCTION_SFTP_DEST }}
         run: |
           set -euo pipefail
           batch_file="$(mktemp)"
           trap 'rm -f "$batch_file"' EXIT
-          {
-            printf 'set ftp:ssl-force false\nset ssl:verify-certificate false\nopen -p "%s" -u "%s","%s" 157.173.208.128\n' "$FTP_PORT" "$FTP_USER" "$FTP_PASS"
-            printf 'put "dist/index.html" -o "%s/index.html"\n' "$FTP_SITE_ROOT"
-            for route in app offerings guides reviews deals contact privacy terms user-guide pizza-chicken-pop-support storydonkey storydonkey-privacy storydonkey-terms storydonkey-support; do
-              printf 'mkdir -p "%s/%s"\n' "$FTP_SITE_ROOT" "$route"
-              printf 'cd "%s/%s"\n' "$FTP_SITE_ROOT" "$route"
-              printf 'put "dist/%s/index.html" -o "index.html"\n' "$route"
-              printf 'cd "%s"\n' "$FTP_SITE_ROOT"
-            done
-            printf 'put "dist/storydonkey-privacy/index.html" -o "%s/storydonkey-privacy-static.html"\n' "$FTP_SITE_ROOT"
-            printf 'put "dist/storydonkey-terms/index.html" -o "%s/storydonkey-terms-static.html"\n' "$FTP_SITE_ROOT"
-            printf 'put "dist/storydonkey-support/index.html" -o "%s/storydonkey-support-static.html"\n' "$FTP_SITE_ROOT"
-            printf 'put "dist/.htaccess" -o "%s/.htaccess"\n' "$FTP_SITE_ROOT"
-            printf 'put "dist/app-ads.txt" -o "%s/app-ads.txt"\n' "$FTP_SITE_ROOT"
-            printf 'mirror --reverse --continue --dereference --ignore-time dist/assets "%s/assets"\n' "$FTP_SITE_ROOT"
-            printf 'quit\n'
-          } > "$batch_file"
-          lftp -f "$batch_file"
-
-      - name: Verify uploaded route bytes
-        env:
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
-          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
-        run: |
-          set -euo pipefail
-          for route in app offerings guides reviews deals contact privacy terms user-guide pizza-chicken-pop-support storydonkey storydonkey-privacy storydonkey-terms storydonkey-support; do
-            remote_file="$(mktemp)"
-            rm -f "$remote_file"
-            trap 'rm -f "$remote_file"' EXIT
-            lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_SITE_ROOT/$route/index.html\" -o \"$remote_file\"; quit"
-            cmp "dist/$route/index.html" "$remote_file"
-            rm -f "$remote_file"
-            trap - EXIT
-          done
-
-      - name: Verify static routing guard is live
-        env:
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
-          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
-        run: |
-          set -euo pipefail
-          remote_file="$(mktemp)"
-          trap 'rm -f "$remote_file"' EXIT
-          rm -f "$remote_file"
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_SITE_ROOT/.htaccess\" -o \"$remote_file\"; quit"
-          grep -Fq 'DirectoryIndex index.html' "$remote_file"
-          grep -Fq 'RewriteEngine On' "$remote_file"
-          grep -Fq 'storydonkey-privacy-static.html' "$remote_file"
+          printf 'cd "%s"\n' "$PRODUCTION_SFTP_DEST" > "$batch_file"
+          while IFS= read -r -d '' directory; do
+            relative="${directory#dist/}"
+            if [ "$relative" != "$directory" ]; then
+              case "$relative" in
+                *[!A-Za-z0-9._/-]*) echo "Unsupported generated path: $relative" >&2; exit 1 ;;
+              esac
+              printf -- '-mkdir "%s"\n' "$relative" >> "$batch_file"
+            fi
+          done < <(find dist -type d -print0 | sort -z)
+          while IFS= read -r -d '' file; do
+            relative="${file#dist/}"
+            case "$relative" in
+              *[!A-Za-z0-9._/-]*) echo "Unsupported generated path: $relative" >&2; exit 1 ;;
+            esac
+            printf 'put "%s" "%s"\n' "$file" "$relative" >> "$batch_file"
+          done < <(find dist -type f -print0 | sort -z)
+          sftp -b "$batch_file" -i "$HOME/.ssh/production_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/production_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
 
       - name: Smoke-test static production routes
         env:
