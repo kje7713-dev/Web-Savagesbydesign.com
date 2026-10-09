@@ -1,0 +1,4 @@
+# Static site cutover: stop WordPress rewrites and serve route directories directly.
+Options -Indexes
+DirectoryIndex index.html
+RewriteEngine Off

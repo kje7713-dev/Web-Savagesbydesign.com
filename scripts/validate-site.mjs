@@ -44,6 +44,15 @@ const appAds = path.join(distDir, 'app-ads.txt');
 if (!(await exists(appAds))) failures.push('missing /app-ads.txt');
 else if ((await readFile(appAds, 'utf8')).trim() !== 'google.com, pub-9428188855756038, DIRECT, f08c47fec0942fa0') failures.push('app-ads.txt content changed');
 
+const staticHtaccess = path.join(distDir, '.htaccess');
+if (!(await exists(staticHtaccess))) failures.push('missing static .htaccess');
+else {
+  const htaccess = await readFile(staticHtaccess, 'utf8');
+  for (const marker of ['DirectoryIndex index.html', 'RewriteEngine Off']) {
+    if (!htaccess.includes(marker)) failures.push(`static .htaccess missing: ${marker}`);
+  }
+}
+
 const localTargets = new Set(Object.keys(routes).map((route) => `/${route ? `${route}/` : ''}`));
 const htmlFiles = [];
 async function collect(directory) {

@@ -1,0 +1,129 @@
+name: Cut Over Production to Static Site
+
+# Manual, explicit production cutover. This uploads the validated static build to
+# the existing Hostinger document root and replaces WordPress .htaccess with the
+# static routing guard. It intentionally does not delete old WordPress files,
+# preserving a rollback path until the owner confirms the cutover.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type CUTOVER to deploy the static site over the active WordPress document root'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  cutover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Require explicit cutover confirmation
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: test "$CONFIRM" = 'CUTOVER'
+
+      - name: Checkout exact commit
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and validate production static output
+        env:
+          SBD_DEPLOYMENT_SHA: ${{ github.sha }}
+        run: npm run check
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Require the verified production root
+        env:
+          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+        run: |
+          set -euo pipefail
+          : "${FTP_SITE_ROOT:?FTP_SITE_ROOT is required}"
+          : "${FTP_PORT:?FTP_PORT is required}"
+          : "${FTP_USER:?FTP_USER is required}"
+          : "${FTP_PASS:?FTP_PASS is required}"
+          test "$FTP_SITE_ROOT" = '/public_html' || {
+            echo 'FTP_SITE_ROOT must be exactly /public_html for this cutover'; exit 1;
+          }
+
+      - name: Upload static build over the active document root
+        env:
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+        run: |
+          set -euo pipefail
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mirror --reverse --continue --dereference --ignore-time dist \"$FTP_SITE_ROOT\"; quit"
+
+      - name: Verify static routing guard is live
+        env:
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
+        run: |
+          set -euo pipefail
+          remote_file="$(mktemp)"
+          trap 'rm -f "$remote_file"' EXIT
+          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; get \"$FTP_SITE_ROOT/.htaccess\" -o \"$remote_file\"; quit"
+          grep -Fq 'DirectoryIndex index.html' "$remote_file"
+          grep -Fq 'RewriteEngine Off' "$remote_file"
+
+      - name: Smoke-test static production routes
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
+          failures=0
+          check_route() {
+            slug="$1"
+            expected="$2"
+            body="$temp_dir/${slug:-root}.body"
+            result="$(curl --silent --show-error --location --retry 2 --max-time 30 \
+              -o "$body" -w '%{http_code}\t%{url_effective}' "https://savagesbydesign.com/${slug:+$slug/}?static-cutover=$GITHUB_SHA")"
+            status="${result%%$'\t'*}"
+            expected_ok=no
+            sha_ok=no
+            [ "$status" = 200 ] && grep -Fq "$expected" "$body" && expected_ok=yes
+            [ "$status" = 200 ] && grep -Fq "$GITHUB_SHA" "$body" && sha_ok=yes
+            printf '%-32s status=%-3s sha=%-3s expected=%-3s\n' \
+              "/${slug:+$slug/}" "$status" "$sha_ok" "$expected_ok"
+            if [ "$status" != 200 ] || [ "$sha_ok" != yes ] || [ "$expected_ok" != yes ]; then
+              failures=$((failures + 1))
+            fi
+          }
+          check_route '' 'TAKE CHARGE'
+          check_route 'app' 'Welcome to Savage By Design'
+          check_route 'offerings' 'What We Offer'
+          check_route 'guides' 'Training Guides'
+          check_route 'reviews' 'Gear Reviews'
+          check_route 'deals' 'Training Gear Deals'
+          check_route 'contact' 'Get In Touch'
+          check_route 'privacy' 'Privacy Policy'
+          check_route 'terms' 'Terms of Service'
+          check_route 'user-guide' 'User Guide'
+          check_route 'pizza-chicken-pop-support' 'Pizza Chicken Pop Support'
+          check_route 'storydonkey' 'StoryDonkey'
+          check_route 'storydonkey-privacy' 'StoryDonkey Privacy Policy'
+          check_route 'storydonkey-terms' 'StoryDonkey Terms of Use'
+          check_route 'storydonkey-support' 'StoryDonkey Support'
+          test "$failures" -eq 0
