@@ -7,10 +7,10 @@ retiring WordPress without changing DNS.
 ## Static production cutover
 
 Run **Cut Over Production to Static Site** manually with the input `CUTOVER`.
-The workflow builds and validates all 15 static routes, uploads `dist/` to the
-verified `FTP_SITE_ROOT` (`/public_html`), replaces the active WordPress
-`.htaccess` with the static routing guard, moves the WordPress front controller to a
-rollback filename, and smoke-tests every public route.
+The workflow builds and validates all 15 static routes, uploads `dist/` over the verified SSH/SFTP destination
+`/home/u818755784/domains/savagesbydesign.com/public_html`, replaces the active
+WordPress `.htaccess` with the static routing guard, moves the WordPress front
+controller to a rollback filename, and smoke-tests every public route.
 It does not delete the old WordPress files, preserving a rollback path while
 the owner confirms the cutover. Once production is verified, the old WordPress
 files and database can be archived or removed separately.
