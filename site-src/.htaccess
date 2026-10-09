@@ -1,4 +1,7 @@
-# Static site cutover: stop WordPress rewrites and serve route directories directly.
+# Static site cutover: route canonical paths to static files and stop WordPress rewrites.
 Options -Indexes
 DirectoryIndex index.html
-RewriteEngine Off
+RewriteEngine On
+RewriteRule ^storydonkey-privacy/?$ /storydonkey-privacy/index.html [L]
+RewriteRule ^storydonkey-terms/?$ /storydonkey-terms/index.html [L]
+RewriteRule ^storydonkey-support/?$ /storydonkey-support/index.html [L]
