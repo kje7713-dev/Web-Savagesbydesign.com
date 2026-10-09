@@ -57,8 +57,7 @@
       <p class="kicker">COMING TO IOS · EARLY ACCESS</p>
       <h2>Make the story real.</h2>
       <p>Get early access to StoryDonkey and help shape the app built to carry a story all the way through.</p>
-      <!-- Signup backend replacement is intentionally deferred to the dynamic-functionality phase. -->
-        <form class="storydonkey-form" action="/storydonkey/#beta" method="post" data-signup-backend="pending">
+        <form class="storydonkey-form" action="#beta" method="post" data-signup-backend="resend-edge-function" data-signup-endpoint="{{STORYDONKEY_BETA_SIGNUP_ENDPOINT}}" aria-describedby="storydonkey-form-status">
           <label class="sr-only" for="storydonkey-email">Email address</label>
           <input id="storydonkey-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
           <label class="sr-only" for="storydonkey-arc">Which story arc are you interested in?</label>
@@ -68,7 +67,9 @@
           </select>
           <input class="storydonkey-honeypot" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn" type="submit">Join the beta</button>
+          <p class="storydonkey-form-status" id="storydonkey-form-status" data-signup-status role="status" aria-live="polite"></p>
         </form>
+        <script type="module" src="/assets/storydonkey-beta-signup.js"></script>
     </div>
   </section>
 </main>

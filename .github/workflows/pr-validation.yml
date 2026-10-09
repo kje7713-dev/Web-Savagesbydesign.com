@@ -5,8 +5,13 @@ on:
     branches: ["main"]
     paths:
       - "sbd-brutalist/**"
+      - "site-src/**"
+      - "scripts/**"
+      - "supabase/**"
+      - "tests/**"
       - ".github/workflows/**"
       - "DEPLOYMENT.md"
+      - "docs/storydonkey-beta-signup.md"
       - "AGENTS.md"
   push:
     branches: ["codex/**"]
@@ -44,6 +49,16 @@ jobs:
 
       - name: Build and validate static foundation
         run: npm run check
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Test StoryDonkey beta signup
+        run: |
+          deno fmt --check supabase/functions/storydonkey-beta-signup/index.ts supabase/functions/storydonkey-beta-signup/index_test.ts sbd-brutalist/assets/storydonkey-beta-signup.js tests/storydonkey-beta-signup.test.mjs
+          deno test --allow-env supabase/functions/storydonkey-beta-signup/index_test.ts tests/storydonkey-beta-signup.test.mjs
 
       - name: Check workflow YAML syntax
         run: |

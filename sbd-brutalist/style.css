@@ -587,6 +587,8 @@ body.storydonkey-template a:hover{ background:#151515; color:#eee8dc; }
 .storydonkey-form{ display:grid; grid-template-columns:1.1fr 1fr auto; gap:10px; max-width:900px; margin-top:28px; }
 .storydonkey-form input:not(.storydonkey-honeypot), .storydonkey-form select{ min-height:52px; padding:0 15px; border:2px solid #151515; border-radius:0; background:#eee8dc; color:#151515; font:inherit; }
 .storydonkey-form .btn{ min-height:52px; cursor:pointer; background:#151515; color:#eee8dc; border:2px solid #151515; font:inherit; font-weight:900; padding:0 22px; }
+.storydonkey-form .btn:disabled{ cursor:wait; opacity:.65; }
+.storydonkey-form-status{ grid-column:1/-1; min-height:1.5em; margin:0; font-weight:700; }
 .storydonkey-form .btn:hover{ background:#eee8dc; color:#151515; }
 .storydonkey-honeypot{ position:absolute; left:-9999px; width:1px; height:1px; }
 .storydonkey-success{ display:inline-block; margin-top:26px; padding:14px 18px; background:#151515; color:#eee8dc; font-weight:900; }
