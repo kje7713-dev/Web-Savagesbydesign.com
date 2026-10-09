@@ -125,6 +125,9 @@ jobs:
             esac
             printf 'put "%s" "%s"\n' "$file" "$relative" >> "$batch_file"
           done < <(find dist -type f -print0 | sort -z)
+          printf 'put "dist/storydonkey-privacy/index.html" "storydonkey-privacy-static.html"\n' >> "$batch_file"
+          printf 'put "dist/storydonkey-terms/index.html" "storydonkey-terms-static.html"\n' >> "$batch_file"
+          printf 'put "dist/storydonkey-support/index.html" "storydonkey-support-static.html"\n' >> "$batch_file"
           sftp -b "$batch_file" -i "$HOME/.ssh/production_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/production_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
 
       - name: Smoke-test static production routes
