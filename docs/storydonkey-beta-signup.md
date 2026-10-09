@@ -1,59 +1,40 @@
-# StoryDonkey beta signup replacement contract
+# StoryDonkey beta signup
 
-Status: contract prepared; no backend or production database has been changed.
+## Simpler email-only launch
 
-## Current WordPress behavior
+The beta form uses the smallest possible flow: it opens the visitor’s email application with a prefilled message addressed to `savagesbydesignhq@gmail.com`. The visitor must press Send. There is no backend, database, account platform, CRM, Supabase project, Resend key, WordPress/PHP dependency, or automatic delivery claim.
 
-Source: `sbd-brutalist/functions.php` and `sbd-brutalist/page-storydonkey.php`.
+This is intentionally a temporary launch approach. The existing WordPress lead records remain outside this change and must be exported/backed up before any future WordPress retirement work.
 
-- Form fields: `email`, `arc`, and hidden honeypot `company`.
-- WordPress routing: `POST /wp-admin/admin-post.php` with `action=sbd_beta_signup`.
-- Request protection: WordPress nonce plus a cache-safe HMAC token.
-- Honeypot: non-empty `company` is treated as a successful response without persistence or notification.
-- Validation: `email` is sanitized and must pass WordPress `is_email()`; `arc` is sanitized text.
-- Valid lead persistence: private `sbd_beta_lead` post with email and selected arc.
-- Notification: `wp_mail()` to `savagesbydesignhq@gmail.com` with `Reply-To` set to the submitted email.
-- Success redirect: `/storydonkey/?beta=thanks#beta`.
-- Invalid-email redirect: `/storydonkey/?beta=invalid#beta`.
-- Invalid requests without a valid nonce/token: HTTP 400.
-- The static foundation removes the WordPress target and marks the form `data-signup-backend="pending"`; it intentionally does not claim signup functionality is ready.
+## Browser behavior
 
-## Replacement API contract
-
-Recommended endpoint: `POST /api/storydonkey-beta-signup` behind HTTPS. The static form may submit the existing URL-encoded fields so the front-end experience does not need to change.
-
-### Request
+The form keeps the existing email, story-arc, and hidden company fields. The browser handler validates the required email and arc using the existing form controls, then opens:
 
 ```text
-Content-Type: application/x-www-form-urlencoded
-email=<required email>&arc=<required selected arc>&company=<honeypot>
+mailto:savagesbydesignhq@gmail.com
 ```
 
-### Server requirements
+with a URL-encoded subject and body containing the visitor’s email and selected story arc. It prevents duplicate clicks and displays:
 
-1. Validate and normalize the email server-side.
-2. Validate `arc` against the current allowed options or store an explicit `Other` value only after a product decision.
-3. Treat a non-empty `company` as a successful no-op without persistence or notification.
-4. Rate-limit by IP and normalized email; do not rely on the client for abuse protection.
-5. Persist only the minimum lead data: normalized email, arc, source, created timestamp, and notification status.
-6. Make duplicate submissions safe and idempotent without exposing whether an email already exists.
-7. Send the notification through an approved server-side email provider; never expose its credential to the browser.
-8. Return a generic success response that does not disclose persistence or provider details.
-9. Return a generic validation failure for malformed input and do not echo submitted email addresses.
-10. Record failures without putting email addresses in logs or CI output.
+- an accessible validation error for invalid input;
+- a pending message explaining that the email app is opening and the visitor must send;
+- no false “signup complete” message.
 
-### Response behavior
+A `mailto:` link depends on the visitor having an email application configured. Webmail users may need to copy the prefilled details into Gmail or another service manually. The site cannot confirm that the visitor sent the message or that it arrived.
 
-- Success or honeypot: `303` to `/storydonkey/?beta=thanks#beta`, or a JSON equivalent if the front end is changed.
-- Invalid input: `303` to `/storydonkey/?beta=invalid#beta`, or HTTP 400 for an API client.
-- Server/provider failure: generic HTTP 503; do not report provider internals.
+## Staging and production
 
-## Configuration still required
+No endpoint or secret configuration is required. The same static form works on staging and production because it opens the fixed operator address. The existing SFTP staging workflow, exact destination guard, strict host-key checks, manual trigger, and non-destructive upload behavior are unchanged.
 
-- Choose the serverless/runtime location for `/api/storydonkey-beta-signup`.
-- Confirm whether the existing Supabase project is the intended durable store; its current schema has no beta-lead or signup table.
-- Create a private `beta_leads` table and server-side insert path with RLS/service-role boundaries if Supabase is selected.
-- Provide or confirm an approved notification provider and secret name. No provider/account configuration was changed by this work.
-- Add staging-only endpoint configuration and end-to-end tests before enabling the form.
+Deploy the updated static site through the existing manual staging workflow, then test `/storydonkey/` in a browser. Submit a test message and confirm it arrives at `savagesbydesignhq@gmail.com`. This is a manual send-and-inbox check, not an automated delivery test.
 
-Do not enable the static form in production until persistence, notification, rate limiting, failure behavior, and a staging smoke test are verified.
+## Privacy note
+
+The StoryDonkey privacy page explains that the visitor’s email and selected arc are sent to the operator by email. The site does not transmit or store those values before the visitor’s email application sends the message.
+
+## Automated coverage
+
+- `npm run check` validates all static routes, deployment markers, `app-ads.txt`, the signup contract, and the no-WordPress static boundary.
+- `tests/storydonkey-beta-signup.test.mjs` covers the generated recipient/subject/body, duplicate-click prevention, invalid-input handling, and the absence of a false success state.
+
+This approach is ready for manual staging integration testing. It is not evidence that an email has been sent or received until the owner performs the browser and inbox check.

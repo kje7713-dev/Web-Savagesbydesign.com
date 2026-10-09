@@ -5,8 +5,12 @@ on:
     branches: ["main"]
     paths:
       - "sbd-brutalist/**"
+      - "site-src/**"
+      - "scripts/**"
+      - "tests/**"
       - ".github/workflows/**"
       - "DEPLOYMENT.md"
+      - "docs/storydonkey-beta-signup.md"
       - "AGENTS.md"
   push:
     branches: ["codex/**"]
@@ -44,6 +48,9 @@ jobs:
 
       - name: Build and validate static foundation
         run: npm run check
+
+      - name: Test StoryDonkey beta signup
+        run: node --test tests/storydonkey-beta-signup.test.mjs
 
       - name: Check workflow YAML syntax
         run: |

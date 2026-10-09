@@ -6,17 +6,18 @@ const requiredSourceMarkers = [
   'name="email"',
   'name="arc"',
   'name="company"',
-  'data-signup-backend="pending"',
-  'action="/storydonkey/#beta"',
+  'data-signup-backend="mailto"',
+  'action="mailto:savagesbydesignhq@gmail.com"',
+  'storydonkey-beta-signup.js',
+  'data-signup-status',
 ];
 const requiredContractMarkers = [
-  'Current WordPress behavior',
-  'Replacement API contract',
-  'Rate-limit by IP and normalized email',
-  'approved server-side email provider',
-  'Do not enable the static form in production',
+  'Simpler email-only launch',
+  'mailto:',
+  'There is no backend, database, account platform',
+  'visitor must press Send',
 ];
-const forbiddenSourceMarkers = ['/wp-admin/', 'admin-post.php', 'wp_nonce', 'sbd_beta_token'];
+const forbiddenSourceMarkers = ['/wp-admin/', 'admin-post.php', 'wp_nonce', 'sbd_beta_token', 'data-signup-backend="pending"'];
 const failures = [];
 for (const marker of requiredSourceMarkers) if (!source.includes(marker)) failures.push(`static form missing: ${marker}`);
 for (const marker of requiredContractMarkers) if (!contract.includes(marker)) failures.push(`contract missing: ${marker}`);
@@ -25,4 +26,4 @@ if (failures.length) {
   console.error(failures.map((failure) => `- ${failure}`).join('\n'));
   process.exit(1);
 }
-console.log('Validated StoryDonkey signup contract and deferred-backend guardrails.');
+console.log('Validated StoryDonkey email-only mailto signup contract.');
