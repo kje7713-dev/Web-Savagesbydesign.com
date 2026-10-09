@@ -48,7 +48,7 @@ const staticHtaccess = path.join(distDir, '.htaccess');
 if (!(await exists(staticHtaccess))) failures.push('missing static .htaccess');
 else {
   const htaccess = await readFile(staticHtaccess, 'utf8');
-  for (const marker of ['DirectoryIndex index.html', 'RewriteEngine Off']) {
+  for (const marker of ['DirectoryIndex index.html', 'RewriteEngine On', 'RewriteRule ^storydonkey-privacy/?$']) {
     if (!htaccess.includes(marker)) failures.push(`static .htaccess missing: ${marker}`);
   }
 }
