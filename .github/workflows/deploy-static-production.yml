@@ -66,7 +66,21 @@ jobs:
           FTP_SITE_ROOT: ${{ secrets.FTP_SITE_ROOT }}
         run: |
           set -euo pipefail
-          lftp -c "set ftp:ssl-force false; set ssl:verify-certificate false; open -p \"$FTP_PORT\" -u \"$FTP_USER\",\"$FTP_PASS\" 157.173.208.128; mirror --reverse --continue --dereference --ignore-time dist \"$FTP_SITE_ROOT\"; quit"
+          batch_file="$(mktemp)"
+          trap 'rm -f "$batch_file"' EXIT
+          {
+            printf 'set ftp:ssl-force false\nset ssl:verify-certificate false\nopen -p "%s" -u "%s","%s" 157.173.208.128\n' "$FTP_PORT" "$FTP_USER" "$FTP_PASS"
+            printf 'put "dist/index.html" -o "%s/index.html"\n' "$FTP_SITE_ROOT"
+            for route in app offerings guides reviews deals contact privacy terms user-guide pizza-chicken-pop-support storydonkey storydonkey-privacy storydonkey-terms storydonkey-support; do
+              printf 'mkdir -p "%s/%s"\n' "$FTP_SITE_ROOT" "$route"
+              printf 'put "dist/%s/index.html" -o "%s/%s/index.html"\n' "$route" "$FTP_SITE_ROOT" "$route"
+            done
+            printf 'put "dist/.htaccess" -o "%s/.htaccess"\n' "$FTP_SITE_ROOT"
+            printf 'put "dist/app-ads.txt" -o "%s/app-ads.txt"\n' "$FTP_SITE_ROOT"
+            printf 'mirror --reverse --continue --dereference --ignore-time dist/assets "%s/assets"\n' "$FTP_SITE_ROOT"
+            printf 'quit\n'
+          } > "$batch_file"
+          lftp -f "$batch_file"
 
       - name: Verify static routing guard is live
         env:
