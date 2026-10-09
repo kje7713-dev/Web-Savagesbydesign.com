@@ -22,6 +22,7 @@ jobs:
   cutover:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    environment: staging
     steps:
       - name: Require explicit cutover confirmation
         env:
