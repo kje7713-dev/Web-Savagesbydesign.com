@@ -92,7 +92,7 @@ jobs:
             echo "Resolved SSH destination is not the exact staging root: $resolved_path"; exit 1;
           }
           printf 'verified SSH destination: %s\n' "$resolved_path"
-          printf 'pwd\ncd %s\npwd\nls -ld %s\n' "$STAGING_SFTP_DEST" "$STAGING_SFTP_DEST" |
+          printf 'pwd\ncd %s\npwd\n' "$STAGING_SFTP_DEST" |
             sftp -q -b - -i "$HOME/.ssh/staging_deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/staging_known_hosts" -P "$STAGING_SSH_PORT" "$STAGING_SSH_USER@$STAGING_SSH_HOST"
 
       - name: Upload static output to verified staging path via SFTP
