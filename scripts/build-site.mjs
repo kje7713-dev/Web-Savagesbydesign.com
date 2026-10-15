@@ -19,7 +19,12 @@ const routes = {
   'terms': { title: 'Savage by Design — Terms of Service', bodyClass: '' },
   'user-guide': { title: 'Savage by Design — User Guide', bodyClass: '' },
   'pizza-chicken-pop-support': { title: 'Pizza Chicken Pop — Support', bodyClass: '' },
-  'storydonkey': { title: 'StoryDonkey — Savage by Design', bodyClass: 'storydonkey-template' },
+  'storydonkey': {
+    title: 'StoryDonkey — Savage by Design',
+    bodyClass: 'storydonkey-template',
+    ogDescription: 'An AI-assisted fiction workspace that carries structure, context, and continuity from idea to finished story.',
+    ogImage: 'https://savagesbydesign.com/assets/storydonkey-hero.jpg',
+  },
   'storydonkey-privacy': { title: 'StoryDonkey Privacy Policy', bodyClass: '' },
   'storydonkey-terms': { title: 'StoryDonkey Terms of Use', bodyClass: '' },
   'storydonkey-support': { title: 'StoryDonkey Support', bodyClass: '' },
@@ -52,6 +57,10 @@ for (const [route, metadata] of Object.entries(routes)) {
     .replaceAll('{{DEPLOYMENT_SHA}}', deploymentSha)
     .replaceAll('{{YEAR}}', String(year))
     .replaceAll('{{TITLE}}', metadata.title)
+    .replaceAll('{{OG_TITLE}}', metadata.ogTitle || metadata.title)
+    .replaceAll('{{OG_DESCRIPTION}}', metadata.ogDescription || metadata.title)
+    .replaceAll('{{OG_URL}}', `https://savagesbydesign.com/${route === 'index' ? '' : `${route}/`}`)
+    .replaceAll('{{OG_IMAGE}}', metadata.ogImage || 'https://savagesbydesign.com/assets/template-parts/icon_ios-marketing_1024x1024_1x.png')
     .replaceAll('{{BODY_CLASS}}', metadata.bodyClass);
   const destination = route === 'index' ? distDir : path.join(distDir, route);
   await mkdir(destination, { recursive: true });
